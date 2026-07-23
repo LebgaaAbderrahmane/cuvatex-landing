@@ -1,0 +1,256 @@
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { motion, AnimatePresence } from 'framer-motion';
+import ScrollReveal from './ScrollReveal';
+
+export default function Contact() {
+  const { t } = useTranslation();
+  const [sent, setSent] = useState(false);
+
+  function onSubmit(e) {
+    e.preventDefault();
+    setSent(true);
+  }
+
+  return (
+    <section
+      id="contact"
+      style={{
+        scrollMarginTop: 80,
+        padding: 'clamp(64px, 10vw, 124px) clamp(20px, 5vw, 48px)',
+        background: 'var(--surface, #fff)',
+        borderTop: '1px solid var(--line, rgba(21,18,15,0.13))',
+      }}
+    >
+      <div style={{
+        maxWidth: 1160,
+        margin: '0 auto',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: 'clamp(40px, 6vw, 80px)',
+        alignItems: 'start',
+      }}>
+        <div>
+          <ScrollReveal>
+            <p style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              margin: 0,
+              fontSize: 13,
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              color: 'var(--muted, #6c665e)',
+              fontWeight: 600,
+            }}>
+              <span style={{ width: 7, height: 7, background: 'var(--accent, #0E7A69)', display: 'inline-block' }} />
+              {t('nav.contact')}
+            </p>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.1}>
+            <h2 style={{
+              fontSize: 'clamp(30px, 5vw, 52px)',
+              fontWeight: 600,
+              letterSpacing: '-0.02em',
+              lineHeight: 1.05,
+              margin: '16px 0 0',
+              maxWidth: '14ch',
+            }}>
+              {t('contactTitle')}
+            </h2>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.15}>
+            <p style={{
+              margin: '22px 0 0',
+              color: 'var(--muted, #6c665e)',
+              fontSize: 'clamp(16px, 1.8vw, 19px)',
+              lineHeight: 1.6,
+              maxWidth: '44ch',
+            }}>
+              {t('contactIntro')}
+            </p>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.2}>
+            <p style={{ margin: '26px 0 0', fontSize: 16, color: 'var(--muted, #6c665e)' }}>
+              {t('emailDirect')}{' '}
+              <a
+                href={`mailto:${t('email')}`}
+                style={{ color: 'var(--accent, #0E7A69)', fontWeight: 600, textDecoration: 'none' }}
+              >
+                {t('email')}
+              </a>
+            </p>
+          </ScrollReveal>
+        </div>
+
+        <ScrollReveal delay={0.2}>
+          <AnimatePresence mode="wait">
+            {!sent ? (
+              <motion.form
+                key="form"
+                onSubmit={onSubmit}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
+              >
+                <label style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 8,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  color: 'var(--muted, #6c665e)',
+                }}>
+                  {t('nameLabel')}
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    style={{
+                      width: '100%',
+                      background: 'transparent',
+                      border: '1px solid var(--line, rgba(21,18,15,0.13))',
+                      color: 'var(--fg, #15120f)',
+                      padding: '13px 14px',
+                      borderRadius: 2,
+                      fontSize: 16,
+                      fontWeight: 400,
+                      textTransform: 'none',
+                      letterSpacing: 0,
+                      fontFamily: 'inherit',
+                    }}
+                    onFocus={e => e.target.style.borderColor = 'var(--accent, #0E7A69)'}
+                    onBlur={e => e.target.style.borderColor = 'var(--line, rgba(21,18,15,0.13))'}
+                  />
+                </label>
+
+                <label style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 8,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  color: 'var(--muted, #6c665e)',
+                }}>
+                  {t('emailLabel')}
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    style={{
+                      width: '100%',
+                      background: 'transparent',
+                      border: '1px solid var(--line, rgba(21,18,15,0.13))',
+                      color: 'var(--fg, #15120f)',
+                      padding: '13px 14px',
+                      borderRadius: 2,
+                      fontSize: 16,
+                      fontWeight: 400,
+                      textTransform: 'none',
+                      letterSpacing: 0,
+                      fontFamily: 'inherit',
+                    }}
+                    onFocus={e => e.target.style.borderColor = 'var(--accent, #0E7A69)'}
+                    onBlur={e => e.target.style.borderColor = 'var(--line, rgba(21,18,15,0.13))'}
+                  />
+                </label>
+
+                <label style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 8,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  color: 'var(--muted, #6c665e)',
+                }}>
+                  {t('msgLabel')}
+                  <textarea
+                    name="message"
+                    rows={4}
+                    required
+                    style={{
+                      width: '100%',
+                      background: 'transparent',
+                      border: '1px solid var(--line, rgba(21,18,15,0.13))',
+                      color: 'var(--fg, #15120f)',
+                      padding: '13px 14px',
+                      borderRadius: 2,
+                      fontSize: 16,
+                      fontWeight: 400,
+                      textTransform: 'none',
+                      letterSpacing: 0,
+                      lineHeight: 1.5,
+                      fontFamily: 'inherit',
+                    }}
+                    onFocus={e => e.target.style.borderColor = 'var(--accent, #0E7A69)'}
+                    onBlur={e => e.target.style.borderColor = 'var(--line, rgba(21,18,15,0.13))'}
+                  />
+                </label>
+
+                <motion.button
+                  type="submit"
+                  whileHover={{ opacity: 0.92 }}
+                  whileTap={{ scale: 0.98 }}
+                  style={{
+                    alignSelf: 'flex-start',
+                    background: 'var(--accent, #0E7A69)',
+                    color: 'var(--accent-fg, #fff)',
+                    border: 'none',
+                    fontWeight: 600,
+                    fontSize: 16,
+                    padding: '14px 28px',
+                    borderRadius: 2,
+                    cursor: 'pointer',
+                    fontFamily: 'inherit',
+                  }}
+                >
+                  {t('send')}
+                </motion.button>
+              </motion.form>
+            ) : (
+              <motion.div
+                key="sent"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{
+                  border: '1px solid var(--line, rgba(21,18,15,0.13))',
+                  borderRadius: 3,
+                  padding: '40px 32px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 12,
+                }}
+              >
+                <span style={{
+                  width: 12,
+                  height: 12,
+                  background: 'var(--accent, #0E7A69)',
+                  display: 'inline-block',
+                }} />
+                <p style={{
+                  margin: 0,
+                  fontSize: 20,
+                  fontWeight: 600,
+                  letterSpacing: '-0.01em',
+                  color: 'var(--fg, #15120f)',
+                }}>
+                  {t('sent')}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </ScrollReveal>
+      </div>
+    </section>
+  );
+}

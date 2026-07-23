@@ -1,0 +1,67 @@
+{
+  "nav": {
+    "services": "Services",
+    "process": "Process",
+    "work": "Work",
+    "team": "Team",
+    "contact": "Contact"
+  },
+  "cta": "Start a project",
+  "heroKicker": "Design · Frontend · Backend",
+  "heroTitle": "We design and build complete software products — end to end.",
+  "heroNote": "A team that builds software together, from the first idea to launch.",
+  "servicesTitle": "What we do",
+  "services": [
+    { "title": "Web apps", "desc": "Fast, accessible web applications built on a solid architecture." },
+    { "title": "MVPs", "desc": "Your idea turned into a working product in weeks, focused on what matters." },
+    { "title": "Backend & APIs", "desc": "Reliable systems, clean data models, well-documented APIs." },
+    { "title": "Product design", "desc": "Interfaces and flows designed to be used, not just admired." },
+    { "title": "Full product builds", "desc": "From first sketch to production. One team owns design, frontend, and backend." },
+    { "title": "Custom software", "desc": "Tailored builds that solve a specific problem, not off-the-shelf." },
+    { "title": "Mobile Apps", "desc": "Native and cross-platform mobile applications for iOS and Android, built with React Native or Flutter." }
+  ],
+  "processTitle": "How we work",
+  "processIntro": "A clear path from idea to shipped product. No black boxes, no surprises.",
+  "steps": [
+    { "n": "01", "title": "Understand", "desc": "We learn your business, users, and constraints before writing a line of code." },
+    { "n": "02", "title": "Design", "desc": "We turn requirements into flows, then into interfaces you can react to early." },
+    { "n": "03", "title": "Build", "desc": "Frontend and backend built in parallel, in small reviewable increments." },
+    { "n": "04", "title": "Ship", "desc": "We deploy, measure, and hand over a product you fully own." }
+  ],
+  "workTitle": "Selected work",
+  "workIntro": "Case studies coming soon.",
+  "workCta": "View all projects",
+  "imgLabel": "project image",
+  "projectTitle": "Project title",
+  "projectDesc": "One line describing the outcome we delivered.",
+  "tags": {
+    "web": "Web app",
+    "api": "Backend",
+    "product": "Product design",
+    "mobile": "Mobile",
+    "platform": "Platform"
+  },
+  "teamTitle": "The team",
+  "teamIntro": "Three people. No account managers, no hand-offs — you work directly with the people building your product.",
+  "aboutEyebrow": "About",
+  "aboutTitle": "Who we are",
+  "aboutBody": "We are a small, focused team of engineers and designers who take on one product at a time. You work directly with the people building your product — not a manager or an account handler.",
+  "aboutExtra": "Every project starts with understanding your users and your market, then moves through design and development in tight loops until we ship something you are proud of. No handoffs, no layers — just the people building your product talking directly to you.",
+  "roles": ["Software Engineer", "Frontend Developer", "Product Designer"],
+  "bios": [
+    "Designs the systems and APIs that keep products fast and reliable as they grow.",
+    "Turns designs into accessible, responsive interfaces that feel effortless.",
+    "Shapes how the product looks, feels, and flows — from first idea to final pixel."
+  ],
+  "photoLabel": "photo",
+  "contactTitle": "Let's build something",
+  "contactIntro": "Tell us about the product you want to build. We reply within two business days.",
+  "emailDirect": "Prefer email?",
+  "email": "hello@cuvatex.com",
+  "nameLabel": "Name",
+  "emailLabel": "Email",
+  "msgLabel": "What do you want to build?",
+  "send": "Send message",
+  "sent": "Thanks — we will be in touch soon.",
+  "footer": "© 2026 CUVATEX. Available for new projects."
+}

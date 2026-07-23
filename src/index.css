@@ -1,0 +1,32 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background: var(--bg, #f6f5f2);
+  color: var(--fg, #15120f);
+  font-family: 'IBM Plex Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+a {
+  color: var(--accent, #0E7A69);
+}
+
+::selection {
+  background: var(--accent, #0E7A69);
+  color: #fff;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}

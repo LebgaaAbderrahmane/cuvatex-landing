@@ -1,0 +1,67 @@
+{
+  "nav": {
+    "services": "Services",
+    "process": "Méthode",
+    "work": "Projets",
+    "team": "Équipe",
+    "contact": "Contact"
+  },
+  "cta": "Démarrer un projet",
+  "heroKicker": "Design · Frontend · Backend",
+  "heroTitle": "Nous concevons et développons des produits logiciels complets, de bout en bout.",
+  "heroNote": "Une équipe qui construit des logiciels ensemble, de la première idée au lancement.",
+  "servicesTitle": "Ce que nous faisons",
+  "services": [
+    { "title": "Applications web", "desc": "Des applications web rapides et accessibles, sur une architecture solide." },
+    { "title": "MVP", "desc": "Votre idée transformée en produit fonctionnel en quelques semaines, centré sur l'essentiel." },
+    { "title": "Backend & API", "desc": "Des systèmes fiables, des modèles de données clairs, des API bien documentées." },
+    { "title": "Design produit", "desc": "Des interfaces et des parcours pensés pour être utilisés, pas seulement admirés." },
+    { "title": "Produits complets", "desc": "Du premier croquis à la production. Une équipe pour le design, le frontend et le backend." },
+    { "title": "Logiciels sur mesure", "desc": "Des développements sur mesure qui résolvent un problème précis, pas des solutions toutes faites." },
+    { "title": "Applications mobiles", "desc": "Applications mobiles natives et multiplateformes pour iOS et Android, construites avec React Native ou Flutter." }
+  ],
+  "processTitle": "Notre méthode",
+  "processIntro": "Un chemin clair de l'idée au produit livré. Aucune boîte noire, aucune surprise.",
+  "steps": [
+    { "n": "01", "title": "Comprendre", "desc": "Nous étudions votre activité, vos utilisateurs et vos contraintes avant d'écrire une ligne de code." },
+    { "n": "02", "title": "Concevoir", "desc": "Nous transformons les besoins en parcours, puis en interfaces que vous validez tôt." },
+    { "n": "03", "title": "Développer", "desc": "Frontend et backend développés en parallèle, par petites étapes vérifiables." },
+    { "n": "04", "title": "Livrer", "desc": "Nous déployons, mesurons et livrons un produit qui vous appartient entièrement." }
+  ],
+  "workTitle": "Projets sélectionnés",
+  "workIntro": "Études de cas à venir.",
+  "workCta": "Voir tous les projets",
+  "imgLabel": "image du projet",
+  "projectTitle": "Titre du projet",
+  "projectDesc": "Une ligne décrivant le résultat livré.",
+  "tags": {
+    "web": "App web",
+    "api": "Backend",
+    "product": "Design produit",
+    "mobile": "Mobile",
+    "platform": "Plateforme"
+  },
+  "teamTitle": "L'équipe",
+  "teamIntro": "Trois personnes. Pas d'intermédiaires, pas de transferts — vous travaillez directement avec ceux qui construisent votre produit.",
+  "aboutEyebrow": "À propos",
+  "aboutTitle": "Qui nous sommes",
+  "aboutBody": "Nous sommes une petite équipe focalisée d'ingénieurs et de designers qui prennent un seul produit à la fois. Vous travaillez directement avec les personnes qui construisent votre produit, pas un manager ni un chargé de compte.",
+  "aboutExtra": "Chaque projet commence par la compréhension de vos utilisateurs et de votre marché, puis progresse à travers le design et le développement en cycles serrés jusqu'à ce que nous livrions quelque chose dont vous êtes fier. Sans intermédiaires, sans couches — juste les personnes qui construisent votre produit qui vous parlent directement.",
+  "roles": ["Ingénieur logiciel", "Développeuse frontend", "Designer produit"],
+  "bios": [
+    "Conçoit les systèmes et les API qui gardent les produits rapides et fiables à mesure qu'ils grandissent.",
+    "Transforme les maquettes en interfaces accessibles et responsives, d'une fluidité naturelle.",
+    "Façonne l'apparence, le ressenti et les parcours du produit, de la première idée au pixel final."
+  ],
+  "photoLabel": "photo",
+  "contactTitle": "Construisons ensemble",
+  "contactIntro": "Parlez-nous du produit que vous voulez construire. Nous répondons sous deux jours ouvrés.",
+  "emailDirect": "Vous préférez l'e-mail ?",
+  "email": "hello@cuvatex.com",
+  "nameLabel": "Nom",
+  "emailLabel": "E-mail",
+  "msgLabel": "Que voulez-vous construire ?",
+  "send": "Envoyer",
+  "sent": "Merci — nous vous répondrons bientôt.",
+  "footer": "© 2026 CUVATEX. Disponible pour de nouveaux projets."
+}
