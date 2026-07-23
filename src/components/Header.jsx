@@ -52,15 +52,10 @@ export default function Header() {
             marginInlineEnd: 'auto',
           }}
         >
-          <motion.span
-            style={{
-              width: 12,
-              height: 12,
-              background: 'var(--accent, #0E7A69)',
-              display: 'inline-block',
-            }}
-            animate={{ scale: [1, 1.15, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          <img
+            src="/Cuvatex_logo.png"
+            alt="CUVATEX"
+            style={{ height: 28, width: 'auto', display: 'block' }}
           />
           CUVATEX
         </a>

@@ -1,16 +1,69 @@
-# React + Vite
+# CUVATEX Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A multilingual portfolio site for CUVATEX — a software product team.
 
-Currently, two official plugins are available:
+**Stack:** React 19, Vite 8, Framer Motion, i18next, pnpm
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Quick start
 
-## React Compiler
+### With Docker
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+docker compose up
+```
 
-## Expanding the Oxlint configuration
+Open [http://localhost:5173](http://localhost:5173) — hot reload works automatically.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+### Without Docker
+
+```bash
+pnpm install
+pnpm dev
+```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start dev server with hot reload |
+| `pnpm build` | Production build to `dist/` |
+| `pnpm preview` | Preview production build locally |
+| `pnpm lint` | Lint source with oxlint |
+
+## Features
+
+- **Multilingual** — English, French, Arabic (RTL)
+- **Dark/light theme** — persisted to localStorage
+- **Scroll animations** — Framer Motion reveal on scroll
+- **Responsive** — mobile-first layout
+- **Docker** — dev & production Dockerfiles included
+
+## Production build
+
+```bash
+docker build --target prod -t cuvatex .
+docker run -p 8080:80 cuvatex
+```
+
+Or without Docker:
+
+```bash
+pnpm build
+pnpm preview
+```
+
+## Project structure
+
+```
+src/
+├── components/   — React components (Header, Hero, Services, etc.)
+├── i18n/         — Translation JSON files (en, fr, ar)
+├── theme/        — Theme context (light/dark)
+├── App.jsx       — Root layout
+├── main.jsx      — Entry point
+└── index.css     — Global styles
+```
+
+## License
+
+Private — CUVATEX
