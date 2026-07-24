@@ -3,13 +3,36 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import ScrollReveal from './ScrollReveal';
 
+const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
+
 export default function Contact() {
   const { t } = useTranslation();
-  const [sent, setSent] = useState(false);
+  // status: 'idle' | 'sending' | 'sent' | 'error'
+  const [status, setStatus] = useState('idle');
+  const sent = status === 'sent';
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
-    setSent(true);
+    setStatus('sending');
+
+    const formData = new FormData(e.target);
+    formData.append('access_key', WEB3FORMS_KEY);
+    formData.append('subject', 'New message from cuvatex.com');
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStatus('sent');
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
   }
 
   return (
@@ -97,6 +120,15 @@ export default function Contact() {
                 exit={{ opacity: 0 }}
                 style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
               >
+                {/* Honeypot — hidden from users, catches bots */}
+                <input
+                  type="checkbox"
+                  name="botcheck"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ display: 'none' }}
+                />
                 <label style={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -199,8 +231,9 @@ export default function Contact() {
 
                 <motion.button
                   type="submit"
-                  whileHover={{ opacity: 0.92 }}
-                  whileTap={{ scale: 0.98 }}
+                  disabled={status === 'sending'}
+                  whileHover={status === 'sending' ? {} : { opacity: 0.92 }}
+                  whileTap={status === 'sending' ? {} : { scale: 0.98 }}
                   style={{
                     alignSelf: 'flex-start',
                     background: 'var(--accent, #0E7A69)',
@@ -210,12 +243,22 @@ export default function Contact() {
                     fontSize: 16,
                     padding: '14px 28px',
                     borderRadius: 2,
-                    cursor: 'pointer',
+                    cursor: status === 'sending' ? 'default' : 'pointer',
+                    opacity: status === 'sending' ? 0.7 : 1,
                     fontFamily: 'inherit',
                   }}
                 >
-                  {t('send')}
+                  {status === 'sending' ? t('sending') : t('send')}
                 </motion.button>
+
+                {status === 'error' && (
+                  <p
+                    role="alert"
+                    style={{ margin: 0, fontSize: 14, color: 'var(--accent, #0E7A69)' }}
+                  >
+                    {t('error')}
+                  </p>
+                )}
               </motion.form>
             ) : (
               <motion.div
