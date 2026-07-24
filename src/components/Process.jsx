@@ -1,50 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import ScrollReveal from './ScrollReveal';
-import { useEffect, useRef, useState } from 'react';
-
-function StepLine() {
-  const lineRef = useRef(null);
-  const [drawn, setDrawn] = useState(false);
-
-  useEffect(() => {
-    const el = lineRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setDrawn(true);
-          io.unobserve(el);
-        }
-      },
-      { threshold: 0.3 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={lineRef}
-      style={{
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        insetInlineStart: 0,
-        width: 1,
-        background: 'var(--line, rgba(21,18,15,0.13))',
-        overflow: 'hidden',
-      }}
-    >
-      <motion.div
-        style={{ width: 1, background: 'var(--accent, #0E7A69)', height: '100%' }}
-        initial={{ scaleY: 0, transformOrigin: 'top' }}
-        animate={drawn ? { scaleY: 1 } : {}}
-        transition={{ duration: 1, ease: [0.2, 0.6, 0.2, 1] }}
-      />
-    </div>
-  );
-}
 
 export default function Process() {
   const { t } = useTranslation();
@@ -108,8 +64,7 @@ export default function Process() {
           display: 'flex',
           flexDirection: 'column',
           gap: 'clamp(34px, 5vw, 52px)',
-          position: 'relative',
-          paddingInlineStart: 0,
+          borderInlineStart: '1px solid var(--line, rgba(21,18,15,0.13))',
         }}>
           {Array.isArray(steps) && steps.map((st, i) => (
             <ScrollReveal key={st.n} delay={i * 0.1}>
@@ -117,7 +72,6 @@ export default function Process() {
                 position: 'relative',
                 paddingInlineStart: 'clamp(32px, 5vw, 60px)',
               }}>
-                {i === 0 && <StepLine />}
                 <div style={{
                   position: 'absolute',
                   top: -1,
