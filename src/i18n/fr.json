@@ -62,6 +62,8 @@
   "emailLabel": "E-mail",
   "msgLabel": "Que voulez-vous construire ?",
   "send": "Envoyer",
+  "sending": "Envoi…",
   "sent": "Merci — nous vous répondrons bientôt.",
+  "error": "Une erreur est survenue. Réessayez ou écrivez-nous directement.",
   "footer": "© 2026 CUVATEX. Disponible pour de nouveaux projets."
 }
