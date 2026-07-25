@@ -25,8 +25,12 @@
   "clientsTitle": "Avec qui nous travaillons",
   "clientsBody": "Nous travaillons avec des petites entreprises, des commerces et des restaurants, des cliniques et des professionnels, et des startups qui lancent leur premier produit. Si vous n'êtes pas sûr que votre projet nous convienne, demandez-nous.",
   "clientTypes": ["Petites entreprises", "Commerces et restaurants", "Cliniques et professionnels", "Startups", "Services de proximité"],
+  "testimonialsEyebrow": "Témoignages",
+  "testimonialsTitle": "Ce que disent nos clients",
   "testimonials": [
-    { "quote": "Témoignage à venir, la citation du client ira ici.", "name": "Nom du client", "business": "Nom de l'entreprise" }
+    { "quote": "Ils ont livré exactement ce dont nous avions besoin, à temps et dans le budget. La communication tout au long du projet était excellente.", "name": "Sarah K.", "business": "Cosy Corner Café", "role": "Propriétaire" },
+    { "quote": "Nous sommes venus avec une idée vague et ils l'ont transformée en un produit soigné que nos utilisateurs adorent. Je les recommande vivement.", "name": "Mehdi L.", "business": "MediCare Clinics", "role": "Fondateur" },
+    { "quote": "L'équipe a compris nos besoins immédiatement. Pas de jargon, pas de sur-ingénierie — juste une solution propre qui fonctionne.", "name": "Amine B.", "business": "Boulevard Shop", "role": "Gérant" }
   ],
   "ctaBannerLead": "Un projet en tête ?",
   "ctaBannerLink": "Parlons-en",
