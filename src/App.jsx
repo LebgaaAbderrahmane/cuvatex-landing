@@ -3,10 +3,15 @@ import { useTranslation } from 'react-i18next';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Services from './components/Services';
+import Clients from './components/Clients';
 import Process from './components/Process';
 import Work from './components/Work';
+import Testimonials from './components/Testimonials';
+import CtaBanner from './components/CtaBanner';
 import About from './components/About';
 import Team from './components/Team';
+import Faq from './components/Faq';
+import Pricing from './components/Pricing';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import BackToTop from './components/BackToTop';
@@ -26,10 +31,16 @@ export default function App() {
       <main>
         <Hero />
         <Services />
+        <Clients />
         <Process />
         <Work />
+        <Testimonials />
+        <CtaBanner />
         <About />
         <Team />
+        <Faq />
+        <CtaBanner />
+        <Pricing />
         <Contact />
       </main>
       <Footer />

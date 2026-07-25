@@ -90,6 +90,14 @@ export default function Hero() {
               {t('cta')}
               <span aria-hidden="true">{dirArrow[i18n.language] || '\u2192'}</span>
             </motion.a>
+            <p style={{
+              margin: '16px 0 0',
+              fontSize: 14,
+              color: 'var(--muted, #6c665e)',
+              lineHeight: 1.5,
+            }}>
+              {t('heroAvailability')}
+            </p>
           </div>
         </ScrollReveal>
       </div>
