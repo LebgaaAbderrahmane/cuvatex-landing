@@ -107,6 +107,20 @@ export default function Contact() {
               </a>
             </p>
           </ScrollReveal>
+
+          <ScrollReveal delay={0.25}>
+            <p style={{ margin: '12px 0 0', fontSize: 16, color: 'var(--muted, #6c665e)' }}>
+              {t('whatsappDirect')}{' '}
+              <a
+                href="https://wa.me/PHONE_NUMBER_PLACEHOLDER"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: 'var(--accent, #0E7A69)', fontWeight: 600, textDecoration: 'none' }}
+              >
+                {t('whatsappLink')}
+              </a>
+            </p>
+          </ScrollReveal>
         </div>
 
         <ScrollReveal delay={0.2}>

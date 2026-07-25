@@ -67,7 +67,7 @@ export default function Header() {
           alignItems: 'center',
           fontSize: 15,
         }}>
-          {['services', 'process', 'work', 'team', 'contact'].map(section => (
+          {['services', 'process', 'work', 'team', 'faq', 'contact'].map(section => (
             <a
               key={section}
               href={`#${section}`}
