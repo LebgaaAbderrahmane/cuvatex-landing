@@ -1,11 +1,56 @@
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../theme/ThemeContext';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import LanguageSwitcher from './LanguageSwitcher';
+
+const sections = ['services', 'process', 'work', 'team', 'faq', 'contact'];
+
+// Below this width the six nav links wrap onto extra rows and push the sticky
+// header to ~200px, so they move behind a toggle instead.
+const MOBILE_QUERY = '(max-width: 767px)';
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(MOBILE_QUERY).matches
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_QUERY);
+    function onChange(e) { setIsMobile(e.matches); }
+    mq.addEventListener('change', onChange);
+    setIsMobile(mq.matches);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  return isMobile;
+}
+
+const linkStyle = {
+  textDecoration: 'none',
+  color: 'var(--muted, #6c665e)',
+  fontWeight: 500,
+  transition: 'color 0.2s',
+};
 
 export default function Header() {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
+  const isMobile = useIsMobile();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Close the panel when we grow past the breakpoint, otherwise it stays
+  // mounted and overlaps the desktop nav.
+  useEffect(() => {
+    if (!isMobile) setMenuOpen(false);
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onKey(e) { if (e.key === 'Escape') setMenuOpen(false); }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
 
   return (
     <motion.header
@@ -53,30 +98,26 @@ export default function Header() {
           CUVATEX
         </a>
 
-        <nav style={{
-          display: 'flex',
-          gap: 22,
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          fontSize: 15,
-        }}>
-          {['services', 'process', 'work', 'team', 'faq', 'contact'].map(section => (
-            <a
-              key={section}
-              href={`#${section}`}
-              style={{
-                textDecoration: 'none',
-                color: 'var(--muted, #6c665e)',
-                fontWeight: 500,
-                transition: 'color 0.2s',
-              }}
-              onMouseEnter={e => e.target.style.color = 'var(--fg, #15120f)'}
-              onMouseLeave={e => e.target.style.color = 'var(--muted, #6c665e)'}
-            >
-              {t(`nav.${section}`)}
-            </a>
-          ))}
-        </nav>
+        {!isMobile && (
+          <nav style={{
+            display: 'flex',
+            gap: 22,
+            alignItems: 'center',
+            fontSize: 15,
+          }}>
+            {sections.map(section => (
+              <a
+                key={section}
+                href={`#${section}`}
+                style={linkStyle}
+                onMouseEnter={e => e.target.style.color = 'var(--fg, #15120f)'}
+                onMouseLeave={e => e.target.style.color = 'var(--muted, #6c665e)'}
+              >
+                {t(`nav.${section}`)}
+              </a>
+            ))}
+          </nav>
+        )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <LanguageSwitcher />
@@ -118,8 +159,82 @@ export default function Header() {
               </svg>
             )}
           </motion.button>
+
+          {isMobile && (
+            <motion.button
+              type="button"
+              onClick={() => setMenuOpen(o => !o)}
+              whileTap={{ scale: 0.9 }}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-nav"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 44,
+                height: 44,
+                border: '1px solid var(--line, rgba(21,18,15,0.13))',
+                background: 'transparent',
+                color: 'var(--fg, #15120f)',
+                borderRadius: 2,
+                cursor: 'pointer',
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" aria-hidden="true">
+                <motion.line x1="3" y1="6" x2="17" y2="6" animate={{ y: menuOpen ? 4 : 0, rotate: menuOpen ? 45 : 0 }} style={{ transformOrigin: '10px 6px' }} transition={{ duration: 0.2 }} />
+                <motion.line x1="3" y1="14" x2="17" y2="14" animate={{ y: menuOpen ? -4 : 0, rotate: menuOpen ? -45 : 0 }} style={{ transformOrigin: '10px 14px' }} transition={{ duration: 0.2 }} />
+              </svg>
+            </motion.button>
+          )}
         </div>
       </div>
+
+      <AnimatePresence>
+        {isMobile && menuOpen && (
+          <motion.nav
+            id="mobile-nav"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.2, 0.6, 0.2, 1] }}
+            style={{
+              // Overlay, not in-flow: an in-flow panel changes document height,
+              // so closing it after an anchor click shifts the whole page up by
+              // the panel height and the target heading ends up off-screen.
+              position: 'absolute',
+              top: '100%',
+              insetInline: 0,
+              overflow: 'hidden',
+              background: 'var(--bg, #f6f5f2)',
+              borderBottom: '1px solid var(--line, rgba(21,18,15,0.13))',
+              boxShadow: '0 8px 20px rgba(0,0,0,0.10)',
+            }}
+          >
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '8px clamp(20px, 5vw, 48px) 16px',
+            }}>
+              {sections.map(section => (
+                <a
+                  key={section}
+                  href={`#${section}`}
+                  onClick={() => setMenuOpen(false)}
+                  style={{
+                    ...linkStyle,
+                    fontSize: 17,
+                    padding: '13px 0',
+                    borderBottom: '1px solid var(--line, rgba(21,18,15,0.13))',
+                  }}
+                >
+                  {t(`nav.${section}`)}
+                </a>
+              ))}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }
