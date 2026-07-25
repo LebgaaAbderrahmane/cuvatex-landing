@@ -1,6 +1,8 @@
-import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Building2, Store, Heart, Rocket, MapPin } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
+
+const clientIcons = [Building2, Store, Heart, Rocket, MapPin];
 
 export default function Clients() {
   const { t } = useTranslation();
@@ -70,17 +72,30 @@ export default function Clients() {
             letterSpacing: '-0.01em',
             color: 'var(--fg, #15120f)',
           }}>
-            {Array.isArray(items) && items.map((item, i) => (
-              <Fragment key={i}>
-                {i > 0 && (
-                  <span
-                    aria-hidden="true"
-                    style={{ width: 6, height: 6, background: 'var(--accent, #0E7A69)', display: 'inline-block', flex: 'none' }}
-                  />
-                )}
-                <span>{item}</span>
-              </Fragment>
-            ))}
+            {Array.isArray(items) && items.map((item, i) => {
+              const Icon = clientIcons[i] || Building2;
+              return (
+                <span key={i} style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}>
+                  <span style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 8,
+                    background: 'color-mix(in srgb, var(--accent, #0E7A69) 10%, transparent)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flex: 'none',
+                  }}>
+                    <Icon size={16} color="var(--accent, #0E7A69)" strokeWidth={1.5} />
+                  </span>
+                  <span>{item}</span>
+                </span>
+              );
+            })}
           </div>
         </ScrollReveal>
       </div>

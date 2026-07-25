@@ -4,6 +4,10 @@ import ScrollReveal from './ScrollReveal';
 
 const names = ['Alex Morgan', 'Sam Rivera', 'Jordan Lee'];
 
+function getInitials(name) {
+  return name.split(' ').map(n => n[0]).join('');
+}
+
 export default function Team() {
   const { t } = useTranslation();
   const roles = t('roles', { returnObjects: true });
@@ -11,6 +15,7 @@ export default function Team() {
 
   const members = names.map((name, i) => ({
     name,
+    initials: getInitials(name),
     role: Array.isArray(roles) ? roles[i] : '',
     bio: Array.isArray(bios) ? bios[i] : '',
   }));
@@ -81,29 +86,22 @@ export default function Team() {
               >
                 <div style={{
                   aspectRatio: '4/5',
-                  border: '1px solid var(--line, rgba(21,18,15,0.13))',
-                  background: 'repeating-linear-gradient(135deg, var(--line, rgba(21,18,15,0.13)) 0 1px, transparent 1px 13px)',
+                  borderRadius: 3,
+                  overflow: 'hidden',
+                  background: 'color-mix(in srgb, var(--accent, #0E7A69) 8%, transparent)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: 3,
-                  overflow: 'hidden',
+                  border: '1px solid var(--line, rgba(21,18,15,0.13))',
                 }}>
-                  <svg viewBox="0 0 400 500" style={{ width: '100%', height: '100%' }}>
-                    <rect width="400" height="500" fill="var(--surface, #fff)" />
-                    <circle cx="200" cy="180" r="60" fill="var(--accent, #0E7A69)" opacity="0.08" />
-                    <rect x="140" y="300" width="120" height="80" rx="4" fill="var(--accent, #0E7A69)" opacity="0.06" />
-                    <text
-                      x="200" y="420"
-                      textAnchor="middle"
-                      fill="var(--muted, #6c665e)"
-                      fontSize="13"
-                      fontFamily="'IBM Plex Sans', monospace"
-                      letterSpacing="0.06em"
-                    >
-                      {t('photoLabel')}
-                    </text>
-                  </svg>
+                  <span style={{
+                    fontSize: 'clamp(48px, 6vw, 64px)',
+                    fontWeight: 600,
+                    color: 'var(--accent, #0E7A69)',
+                    opacity: 0.25,
+                  }}>
+                    {m.initials}
+                  </span>
                 </div>
                 <h3 style={{
                   margin: '20px 0 0',
