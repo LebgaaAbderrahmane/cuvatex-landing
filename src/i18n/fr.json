@@ -11,7 +11,7 @@
   "heroKicker": "Idée · Design · Réalisation · Lancement",
   "heroTitle": "Nous concevons et développons des produits logiciels complets, de bout en bout.",
   "heroNote": "Une équipe qui construit des logiciels ensemble, de la première idée au lancement.",
-  "heroAvailability": "Disponibles pour de nouveaux projets — nous répondons sous deux jours ouvrés.",
+  "heroAvailability": "Disponibles pour de nouveaux projets, nous répondons sous deux jours ouvrés.",
   "servicesTitle": "Ce que nous faisons",
   "services": [
     { "title": "Sites et applications web", "desc": "Des sites et applications web rapides, faciles à utiliser et conçus pour durer." },
@@ -26,7 +26,7 @@
   "clientsBody": "Nous travaillons avec des petites entreprises, des commerces et des restaurants, des cliniques et des professionnels, et des startups qui lancent leur premier produit. Si vous n'êtes pas sûr que votre projet nous convienne, demandez-nous.",
   "clientTypes": ["Petites entreprises", "Commerces et restaurants", "Cliniques et professionnels", "Startups", "Services de proximité"],
   "testimonials": [
-    { "quote": "Témoignage à venir — la citation du client ira ici.", "name": "Nom du client", "business": "Nom de l'entreprise" }
+    { "quote": "Témoignage à venir, la citation du client ira ici.", "name": "Nom du client", "business": "Nom de l'entreprise" }
   ],
   "ctaBannerLead": "Un projet en tête ?",
   "ctaBannerLink": "Parlons-en",
@@ -55,11 +55,11 @@
     "platform": "Plateforme"
   },
   "teamTitle": "L'équipe",
-  "teamIntro": "Trois personnes. Pas d'intermédiaires, pas de transferts — vous travaillez directement avec ceux qui construisent votre produit.",
+  "teamIntro": "Trois personnes. Pas d'intermédiaires, pas de transferts, vous travaillez directement avec ceux qui construisent votre produit.",
   "aboutEyebrow": "À propos",
   "aboutTitle": "Qui nous sommes",
   "aboutBody": "Nous sommes une équipe d'ingénieurs et de designers qui prennent un seul produit à la fois. Vous travaillez directement avec les personnes qui construisent votre produit, pas un manager ni un chargé de compte.",
-  "aboutExtra": "Chaque projet commence par la compréhension de vos utilisateurs et de votre marché, puis progresse à travers le design et le développement en cycles serrés jusqu'à ce que nous livrions quelque chose dont vous êtes fier. Sans intermédiaires, sans couches — juste les personnes qui construisent votre produit qui vous parlent directement.",
+  "aboutExtra": "Chaque projet commence par la compréhension de vos utilisateurs et de votre marché, puis progresse à travers le design et le développement en cycles serrés jusqu'à ce que nous livrions quelque chose dont vous êtes fier. Sans intermédiaires, sans couches, juste les personnes qui construisent votre produit qui vous parlent directement.",
   "roles": ["Ingénieur logiciel", "Développeuse frontend", "Designer produit"],
   "bios": [
     "Conçoit les systèmes et les API qui gardent les produits rapides et fiables à mesure qu'ils grandissent.",
@@ -86,7 +86,7 @@
   "msgLabel": "Que voulez-vous construire ?",
   "send": "Envoyer",
   "sending": "Envoi…",
-  "sent": "Merci — nous vous répondrons bientôt.",
+  "sent": "Merci, nous vous répondrons bientôt.",
   "error": "Une erreur est survenue. Réessayez ou écrivez-nous directement.",
   "footer": "© 2026 CUVATEX. Disponible pour de nouveaux projets."
 }
