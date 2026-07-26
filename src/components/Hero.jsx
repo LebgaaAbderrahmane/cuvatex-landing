@@ -110,7 +110,7 @@ export default function Hero() {
           </ScrollReveal>
         </div>
 
-        <div style={{ flex: '1 1 360px', display: 'flex', justifyContent: 'center' }}>
+        <div style={{ flex: '1 1 420px', display: 'flex', justifyContent: 'center' }}>
           <HeroIllustration />
         </div>
       </div>
