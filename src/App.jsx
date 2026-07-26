@@ -39,7 +39,6 @@ export default function App() {
         <About />
         <Team />
         <Faq />
-        <CtaBanner />
         <Pricing />
         <Contact />
       </main>

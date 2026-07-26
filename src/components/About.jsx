@@ -86,33 +86,20 @@ export default function About() {
               border: '1px solid var(--line, rgba(21,18,15,0.13))',
               borderRadius: 3,
               overflow: 'hidden',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'var(--bg, #f6f5f2)',
             }}
             whileHover={{ scale: 1.02 }}
             transition={{ type: 'spring', stiffness: 200 }}
           >
-            <svg viewBox="0 0 500 375" style={{ width: '100%', height: '100%' }}>
-              <rect width="500" height="375" fill="var(--surface, #fff)" />
-              <circle cx="250" cy="160" r="60" fill="var(--accent, #0E7A69)" opacity="0.08" />
-              <circle cx="250" cy="160" r="40" fill="var(--accent, #0E7A69)" opacity="0.12" />
-              <rect x="170" y="250" width="160" height="8" rx="4" fill="var(--line, rgba(21,18,15,0.13))" />
-              <rect x="190" y="270" width="120" height="6" rx="3" fill="var(--line, rgba(21,18,15,0.13))" />
-              <rect x="210" y="286" width="80" height="6" rx="3" fill="var(--line, rgba(21,18,15,0.13))" />
-              <rect x="120" y="220" width="260" height="1" fill="var(--line, rgba(21,18,15,0.13))" />
-              <text
-                x="250" y="340"
-                textAnchor="middle"
-                fill="var(--muted, #6c665e)"
-                fontSize="13"
-                fontFamily="'IBM Plex Sans', monospace"
-                letterSpacing="0.06em"
-              >
-                {t('photoLabel')}
-              </text>
-            </svg>
+            <img
+              src="/whoWeAre.jpg"
+              alt="CUVATEX team workspace"
+              loading="lazy"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
           </motion.div>
         </ScrollReveal>
       </div>

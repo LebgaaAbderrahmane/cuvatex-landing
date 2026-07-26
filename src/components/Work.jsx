@@ -1,14 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import ScrollReveal from './ScrollReveal';
 
-const projectDefs = ['web', 'api', 'product', 'mobile', 'web', 'platform'];
+const projectDefs = ['web', 'api', 'product', 'mobile', 'web', 'platform', 'web', 'api'];
 
 export default function Work() {
   const { t } = useTranslation();
   const [showAll, setShowAll] = useState(false);
-  const visible = showAll ? projectDefs : projectDefs.slice(0, 4);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)');
+    setIsMobile(mq.matches);
+    function handler(e) { setIsMobile(e.matches); }
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  const maxVisible = showAll ? projectDefs.length : (isMobile ? 3 : 6);
+  const visible = projectDefs.slice(0, maxVisible);
+  const hasHidden = !showAll && projectDefs.length > maxVisible;
 
   return (
     <section
@@ -63,7 +75,7 @@ export default function Work() {
           </ScrollReveal>
         </div>
 
-        <div style={{
+        <motion.div layout style={{
           marginTop: 'clamp(36px, 5vw, 56px)',
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
@@ -74,42 +86,29 @@ export default function Work() {
               <motion.article
                 key={k + i}
                 layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                transition={{ duration: 0.35, delay: i * 0.05 }}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  animation: 'none',
                 }}
                 whileHover={{ y: -3 }}
               >
                 <div style={{
                   aspectRatio: '4/3',
                   border: '1px solid var(--line, rgba(21,18,15,0.13))',
-                  background: 'repeating-linear-gradient(135deg, var(--line, rgba(21,18,15,0.13)) 0 1px, transparent 1px 13px)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
                   borderRadius: 3,
                   overflow: 'hidden',
+                  background: 'var(--surface, #fff)',
                 }}>
-                  <svg viewBox="0 0 400 300" style={{ width: '100%', height: '100%' }}>
-                    <rect width="400" height="300" fill="var(--surface, #fff)" />
-                    <rect x="140" y="110" width="120" height="80" rx="4" fill="var(--accent, #0E7A69)" opacity="0.15" />
-                    <text
-                      x="200" y="160"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill="var(--muted, #6c665e)"
-                      fontSize="14"
-                      fontFamily="'IBM Plex Sans', monospace"
-                      letterSpacing="0.06em"
-                    >
-                      {t('imgLabel')}
-                    </text>
-                  </svg>
+                  <img
+                    src={`https://picsum.photos/seed/project${i}/400/300`}
+                    alt={t('imgLabel')}
+                    loading="lazy"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
                 </div>
                 <div style={{ padding: '18px 2px 0' }}>
                   <div style={{
@@ -153,36 +152,71 @@ export default function Work() {
               </motion.article>
             ))}
           </AnimatePresence>
-        </div>
+        </motion.div>
 
-        {!showAll && projectDefs.length > 4 && (
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginTop: 'clamp(36px, 5vw, 52px)',
-          }}>
-            <motion.button
-              type="button"
-              onClick={() => setShowAll(true)}
-              whileHover={{ background: 'var(--accent, #0E7A69)', color: 'var(--accent-fg, #fff)' }}
-              whileTap={{ scale: 0.97 }}
-              style={{
-                background: 'transparent',
-                border: '1px solid var(--accent, #0E7A69)',
-                color: 'var(--accent, #0E7A69)',
-                fontWeight: 600,
-                fontSize: 14,
-                letterSpacing: '0.04em',
-                padding: '12px 26px',
-                borderRadius: 2,
-                cursor: 'pointer',
-                transition: 'background 0.2s, color 0.2s',
-              }}
-            >
-              {t('workCta')}
-            </motion.button>
-          </div>
-        )}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: 'clamp(36px, 5vw, 52px)',
+          gap: 12,
+        }}>
+          <AnimatePresence mode="wait">
+            {hasHidden && (
+              <motion.button
+                key="show"
+                type="button"
+                onClick={() => setShowAll(true)}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                whileHover={{ background: 'var(--accent, #0E7A69)', color: 'var(--accent-fg, #fff)' }}
+                whileTap={{ scale: 0.97 }}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid var(--accent, #0E7A69)',
+                  color: 'var(--accent, #0E7A69)',
+                  fontWeight: 600,
+                  fontSize: 14,
+                  letterSpacing: '0.04em',
+                  padding: '12px 26px',
+                  borderRadius: 2,
+                  cursor: 'pointer',
+                  transition: 'background 0.2s, color 0.2s',
+                }}
+              >
+                {t('workCta')}
+              </motion.button>
+            )}
+            {showAll && (
+              <motion.button
+                key="hide"
+                type="button"
+                onClick={() => setShowAll(false)}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                whileHover={{ background: 'var(--accent, #0E7A69)', color: 'var(--accent-fg, #fff)' }}
+                whileTap={{ scale: 0.97 }}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid var(--line, rgba(21,18,15,0.13))',
+                  color: 'var(--muted, #6c665e)',
+                  fontWeight: 600,
+                  fontSize: 14,
+                  letterSpacing: '0.04em',
+                  padding: '12px 26px',
+                  borderRadius: 2,
+                  cursor: 'pointer',
+                  transition: 'background 0.2s, color 0.2s',
+                }}
+              >
+                Show less
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </section>
   );

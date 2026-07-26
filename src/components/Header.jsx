@@ -1,18 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../theme/ThemeContext';
 import { motion } from 'framer-motion';
-
-const langs = ['en', 'fr', 'ar'];
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Header() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
-
-  function setLang(code) {
-    i18n.changeLanguage(code);
-    document.documentElement.setAttribute('lang', code);
-    document.documentElement.setAttribute('dir', code === 'ar' ? 'rtl' : 'ltr');
-  }
 
   return (
     <motion.header
@@ -85,35 +78,8 @@ export default function Header() {
           ))}
         </nav>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div role="group" aria-label="Language" style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {langs.map(code => {
-              const active = i18n.language === code || (!i18n.language && code === 'en');
-              return (
-                <button
-                  key={code}
-                  type="button"
-                  onClick={() => setLang(code)}
-                  aria-label={code.toUpperCase()}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: '4px 5px',
-                    fontSize: 13,
-                    fontWeight: 600,
-                    letterSpacing: '0.03em',
-                    color: active ? 'var(--accent, #0E7A69)' : 'var(--muted, #6c665e)',
-                    borderBottom: active ? '2px solid var(--accent, #0E7A69)' : '2px solid transparent',
-                    borderRadius: 0,
-                    fontFamily: 'inherit',
-                  }}
-                >
-                  {code.toUpperCase()}
-                </button>
-              );
-            })}
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <LanguageSwitcher />
 
           <motion.button
             type="button"

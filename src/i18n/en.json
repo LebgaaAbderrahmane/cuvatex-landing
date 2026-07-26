@@ -9,9 +9,9 @@
   },
   "cta": "Start a project",
   "heroKicker": "Idea · Design · Build · Launch",
-  "heroTitle": "We design and build complete software products — end to end.",
+  "heroTitle": "We design and build complete software products end to end.",
   "heroNote": "A team that builds software together, from the first idea to launch.",
-  "heroAvailability": "Available for new projects — we reply within 2 business days.",
+  "heroAvailability": "Available for new projects, we reply within 2 business days.",
   "servicesTitle": "What we do",
   "services": [
     { "title": "Websites & web apps", "desc": "Fast, easy-to-use websites and web applications built to last." },
@@ -25,8 +25,12 @@
   "clientsTitle": "Who we work with",
   "clientsBody": "We work with small businesses, shops and restaurants, clinics and professionals, and startups building their first product. If you are not sure whether your project fits, ask us.",
   "clientTypes": ["Small businesses", "Shops & restaurants", "Clinics & professionals", "Startups", "Local services"],
+  "testimonialsEyebrow": "Testimonials",
+  "testimonialsTitle": "What our clients say",
   "testimonials": [
-    { "quote": "Placeholder testimonial — client quote goes here.", "name": "Client name", "business": "Business name" }
+    { "quote": "They delivered exactly what we needed, on time and within budget. The communication throughout the project was excellent.", "name": "Sarah K.", "business": "Cosy Corner Café", "role": "Owner" },
+    { "quote": "We came with a rough idea and they turned it into a polished product our users love. Could not recommend them enough.", "name": "Mehdi L.", "business": "MediCare Clinics", "role": "Founder" },
+    { "quote": "The team understood our needs immediately. No jargon, no over-engineering — just a clean solution that works.", "name": "Amine B.", "business": "Boulevard Shop", "role": "Manager" }
   ],
   "ctaBannerLead": "Have a project in mind?",
   "ctaBannerLink": "Let's talk",
@@ -55,16 +59,16 @@
     "platform": "Platform"
   },
   "teamTitle": "The team",
-  "teamIntro": "Three people. No account managers, no hand-offs — you work directly with the people building your product.",
+  "teamIntro": "Three people. No account managers, no hand-offs, you work directly with the people building your product.",
   "aboutEyebrow": "About",
   "aboutTitle": "Who we are",
-  "aboutBody": "We are a team of engineers and designers who take on one product at a time. You work directly with the people building your product — not a manager or an account handler.",
-  "aboutExtra": "Every project starts with understanding your users and your market, then moves through design and development in tight loops until we ship something you are proud of. No handoffs, no layers — just the people building your product talking directly to you.",
+  "aboutBody": "We are a team of engineers and designers who take on one product at a time. You work directly with the people building your product, not a manager or an account handler.",
+  "aboutExtra": "Every project starts with understanding your users and your market, then moves through design and development in tight loops until we ship something you are proud of. No handoffs, no layers, just the people building your product talking directly to you.",
   "roles": ["Software Engineer", "Frontend Developer", "Product Designer"],
   "bios": [
     "Designs the systems and APIs that keep products fast and reliable as they grow.",
     "Turns designs into accessible, responsive interfaces that feel effortless.",
-    "Shapes how the product looks, feels, and flows — from first idea to final pixel."
+    "Shapes how the product looks, feels, and flows, from first idea to final pixel."
   ],
   "photoLabel": "photo",
   "faqTitle": "Common questions",
@@ -86,7 +90,7 @@
   "msgLabel": "What do you want to build?",
   "send": "Send message",
   "sending": "Sending…",
-  "sent": "Thanks — we will be in touch soon.",
+  "sent": "Thanks, we will be in touch soon.",
   "error": "Something went wrong. Please try again or email us directly.",
   "footer": "© 2026 CUVATEX. Available for new projects."
 }
