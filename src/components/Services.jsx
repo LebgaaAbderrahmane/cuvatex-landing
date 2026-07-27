@@ -1,3 +1,4 @@
+import { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const serviceImages = [
@@ -15,48 +16,101 @@ export default function Services() {
   const { t } = useTranslation();
   const services = t('services', { returnObjects: true });
   const n = Array.isArray(services) ? services.length : 0;
+  const titleRef = useRef(null);
+  const sectionRef = useRef(null);
+  const containerRef = useRef(null);
+  const [titleH, setTitleH] = useState(0);
+  const [ty, setTy] = useState(0);
+
+  useLayoutEffect(() => {
+    if (titleRef.current) setTitleH(titleRef.current.getBoundingClientRect().height);
+    const handleResize = () => {
+      if (titleRef.current) setTitleH(titleRef.current.getBoundingClientRect().height);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!containerRef.current || n === 0) return;
+    let rafId;
+    const handleScroll = () => {
+      rafId = requestAnimationFrame(() => {
+        const container = containerRef.current;
+        if (!container) return;
+        const cr = container.getBoundingClientRect();
+        const cardSpace = window.innerHeight - 56 - titleH;
+        const lastCardStickyTop = 56 + titleH - (n - 1) * cardSpace;
+        const translateRange = 56 + titleH;
+        let progress = 0;
+        if (cr.top <= lastCardStickyTop) {
+          progress = Math.min((lastCardStickyTop - cr.top) / translateRange, 1);
+        }
+        setTy(progress * (56 + titleH));
+      });
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [n, titleH]);
 
   return (
     <section
       id="services"
+      ref={sectionRef}
       style={{
         scrollMarginTop: 80,
+        minHeight: '100dvh',
         borderTop: '1px solid var(--line, rgba(21,18,15,0.13))',
         background: 'var(--bg)',
       }}
     >
-      <div style={{
-        maxWidth: 1160,
-        margin: '0 auto',
-        padding: 'clamp(72px, 10vw, 120px) clamp(20px, 5vw, 48px) 0',
-      }}>
-        <p style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          margin: 0,
-          fontSize: 13,
-          letterSpacing: '0.16em',
-          textTransform: 'uppercase',
-          color: 'var(--muted, #6c665e)',
-          fontWeight: 600,
+      <div
+        ref={titleRef}
+        style={{
+          position: 'sticky',
+          top: 56,
+          zIndex: 49,
+          background: 'var(--bg)',
+          transform: `translateY(-${ty}px)`,
+        }}
+      >
+        <div style={{
+          maxWidth: 1160,
+          margin: '0 auto',
+          padding: 'clamp(24px, 4vw, 56px) clamp(20px, 5vw, 48px)',
         }}>
-          <span style={{ width: 7, height: 7, background: 'var(--accent, #0E7A69)', display: 'inline-block' }} />
-          {t('nav.services')}
-        </p>
-        <h2 style={{
-          fontSize: 'clamp(30px, 5vw, 52px)',
-          fontWeight: 600,
-          letterSpacing: '-0.02em',
-          lineHeight: 1.05,
-          margin: '16px 0 0',
-          maxWidth: '20ch',
-        }}>
-          {t('servicesTitle')}
-        </h2>
+          <p style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            margin: 0,
+            fontSize: 13,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: 'var(--muted, #6c665e)',
+            fontWeight: 600,
+          }}>
+            <span style={{ width: 7, height: 7, background: 'var(--accent, #0E7A69)', display: 'inline-block' }} />
+            {t('nav.services')}
+          </p>
+          <h2 style={{
+            fontSize: 'clamp(30px, 5vw, 52px)',
+            fontWeight: 600,
+            letterSpacing: '-0.02em',
+            lineHeight: 1.05,
+            margin: '8px 0 0',
+            maxWidth: '20ch',
+          }}>
+            {t('servicesTitle')}
+          </h2>
+        </div>
       </div>
 
-      <div style={{ height: `${n}00vh`, position: 'relative' }}>
+      <div ref={containerRef} style={{ height: `calc(${n} * (100dvh - 56px - ${titleH}px) + ${56 + titleH}px)`, position: 'relative', zIndex: 1 }}>
         {n > 0 && services.map((s, i) => {
           const isEven = i % 2 === 0;
           return (
@@ -64,14 +118,15 @@ export default function Services() {
               key={s.title}
               style={{
                 position: 'sticky',
-                top: 56,
-                height: '100dvh',
+                top: `calc(56px + ${titleH}px)`,
+                height: `calc(100dvh - 56px - ${titleH}px)`,
                 zIndex: i,
                 background: i % 2 === 0 ? 'var(--bg)' : 'var(--surface)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '0 clamp(20px, 5vw, 48px)',
+                paddingLeft: 'clamp(20px, 5vw, 48px)',
+                paddingRight: 'clamp(20px, 5vw, 48px)',
                 borderTop: i === 0 ? 'none' : '1px solid var(--line, rgba(21,18,15,0.13))',
               }}
             >
