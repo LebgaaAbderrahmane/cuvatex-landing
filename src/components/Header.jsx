@@ -68,7 +68,7 @@ export default function Header() {
       }}
     >
       <div style={{
-        maxWidth: 1160,
+        maxWidth: 1220,
         margin: '0 auto',
         padding: '14px clamp(20px, 5vw, 48px)',
         display: 'flex',
