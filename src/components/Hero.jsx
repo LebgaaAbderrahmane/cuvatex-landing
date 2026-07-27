@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import ScrollReveal from './ScrollReveal';
 import HeroShowcase from './HeroShowcase';
+import HeroBackground from './HeroBackground';
 
 const dirArrow = { en: '\u2192', fr: '\u2192', ar: '\u2190' };
 
@@ -21,8 +22,11 @@ export default function Hero() {
         display: 'flex',
         flexDirection: 'column',
         padding: '0 clamp(20px, 5vw, 48px)',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
+      <HeroBackground />
       <div style={{
         flex: 1,
         display: 'flex',

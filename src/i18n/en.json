@@ -24,7 +24,19 @@
   "clientsEyebrow": "Clients",
   "clientsTitle": "Who we work with",
   "clientsBody": "We work with small businesses, shops and restaurants, clinics and professionals, and startups building their first product. If you are not sure whether your project fits, ask us.",
-  "clientTypes": ["Small businesses", "Shops & restaurants", "Clinics & professionals", "Startups", "Local services"],
+  "clientTypes": [
+    { "name": "Small businesses", "desc": "Boutiques, freelancers, and local shops looking for a digital presence.", "stat": "40% of projects" },
+    { "name": "Shops & restaurants", "desc": "E-commerce sites, online ordering, and digital menus.", "stat": "25+ delivered" },
+    { "name": "Clinics & professionals", "desc": "Patient portals, booking systems, and practice management tools.", "stat": "15+ clinics" },
+    { "name": "Startups", "desc": "From idea to MVP — we help founders launch faster and iterate smarter.", "stat": "10+ MVPs" },
+    { "name": "Local services", "desc": "Service providers, craftsmen, and consultants needing a professional site.", "stat": "30+ sites" }
+  ],
+  "clientStats": [
+    { "number": "40+", "label": "Projects delivered" },
+    { "number": "4", "label": "Years in business" },
+    { "number": "30+", "label": "Happy clients" },
+    { "number": "98%", "label": "Satisfaction rate" }
+  ],
   "testimonialsEyebrow": "Testimonials",
   "testimonialsTitle": "What our clients say",
   "testimonials": [

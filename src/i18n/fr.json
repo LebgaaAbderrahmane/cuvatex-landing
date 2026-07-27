@@ -24,7 +24,19 @@
   "clientsEyebrow": "Clients",
   "clientsTitle": "Avec qui nous travaillons",
   "clientsBody": "Nous travaillons avec des petites entreprises, des commerces et des restaurants, des cliniques et des professionnels, et des startups qui lancent leur premier produit. Si vous n'êtes pas sûr que votre projet nous convienne, demandez-nous.",
-  "clientTypes": ["Petites entreprises", "Commerces et restaurants", "Cliniques et professionnels", "Startups", "Services de proximité"],
+  "clientTypes": [
+    { "name": "Petites entreprises", "desc": "Boutiques, indépendants et commerces locaux cherchant une présence numérique.", "stat": "40% des projets" },
+    { "name": "Commerces et restaurants", "desc": "Sites e-commerce, commandes en ligne et menus numériques.", "stat": "25+ livrés" },
+    { "name": "Cliniques et professionnels", "desc": "Portails patients, systèmes de rendez-vous et outils de gestion.", "stat": "15+ cliniques" },
+    { "name": "Startups", "desc": "De l'idée au MVP — nous aidons les fondateurs à lancer plus vite.", "stat": "10+ MVP" },
+    { "name": "Services de proximité", "desc": "Prestataires, artisans et consultants ayant besoin d'un site professionnel.", "stat": "30+ sites" }
+  ],
+  "clientStats": [
+    { "number": "40+", "label": "Projets livrés" },
+    { "number": "4+", "label": "Années d'expérience" },
+    { "number": "30+", "label": "Clients satisfaits" },
+    { "number": "98%", "label": "Taux de satisfaction" }
+  ],
   "testimonialsEyebrow": "Témoignages",
   "testimonialsTitle": "Ce que disent nos clients",
   "testimonials": [
