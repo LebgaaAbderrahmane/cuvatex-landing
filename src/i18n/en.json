@@ -14,12 +14,12 @@
   "heroAvailability": "Available for new projects, we reply within 2 business days.",
   "servicesTitle": "What we do",
   "services": [
-    { "title": "Websites & web apps", "desc": "Fast, easy-to-use websites and web applications built to last." },
-    { "title": "First version of your product", "desc": "We turn your idea into a working product in weeks, focused on what actually matters." },
-    { "title": "Mobile apps", "desc": "Apps for iPhone and Android, built once and working on both." },
-    { "title": "Product design", "desc": "Screens and flows designed so your users actually understand them." },
-    { "title": "The system behind your product", "desc": "The engine that stores your data, keeps things fast, and keeps them running reliably." },
-    { "title": "Custom software", "desc": "Software built around how your business actually works, instead of forcing you into a ready-made tool." }
+    { "title": "Websites & web apps", "desc": "Fast, easy-to-use websites and web applications built to last.", "tags": ["React", "Next.js", "TypeScript"], "badge": "50+ shipped", "features": ["Responsive on every device", "SEO-optimised out of the box", "Fast load times guaranteed"] },
+    { "title": "First version of your product", "desc": "We turn your idea into a working product in weeks, focused on what actually matters.", "tags": ["Lean", "MVP", "Iterative"], "badge": "4–6 weeks", "features": ["Validate before you invest", "Ship fast, learn faster", "Pivot without painful rewrites"] },
+    { "title": "Mobile apps", "desc": "Apps for iPhone and Android, built once and working on both.", "tags": ["React Native", "Expo", "Cross-platform"], "badge": "One codebase", "features": ["iPhone and Android from a single codebase", "Native feel on both platforms", "Push notifications & offline support"] },
+    { "title": "Product design", "desc": "Screens and flows designed so your users actually understand them.", "tags": ["Figma", "UI/UX", "Prototyping"], "badge": "User-first", "features": ["Wireframes you can react to early", "Interactive prototypes, not static mockups", "Usability-tested before a line of code"] },
+    { "title": "The system behind your product", "desc": "The engine that stores your data, keeps things fast, and keeps them running reliably.", "tags": ["Node.js", "PostgreSQL", "REST", "GraphQL"], "badge": "99.9% uptime", "features": ["Scalable from day one", "Secured against OWASP top threats", "Automated backups & monitoring"] },
+    { "title": "Custom software", "desc": "Software built around how your business actually works, instead of forcing you into a ready-made tool.", "tags": ["Python", "Docker", "AWS"], "badge": "Tailor-made", "features": ["Built around your workflow, not against it", "Integrates with your existing tools", "No vendor lock-in — you own the code"] }
   ],
   "clientsEyebrow": "Clients",
   "clientsTitle": "Who we work with",

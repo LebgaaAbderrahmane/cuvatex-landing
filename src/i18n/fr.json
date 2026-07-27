@@ -14,12 +14,12 @@
   "heroAvailability": "Disponibles pour de nouveaux projets, nous répondons sous deux jours ouvrés.",
   "servicesTitle": "Ce que nous faisons",
   "services": [
-    { "title": "Sites et applications web", "desc": "Des sites et applications web rapides, faciles à utiliser et conçus pour durer." },
-    { "title": "La première version de votre produit", "desc": "Nous transformons votre idée en produit fonctionnel en quelques semaines, centré sur ce qui compte vraiment." },
-    { "title": "Applications mobiles", "desc": "Des applications pour iPhone et Android, développées une seule fois et fonctionnant sur les deux." },
-    { "title": "Design produit", "desc": "Des écrans et des parcours conçus pour que vos utilisateurs les comprennent vraiment." },
-    { "title": "Le système derrière votre produit", "desc": "Le moteur qui stocke vos données, garde tout rapide et fonctionne de façon fiable." },
-    { "title": "Logiciels sur mesure", "desc": "Un logiciel conçu autour du fonctionnement réel de votre entreprise, au lieu de vous imposer un outil tout fait." }
+    { "title": "Sites et applications web", "desc": "Des sites et applications web rapides, faciles à utiliser et conçus pour durer.", "tags": ["React", "Next.js", "TypeScript"], "badge": "50+ livrés", "features": ["Adaptés à tous les écrans", "Optimisés pour le référencement", "Temps de chargement rapides garantis"] },
+    { "title": "La première version de votre produit", "desc": "Nous transformons votre idée en produit fonctionnel en quelques semaines, centré sur ce qui compte vraiment.", "tags": ["Lean", "MVP", "Itératif"], "badge": "4–6 semaines", "features": ["Validez avant d'investir", "Lancez vite, apprenez plus vite", "Pivotez sans réécriture douloureuse"] },
+    { "title": "Applications mobiles", "desc": "Des applications pour iPhone et Android, développées une seule fois et fonctionnant sur les deux.", "tags": ["React Native", "Expo", "Multi-plateforme"], "badge": "Une seule base", "features": ["iPhone et Android depuis un seul code", "Expérience native sur les deux plateformes", "Notifications push et mode hors-ligne"] },
+    { "title": "Design produit", "desc": "Des écrans et des parcours conçus pour que vos utilisateurs les comprennent vraiment.", "tags": ["Figma", "UI/UX", "Prototypage"], "badge": "Centré utilisateur", "features": ["Maquettes que vous pouvez réagir tôt", "Prototypes interactifs, pas d'images statiques", "Testés avant la première ligne de code"] },
+    { "title": "Le système derrière votre produit", "desc": "Le moteur qui stocke vos données, garde tout rapide et fonctionne de façon fiable.", "tags": ["Node.js", "PostgreSQL", "REST", "GraphQL"], "badge": "99,9% de disponibilité", "features": ["Passage à l'échelle dès le premier jour", "Sécurisé contre les menaces OWASP", "Sauvegardes automatisées et surveillance"] },
+    { "title": "Logiciels sur mesure", "desc": "Un logiciel conçu autour du fonctionnement réel de votre entreprise, au lieu de vous imposer un outil tout fait.", "tags": ["Python", "Docker", "AWS"], "badge": "Sur mesure", "features": ["Conçu autour de votre flux de travail", "Intègre vos outils existants", "Pas de verrouillage — vous possédez le code"] }
   ],
   "clientsEyebrow": "Clients",
   "clientsTitle": "Avec qui nous travaillons",
