@@ -15,15 +15,20 @@ import Pricing from './components/Pricing';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import BackToTop from './components/BackToTop';
+import CaseStudy from './components/CaseStudy';
+import useCaseRoute from './hooks/useCaseRoute';
 
 export default function App() {
   const { i18n } = useTranslation();
+  const { slug: caseSlug, open: openCase, close: closeCase } = useCaseRoute();
 
+  // `resolvedLanguage` is always one of the supported codes; `language` can still
+  // carry a region suffix (`ar-DZ`), which would fail the `=== 'ar'` check.
   useEffect(() => {
-    const lang = i18n.language || 'en';
+    const lang = i18n.resolvedLanguage || 'en';
     document.documentElement.setAttribute('lang', lang);
     document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-  }, [i18n.language]);
+  }, [i18n.resolvedLanguage]);
 
   return (
     <div id="top" style={{ minHeight: '100vh' }}>
@@ -33,7 +38,7 @@ export default function App() {
         <Services />
         <Clients />
         <Process />
-        <Work />
+        <Work openSlug={caseSlug} onOpen={openCase} />
         <Testimonials />
         <CtaBanner />
         <About />
@@ -44,6 +49,7 @@ export default function App() {
       </main>
       <Footer />
       <BackToTop />
+      <CaseStudy slug={caseSlug} onOpen={openCase} onClose={closeCase} />
     </div>
   );
 }

@@ -34,6 +34,13 @@ img {
   display: block;
 }
 
+/* Inline styles cannot express a pseudo-class, so the keyboard focus ring for the
+   project cards and the case-study controls lives here. */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--accent, #0E7A69);
+  outline-offset: 4px;
+}
+
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }

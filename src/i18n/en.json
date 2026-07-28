@@ -60,15 +60,122 @@
   "workTitle": "Selected work",
   "workIntro": "Case studies coming soon.",
   "workCta": "View all projects",
+  "workCtaLess": "Show less",
   "imgLabel": "project image",
-  "projectTitle": "Project title",
-  "projectDesc": "One line describing the outcome we delivered.",
   "tags": {
     "web": "Web app",
     "api": "Backend",
     "product": "Product design",
     "mobile": "Mobile",
     "platform": "Platform"
+  },
+  "caseStudy": {
+    "view": "View case study",
+    "close": "Close",
+    "esc": "Esc",
+    "overview": "Overview",
+    "challenge": "The challenge",
+    "solution": "What we built",
+    "results": "Results",
+    "gallery": "Gallery",
+    "next": "Next case study",
+    "cta": "Start a project like this",
+    "soon": "The full case study for this project is being written. Get in touch and we'll walk you through it.",
+    "year": "Year",
+    "role": "Role",
+    "duration": "Duration"
+  },
+  "projects": {
+    "atlas-retail": {
+      "title": "Atlas Retail",
+      "summary": "A stock and sales dashboard that replaced eleven spreadsheets for a chain of nine stores.",
+      "year": "2024",
+      "role": "Web app, backend",
+      "duration": "14 weeks",
+      "overview": "Atlas ran nine stores on a shared folder of spreadsheets. Nobody knew real stock levels until the end of the month, and reorders were guesswork. We built one dashboard the whole chain works from.",
+      "challenge": "Every store kept its own file, in its own format, and merged them by hand each month. Numbers disagreed constantly, so managers stopped trusting the reports and ordered on instinct instead. The fix had to work for staff who had never used anything but Excel.",
+      "solution": "A single web app with live stock per store, transfers between branches, and a reorder view that flags items before they run out. We imported four years of history so the first screen a manager opened already had their own data in it. Training took one afternoon.",
+      "results": [
+        "Stock counts went from monthly to live across all nine stores",
+        "Reorder decisions moved from instinct to flagged, dated alerts",
+        "Month-end reporting dropped from three days of merging to one click"
+      ],
+      "metrics": [
+        { "value": "9", "label": "Stores on one system" },
+        { "value": "-64%", "label": "Time spent on reporting" },
+        { "value": "4 yrs", "label": "History migrated" }
+      ]
+    },
+    "nordwind-api": {
+      "title": "Nordwind API",
+      "summary": "A rebuilt ordering API that took a logistics platform from nightly batches to real-time.",
+      "year": "2024",
+      "role": "Backend, infrastructure",
+      "duration": "10 weeks",
+      "overview": "Nordwind's partners wanted to see order status as it happened. The existing system answered with data that was up to a day old, because everything moved in a nightly batch job.",
+      "challenge": "The batch job was the only integration point, and eight partners had built against it. We could not simply switch it off. The new API had to run alongside the old one long enough for every partner to migrate on their own schedule.",
+      "solution": "We built a versioned REST API with webhooks for status changes, and kept the nightly export running as a thin layer on top of the new data model. Partners migrated one at a time over four months without a single coordinated cutover.",
+      "results": [
+        "Order status went from up-to-24-hours stale to under a second",
+        "All eight partners migrated with no downtime and no shared cutover date",
+        "The nightly batch was retired after the last partner moved"
+      ],
+      "metrics": [
+        { "value": "<1s", "label": "Status latency" },
+        { "value": "8", "label": "Partners migrated" },
+        { "value": "0", "label": "Downtime windows" }
+      ]
+    },
+    "lumen-studio": {
+      "title": "Lumen Studio",
+      "summary": "A booking flow redesign that cut abandoned bookings for a photography studio group.",
+      "year": "2023",
+      "role": "Product design, web app",
+      "duration": "8 weeks",
+      "overview": "Lumen books studio time by the hour across three locations. Most people who started a booking never finished it, and the team could not tell where they were dropping off.",
+      "challenge": "The old flow asked for payment details on the first screen, before showing whether the slot was even free. It also assumed a desktop screen, while most bookings were attempted on a phone during a lunch break.",
+      "solution": "We rebuilt the flow mobile-first: pick a location, see live availability, hold the slot for ten minutes, then pay. We added analytics on every step so the team can see exactly where people stop, instead of guessing.",
+      "results": [
+        "Completed bookings rose sharply after the payment step moved last",
+        "The team can now see drop-off per step instead of guessing",
+        "Phone bookings became the majority channel within two months"
+      ],
+      "metrics": [
+        { "value": "2.4x", "label": "Completed bookings" },
+        { "value": "3", "label": "Locations live" },
+        { "value": "10 min", "label": "Slot hold window" }
+      ]
+    },
+    "terra-fleet": {
+      "title": "Terra Fleet",
+      "summary": "A driver app for logging vehicle checks and fuel without paper forms.",
+      "year": "2023",
+      "role": "Mobile"
+    },
+    "okapi-books": {
+      "title": "Okapi Books",
+      "summary": "An online catalogue and reservation site for an independent bookshop.",
+      "year": "2023",
+      "role": "Web app"
+    },
+    "vela-grid": {
+      "title": "Vela Grid",
+      "summary": "An internal platform that gives a solar installer one view of every site.",
+      "year": "2022",
+      "role": "Platform"
+    },
+    "siren-labs": {
+      "title": "Siren Labs",
+      "summary": "A marketing site and client portal for a small research lab.",
+      "year": "2022",
+      "role": "Web app"
+    },
+    "cobalt-pay": {
+      "title": "Cobalt Pay",
+      "summary": "A payment reconciliation service that matches transfers to invoices automatically.",
+      "year": "2022",
+      "role": "Backend"
+    }
   },
   "teamTitle": "The team",
   "teamIntro": "Three people. No account managers, no hand-offs, you work directly with the people building your product.",
