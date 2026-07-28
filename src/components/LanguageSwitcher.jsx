@@ -9,7 +9,11 @@ export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  const current = i18n.language && langs.includes(i18n.language) ? i18n.language : 'en';
+  // resolvedLanguage is always one of the supported codes; `language` can still be
+  // region-coded ('ar-DZ'), which used to fall through to 'en' and label an Arabic
+  // page "EN".
+  const resolved = i18n.resolvedLanguage;
+  const current = resolved && langs.includes(resolved) ? resolved : 'en';
 
   useEffect(() => {
     function handle(e) {

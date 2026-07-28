@@ -52,6 +52,20 @@ export default function Header() {
     return () => document.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
+  // Closing the panel unmounts the clicked <a> in the same tick the browser
+  // starts its `scroll-behavior: smooth` jump to the fragment, and the browser
+  // drops the scroll. Scrolling the target ourselves removes that dependency —
+  // the target section is never the element being unmounted.
+  function handleMobileNavClick(e, section) {
+    e.preventDefault();
+    setMenuOpen(false);
+    const el = document.getElementById(section);
+    if (!el) return;
+    // pushState, not replaceState: keeps the back button working for in-page nav.
+    history.pushState(null, '', `#${section}`);
+    el.scrollIntoView({ behavior: 'smooth' });
+  }
+
   return (
     <motion.header
       initial={{ y: -20, opacity: 0 }}
@@ -220,7 +234,7 @@ export default function Header() {
                 <a
                   key={section}
                   href={`#${section}`}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={e => handleMobileNavClick(e, section)}
                   style={{
                     ...linkStyle,
                     fontSize: 17,

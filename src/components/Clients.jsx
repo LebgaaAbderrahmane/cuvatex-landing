@@ -69,11 +69,16 @@ export default function Clients() {
         </ScrollReveal>
 
         <ScrollReveal delay={0.2}>
+          {/* Four stats in one rigid row are wider than a phone: below ~600px they
+              pushed past both edges of the document and the whole page scrolled
+              sideways. Wrapping keeps every stat readable; ≥768px is unchanged. */}
           <div style={{
             marginTop: 'clamp(40px, 5vw, 60px)',
             display: 'flex',
+            flexWrap: 'wrap',
             justifyContent: 'center',
-            gap: 0,
+            columnGap: 0,
+            rowGap: 'clamp(20px, 3vw, 28px)',
           }}>
             {Array.isArray(stats) && stats.map((stat, i) => (
               <div key={stat.label} style={{
@@ -81,7 +86,7 @@ export default function Clients() {
                 alignItems: 'center',
                 gap: 'clamp(24px, 4vw, 48px)',
               }}>
-                <div style={{ textAlign: 'center', padding: '0 clamp(16px, 3vw, 36px)' }}>
+                <div style={{ textAlign: 'center', padding: '0 clamp(12px, 3vw, 36px)' }}>
                   <span style={{
                     display: 'block',
                     fontSize: 'clamp(32px, 4vw, 52px)',
@@ -98,7 +103,6 @@ export default function Clients() {
                     fontSize: 13,
                     fontWeight: 500,
                     color: 'var(--muted, #6c665e)',
-                    whiteSpace: 'nowrap',
                   }}>
                     {stat.label}
                   </span>

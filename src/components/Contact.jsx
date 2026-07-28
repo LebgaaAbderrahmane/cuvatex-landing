@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import ScrollReveal from './ScrollReveal';
+import { track } from '../analytics';
 
 const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
+const WHATSAPP_URL = 'https://wa.me/PHONE_NUMBER_PLACEHOLDER';
 
 export default function Contact() {
   const { t } = useTranslation();
@@ -13,6 +15,21 @@ export default function Contact() {
 
   async function onSubmit(e) {
     e.preventDefault();
+
+    // Vite inlines VITE_WEB3FORMS_KEY at build time. A build with no .env and no
+    // --build-arg produces `undefined` here, and every submit would POST
+    // access_key="undefined" and be rejected. Fail immediately instead, and say so
+    // in the console — otherwise the misconfiguration is invisible to whoever
+    // deployed it.
+    if (!WEB3FORMS_KEY) {
+      console.error(
+        '[contact] VITE_WEB3FORMS_KEY is missing from this build. ' +
+        'Set it in .env for local builds, or pass --build-arg VITE_WEB3FORMS_KEY=... to docker build.'
+      );
+      setStatus('error');
+      return;
+    }
+
     setStatus('sending');
 
     const formData = new FormData(e.target);
@@ -27,11 +44,16 @@ export default function Contact() {
       const data = await res.json();
       if (data.success) {
         setStatus('sent');
+        track('contact_form_submit');
       } else {
+        console.error('[contact] web3forms rejected the submission:', data);
         setStatus('error');
+        track('contact_form_error');
       }
-    } catch {
+    } catch (err) {
+      console.error('[contact] submission failed:', err);
       setStatus('error');
+      track('contact_form_error');
     }
   }
 
@@ -112,9 +134,10 @@ export default function Contact() {
             <p style={{ margin: '12px 0 0', fontSize: 16, color: 'var(--muted, #6c665e)' }}>
               {t('whatsappDirect')}{' '}
               <a
-                href="https://wa.me/PHONE_NUMBER_PLACEHOLDER"
+                href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => track('whatsapp_click')}
                 style={{ color: 'var(--accent, #0E7A69)', fontWeight: 600, textDecoration: 'none' }}
               >
                 {t('whatsappLink')}
@@ -265,13 +288,41 @@ export default function Contact() {
                   {status === 'sending' ? t('sending') : t('send')}
                 </motion.button>
 
+                {/* One error block for all three causes — missing key, a
+                    {success:false} response, and a network failure. Without the
+                    two links a failed submit is a dead end and the lead is lost.
+                    The colour is the danger token, not --accent: a failure
+                    printed in the brand green reads as a success. */}
                 {status === 'error' && (
-                  <p
+                  <div
                     role="alert"
-                    style={{ margin: 0, fontSize: 14, color: 'var(--accent, #0E7A69)' }}
+                    style={{
+                      margin: 0,
+                      fontSize: 14,
+                      lineHeight: 1.6,
+                      color: 'var(--danger, #b3261e)',
+                    }}
                   >
                     {t('error')}
-                  </p>
+                    <span style={{ display: 'block', marginTop: 6 }}>
+                      <a
+                        href={`mailto:${t('email')}`}
+                        style={{ color: 'var(--danger, #b3261e)', fontWeight: 600 }}
+                      >
+                        {t('email')}
+                      </a>
+                      {' · '}
+                      <a
+                        href={WHATSAPP_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => track('whatsapp_click')}
+                        style={{ color: 'var(--danger, #b3261e)', fontWeight: 600 }}
+                      >
+                        {t('whatsappLink')}
+                      </a>
+                    </span>
+                  </div>
                 )}
               </motion.form>
             ) : (
