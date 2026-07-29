@@ -40,6 +40,7 @@ All user-facing text is in `src/i18n/{en,fr,ar}.json` and read via `t('key')`. R
 - **Scroll animations:** wrap content in `<ScrollReveal>` (`src/components/ScrollReveal.jsx`) — a Framer Motion `whileInView` fade-up, `once: true`. Reuse it rather than writing new motion variants per section.
 - **Anchor nav:** header links (`#services`, `#process`, `#work`, `#team`, `#contact`) must match the `id` on each section. Change one, change both.
 - `src/index.css` is only a reset + base `html/body` typography; all component styling is inline.
+- **Analytics:** `src/analytics.js` loads Umami (`VITE_UMAMI_SCRIPT_URL`, `VITE_UMAMI_WEBSITE_ID`) from `main.jsx`, and only in production builds. Record conversions with `track('event_name')` — it no-ops when the tracker is absent.
 
 ## Notes for the CUVATEX collaboration
 Two-person repo (`main` is protected shared branch). Work on a personal branch, never commit directly to `main`; land changes through PRs. `Contact.jsx` is the likely integration point for a backend (form submission) — it is currently frontend-only.

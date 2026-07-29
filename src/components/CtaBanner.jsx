@@ -34,7 +34,8 @@ export default function CtaBanner() {
               whileHover={{ opacity: 0.85 }}
             >
               {t('ctaBannerLink')}{' '}
-              <span aria-hidden="true">{dirArrow[i18n.language] || '→'}</span>
+              {/* resolvedLanguage, not language: the latter can be 'ar-DZ'. */}
+              <span aria-hidden="true">{dirArrow[i18n.resolvedLanguage] || '→'}</span>
             </motion.a>
           </p>
         </ScrollReveal>

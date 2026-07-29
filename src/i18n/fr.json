@@ -60,15 +60,122 @@
   "workTitle": "Projets sélectionnés",
   "workIntro": "Études de cas à venir.",
   "workCta": "Voir tous les projets",
+  "workCtaLess": "Voir moins",
   "imgLabel": "image du projet",
-  "projectTitle": "Titre du projet",
-  "projectDesc": "Une ligne décrivant le résultat livré.",
   "tags": {
     "web": "App web",
     "api": "Backend",
     "product": "Design produit",
     "mobile": "Mobile",
     "platform": "Plateforme"
+  },
+  "caseStudy": {
+    "view": "Voir l'étude de cas",
+    "close": "Fermer",
+    "esc": "Échap",
+    "overview": "Aperçu",
+    "challenge": "Le défi",
+    "solution": "Ce que nous avons construit",
+    "results": "Résultats",
+    "gallery": "Galerie",
+    "next": "Étude de cas suivante",
+    "cta": "Lancer un projet comme celui-ci",
+    "soon": "L'étude de cas complète de ce projet est en cours de rédaction. Contactez-nous et nous vous la présenterons.",
+    "year": "Année",
+    "role": "Rôle",
+    "duration": "Durée"
+  },
+  "projects": {
+    "atlas-retail": {
+      "title": "Atlas Retail",
+      "summary": "Un tableau de bord des stocks et des ventes qui a remplacé onze fichiers Excel pour une chaîne de neuf magasins.",
+      "year": "2024",
+      "role": "App web, backend",
+      "duration": "14 semaines",
+      "overview": "Atlas gérait neuf magasins avec un dossier partagé de fichiers Excel. Personne ne connaissait le stock réel avant la fin du mois, et les réapprovisionnements se faisaient au jugé. Nous avons construit un tableau de bord unique pour toute la chaîne.",
+      "challenge": "Chaque magasin gardait son propre fichier, dans son propre format, fusionné à la main chaque mois. Les chiffres se contredisaient sans cesse, les responsables ont cessé de faire confiance aux rapports et commandaient à l'instinct. La solution devait convenir à des équipes qui n'avaient jamais utilisé autre chose qu'Excel.",
+      "solution": "Une seule application web avec le stock en direct par magasin, les transferts entre succursales et une vue de réapprovisionnement qui signale les articles avant la rupture. Nous avons importé quatre ans d'historique : dès le premier écran, chaque responsable retrouvait ses propres données. La formation a pris un après-midi.",
+      "results": [
+        "Le suivi des stocks est passé du mensuel au temps réel dans les neuf magasins",
+        "Les réapprovisionnements sont passés de l'instinct à des alertes datées et signalées",
+        "La clôture mensuelle est passée de trois jours de fusion à un seul clic"
+      ],
+      "metrics": [
+        { "value": "9", "label": "Magasins sur un système" },
+        { "value": "-64%", "label": "Temps passé en reporting" },
+        { "value": "4 ans", "label": "Historique migré" }
+      ]
+    },
+    "nordwind-api": {
+      "title": "Nordwind API",
+      "summary": "Une API de commandes reconstruite qui a fait passer une plateforme logistique des lots nocturnes au temps réel.",
+      "year": "2024",
+      "role": "Backend, infrastructure",
+      "duration": "10 semaines",
+      "overview": "Les partenaires de Nordwind voulaient suivre l'état des commandes en direct. L'ancien système répondait avec des données parfois vieilles d'une journée, car tout transitait par un traitement par lots nocturne.",
+      "challenge": "Ce traitement par lots était le seul point d'intégration, et huit partenaires s'étaient construits autour. Impossible de l'arrêter du jour au lendemain. La nouvelle API devait cohabiter avec l'ancienne assez longtemps pour que chaque partenaire migre à son rythme.",
+      "solution": "Nous avons construit une API REST versionnée avec des webhooks sur les changements d'état, en conservant l'export nocturne comme une fine couche au-dessus du nouveau modèle de données. Les partenaires ont migré un par un sur quatre mois, sans bascule commune.",
+      "results": [
+        "L'état des commandes est passé de 24 heures de retard à moins d'une seconde",
+        "Les huit partenaires ont migré sans interruption ni date de bascule commune",
+        "Le traitement nocturne a été retiré après la migration du dernier partenaire"
+      ],
+      "metrics": [
+        { "value": "<1s", "label": "Latence de statut" },
+        { "value": "8", "label": "Partenaires migrés" },
+        { "value": "0", "label": "Fenêtres d'interruption" }
+      ]
+    },
+    "lumen-studio": {
+      "title": "Lumen Studio",
+      "summary": "Une refonte du parcours de réservation qui a réduit les abandons pour un groupe de studios photo.",
+      "year": "2023",
+      "role": "Design produit, app web",
+      "duration": "8 semaines",
+      "overview": "Lumen loue des studios à l'heure sur trois sites. La plupart des personnes qui commençaient une réservation ne la terminaient jamais, et l'équipe ne savait pas où elles abandonnaient.",
+      "challenge": "L'ancien parcours demandait les informations de paiement dès le premier écran, avant même de montrer si le créneau était libre. Il supposait aussi un écran d'ordinateur, alors que la plupart des réservations étaient tentées sur téléphone pendant la pause déjeuner.",
+      "solution": "Nous avons reconstruit le parcours en mobile-first : choisir un site, voir les disponibilités en direct, bloquer le créneau dix minutes, puis payer. Nous avons ajouté un suivi à chaque étape pour que l'équipe voie exactement où les gens s'arrêtent, au lieu de deviner.",
+      "results": [
+        "Les réservations finalisées ont fortement augmenté après le déplacement du paiement en fin de parcours",
+        "L'équipe voit désormais l'abandon étape par étape au lieu de le deviner",
+        "Le téléphone est devenu le canal majoritaire en deux mois"
+      ],
+      "metrics": [
+        { "value": "2,4x", "label": "Réservations finalisées" },
+        { "value": "3", "label": "Sites en service" },
+        { "value": "10 min", "label": "Créneau réservé" }
+      ]
+    },
+    "terra-fleet": {
+      "title": "Terra Fleet",
+      "summary": "Une application conducteur pour enregistrer les contrôles véhicule et le carburant sans formulaires papier.",
+      "year": "2023",
+      "role": "Mobile"
+    },
+    "okapi-books": {
+      "title": "Okapi Books",
+      "summary": "Un catalogue en ligne et un site de réservation pour une librairie indépendante.",
+      "year": "2023",
+      "role": "App web"
+    },
+    "vela-grid": {
+      "title": "Vela Grid",
+      "summary": "Une plateforme interne qui donne à un installateur solaire une vue unique de chaque chantier.",
+      "year": "2022",
+      "role": "Plateforme"
+    },
+    "siren-labs": {
+      "title": "Siren Labs",
+      "summary": "Un site vitrine et un portail client pour un petit laboratoire de recherche.",
+      "year": "2022",
+      "role": "App web"
+    },
+    "cobalt-pay": {
+      "title": "Cobalt Pay",
+      "summary": "Un service de rapprochement des paiements qui associe automatiquement les virements aux factures.",
+      "year": "2022",
+      "role": "Backend"
+    }
   },
   "teamTitle": "L'équipe",
   "teamIntro": "Trois personnes. Pas d'intermédiaires, pas de transferts, vous travaillez directement avec ceux qui construisent votre produit.",

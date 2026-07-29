@@ -6,12 +6,17 @@ const themes = {
     '--muted': '#6c665e', '--line': 'rgba(21,18,15,0.13)',
     '--accent': '#0E7A69', '--accent-fg': '#ffffff',
     '--bg-header': 'rgba(246,245,242,0.82)',
+    '--scrim': 'rgba(21,18,15,0.55)',
+    '--danger': '#b3261e',
   },
   dark: {
     '--bg': '#131210', '--surface': '#1b1a17', '--fg': '#f3efe8',
     '--muted': '#a39c92', '--line': 'rgba(243,239,232,0.15)',
     '--accent': '#33AC9C', '--accent-fg': '#05231f',
     '--bg-header': 'rgba(19,18,16,0.82)',
+    '--scrim': 'rgba(5,4,3,0.72)',
+    // Lighter than the light-theme red: #b3261e is unreadable on #131210.
+    '--danger': '#f2857c',
   },
 };
 

@@ -115,7 +115,8 @@ export default function Hero() {
                   whileTap={{ scale: 0.98 }}
                 >
                   {t('cta')}
-                  <span aria-hidden="true">{dirArrow[i18n.language] || '\u2192'}</span>
+                  {/* resolvedLanguage, not language: the latter can be 'ar-DZ'. */}
+                  <span aria-hidden="true">{dirArrow[i18n.resolvedLanguage] || '\u2192'}</span>
                 </motion.a>
                 <p style={{
                   margin: '16px 0 0',

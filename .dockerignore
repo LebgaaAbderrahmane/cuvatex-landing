@@ -1,3 +1,6 @@
+# Note: .env is deliberately NOT ignored — `pnpm build` inlines the VITE_*
+# values at build time inside the build stage. Ignoring it here would silently
+# ship a production image with no web3forms key and no analytics.
 node_modules
 dist
 .git
