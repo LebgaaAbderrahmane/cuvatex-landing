@@ -73,7 +73,7 @@ export default function Services() {
           <div style={{
             maxWidth: 1160,
             margin: '0 auto',
-            padding: 'clamp(24px, 4vw, 56px) clamp(20px, 5vw, 48px)',
+            padding: 'clamp(14px, 4vw, 24px) 0',
           }}>
             <p style={{
               display: 'flex',
