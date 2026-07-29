@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence, useScroll, useMotionValueEvent, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent, useReducedMotion, useTransform } from 'framer-motion';
 import ScrollReveal from './ScrollReveal';
 
 // The card's height drives where it parks and how much runway the steps need, so
@@ -29,8 +29,8 @@ const CARD_TOP = `max(calc(${FOCUS} - ${CARD_HALF}px), ${TITLE_BAR_CLEAR}px)`;
 // grid spans its parked box, so the runways have to match that box — not the
 // viewport centre — or the first and last step burn part of their turn before
 // the card has arrived / after it has left. Their sum is always CARD_H.
-const RUNWAY_TOP = `max(0px, calc(50vh - ${CARD_TOP}))`;
-const RUNWAY_BOTTOM = `calc(${CARD_TOP} + ${CARD_H}px - 50vh)`;
+const RUNWAY_TOP = `100px`;
+const RUNWAY_BOTTOM = `${CARD_H / 3 + 20}px`;
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
@@ -64,12 +64,14 @@ export default function Process() {
   // n equal slices, so every step stays active for the same scroll distance.
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     if (stepList.length < 2) return;
-    const idx = Math.min(
-      stepList.length - 1,
-      Math.max(0, Math.floor(v * stepList.length))
-    );
+    const n = stepList.length;
+    const idx = n === 4
+      ? v < 0.18 ? 0 : v < 0.43 ? 1 : v < 0.68 ? 2 : 3
+      : Math.min(n - 1, Math.max(0, Math.floor(v * n)));
     setActive(idx);
   });
+
+  const releaseY = useTransform(scrollYProgress, [0.85, 1], [0, -300]);
 
   const activeStep = stepList[active];
 
@@ -84,12 +86,14 @@ export default function Process() {
       }}
     >
       <div style={{ maxWidth: 1160, margin: '0 auto' }}>
+        <div style={{ position: 'relative' }}>
         {/* The bar must be a direct child of this tall container: a sticky element
             only travels inside its own parent's box, and a ScrollReveal wrapper is
             exactly content-height, so it would never move. ScrollReveal goes inside. */}
-        <div style={{
+        <motion.div style={{
           position: isMobile ? 'static' : 'sticky',
           top: NAV_H,
+          y: releaseY,
           zIndex: 3, // over the scrolling steps and the card, under the site header (50)
           background: 'var(--surface, #fff)',
           borderBottom: isMobile ? 'none' : '1px solid var(--line, rgba(21,18,15,0.13))',
@@ -122,7 +126,7 @@ export default function Process() {
               {t('processTitle')}
             </h2>
           </ScrollReveal>
-        </div>
+        </motion.div>
 
         <ScrollReveal delay={0.15}>
           <p style={{
@@ -161,13 +165,8 @@ export default function Process() {
                 gap: isMobile ? 'clamp(34px, 6vw, 52px)' : STEP_GAP,
               }}
             >
-              {/* Zero-height leading child. The flex gap after it adds one extra gap to
-                  the measured range, making it exactly n × (step height + gap) — without
-                  it each step would light up ~40px lower than the previous one. Leading
-                  rather than trailing shifts the phase: a step activates below centre,
-                  rises through it, and dims above it, so it never slides behind the
-                  sticky title bar. */}
-              {!isMobile && <div aria-hidden style={{ height: 0 }} />}
+              {/* Zero-height leading child omitted: RUNWAY_TOP positions step 1 at card center instead. */}
+
               {stepList.map((st, i) => (
                 <motion.div
                   key={st.n}
@@ -295,6 +294,7 @@ export default function Process() {
               </div>
             </div>
           )}
+        </div>
         </div>
       </div>
     </section>
