@@ -16,7 +16,7 @@ export default function Clients() {
       id="clients"
       style={{
         scrollMarginTop: 80,
-        minHeight: 'calc(100dvh - 56px)',
+        minHeight: 'calc(100dvh - var(--header-h, 73px))',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -87,6 +87,10 @@ export default function Clients() {
                 gap: 'clamp(24px, 4vw, 48px)',
               }}>
                 <div style={{ textAlign: 'center', padding: '0 clamp(12px, 3vw, 36px)' }}>
+                  {/* `direction: ltr` + `isolate`: "40+" is a number followed by a
+                      neutral character, so in an RTL paragraph the bidi algorithm
+                      moves the "+" to the other side and it paints as "+40".
+                      Isolating the span keeps it reading "40+" in all languages. */}
                   <span style={{
                     display: 'block',
                     fontSize: 'clamp(32px, 4vw, 52px)',
@@ -94,6 +98,8 @@ export default function Clients() {
                     letterSpacing: '-0.03em',
                     lineHeight: 1,
                     color: 'var(--fg, #15120f)',
+                    direction: 'ltr',
+                    unicodeBidi: 'isolate',
                   }}>
                     {stat.number}
                   </span>
@@ -127,14 +133,18 @@ export default function Clients() {
         maskImage: 'linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)',
         WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)',
       }}>
+        {/* The animation itself lives in `.marquee` in index.css. It cannot be an
+            inline style: an inline `animation` shorthand outranks any stylesheet
+            rule, so neither the RTL direction flip nor the reduced-motion
+            `animation: none` could override it from there. */}
         <div
+          className="marquee"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           style={{
             display: 'flex',
             gap: 'clamp(20px, 2.5vw, 32px)',
             width: 'max-content',
-            animation: 'marquee 40s linear infinite',
             animationPlayState: isPaused ? 'paused' : 'running',
             cursor: isPaused ? 'grab' : 'default',
           }}

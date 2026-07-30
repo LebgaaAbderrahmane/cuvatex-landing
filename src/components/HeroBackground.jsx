@@ -74,7 +74,12 @@ export default function HeroBackground() {
           filter: 'blur(40px)',
           top: '50%',
           left: '50%',
-          transform: 'translate(-50%, -50%)',
+          // Centred with negative margins, not `translate(-50%, -50%)`: Framer
+          // writes its own `transform` for the x/y animation below and would
+          // silently drop the centring offset, parking the orb half its own
+          // width down and to the right of centre.
+          marginTop: 'calc(clamp(120px, 18vw, 240px) / -2)',
+          marginLeft: 'calc(clamp(120px, 18vw, 240px) / -2)',
         }}
         animate={{
           x: [0, 50, -30, 20, 0],

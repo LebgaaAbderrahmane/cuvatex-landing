@@ -3,10 +3,12 @@
     "services": "Services",
     "process": "Méthode",
     "work": "Projets",
+    "pricing": "Tarifs",
     "team": "Équipe",
     "faq": "FAQ",
     "contact": "Contact"
   },
+  "skipToContent": "Aller au contenu",
   "cta": "Démarrer un projet",
   "heroKicker": "Idée · Design · Réalisation · Lancement",
   "heroTitle": "Nous concevons et développons des produits logiciels complets, de bout en bout.",

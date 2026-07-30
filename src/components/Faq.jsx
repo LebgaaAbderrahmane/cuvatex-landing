@@ -17,6 +17,9 @@ function FaqItem({ q, a, isOpen, onToggle }) {
           onClick={onToggle}
           aria-expanded={isOpen}
           aria-controls={panelId}
+          // Inset: the row is full-bleed inside its border, so an offset ring
+          // would sit on top of the neighbouring question's divider.
+          className="focus-ring-inset"
           style={{
             width: '100%',
             display: 'flex',

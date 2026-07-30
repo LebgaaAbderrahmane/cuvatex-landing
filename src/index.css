@@ -1,3 +1,34 @@
+/* Theme tokens. These live here rather than in JS so the inline script in
+   index.html can pick a theme before the first paint by setting one attribute —
+   no colour value is duplicated anywhere. ThemeContext.jsx owns the switching;
+   it only writes `data-theme` on <html>. */
+:root {
+  --bg: #f6f5f2;
+  --surface: #ffffff;
+  --fg: #15120f;
+  --muted: #6c665e;
+  --line: rgba(21, 18, 15, 0.13);
+  --accent: #0E7A69;
+  --accent-fg: #ffffff;
+  --bg-header: rgba(246, 245, 242, 0.82);
+  --scrim: rgba(21, 18, 15, 0.55);
+  --danger: #b3261e;
+}
+
+:root[data-theme='dark'] {
+  --bg: #131210;
+  --surface: #1b1a17;
+  --fg: #f3efe8;
+  --muted: #a39c92;
+  --line: rgba(243, 239, 232, 0.15);
+  --accent: #33AC9C;
+  --accent-fg: #05231f;
+  --bg-header: rgba(19, 18, 16, 0.82);
+  --scrim: rgba(5, 4, 3, 0.72);
+  /* Lighter than the light-theme red: #b3261e is unreadable on #131210. */
+  --danger: #f2857c;
+}
+
 *,
 *::before,
 *::after {
@@ -34,14 +65,94 @@ img {
   display: block;
 }
 
-/* Inline styles cannot express a pseudo-class, so the keyboard focus ring for the
-   project cards and the case-study controls lives here. */
+/* Inline styles cannot express a pseudo-class, so every keyboard focus ring on
+   the site lives here. The UA default ring is near-invisible on the dark theme. */
 .focus-ring:focus-visible {
   outline: 2px solid var(--accent, #0E7A69);
   outline-offset: 4px;
+  border-radius: 2px;
 }
 
+/* Same ring, drawn inside the element — for controls sitting in an
+   `overflow: hidden` container, where an offset ring would be clipped. */
+.focus-ring-inset:focus-visible {
+  outline: 2px solid var(--accent, #0E7A69);
+  outline-offset: -3px;
+}
+
+/* Keyboard-only shortcut past the header nav. Off-screen until focused; it must
+   stay focusable, so `display: none` / `visibility: hidden` are not options. */
+.skip-link {
+  position: absolute;
+  inset-inline-start: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 12px 20px;
+  background: var(--accent, #0E7A69);
+  color: var(--accent-fg, #fff);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 2px 2px;
+}
+
+.skip-link:focus {
+  inset-inline-start: 0;
+  /* The accent ring would vanish against the link's own accent background. */
+  outline: 2px solid var(--fg, #15120f);
+  outline-offset: -4px;
+}
+
+/* `tabIndex={-1}` on <main> makes the skip link land there, but browsers then
+   draw a focus ring around the whole page. */
+main:focus {
+  outline: none;
+}
+
+/* The strip holds the card list twice, so travelling exactly half its width lands
+   on an identical frame and the loop is seamless. Direction has to follow the
+   writing direction: in RTL the flex row is laid out from the right edge
+   leftwards, so translating negatively walks it off the left and leaves a growing
+   hole on the right (measured: 199px of empty row in Arabic). */
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee-rtl {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(50%); }
+}
+
+/* Declared here, not inline, so the RTL override can win — an inline
+   `animation` shorthand would beat any stylesheet rule without `!important`. */
+.marquee {
+  animation: marquee 40s linear infinite;
+}
+
+[dir='rtl'] .marquee {
+  animation-name: marquee-rtl;
+}
+
+/* Framer's MotionConfig cannot reach CSS animations or the browser's own smooth
+   scrolling, so the non-Framer half of "reduce motion" is handled here. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* The blanket reset above parks an animation on its last keyframe. For the
+     clients marquee that is `translateX(-50%)`, which clips the first and last
+     card. This one needs the animation removed outright so the strip rests at
+     its natural start. `!important` because the animation is an inline style. */
+  .marquee {
+    animation: none !important;
+  }
 }

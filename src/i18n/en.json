@@ -3,10 +3,12 @@
     "services": "Services",
     "process": "Process",
     "work": "Work",
+    "pricing": "Pricing",
     "team": "Team",
     "faq": "FAQ",
     "contact": "Contact"
   },
+  "skipToContent": "Skip to content",
   "cta": "Start a project",
   "heroKicker": "Idea · Design · Build · Launch",
   "heroTitle": "We design and build complete software products end to end.",

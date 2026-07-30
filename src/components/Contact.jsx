@@ -118,12 +118,21 @@ export default function Contact() {
             </p>
           </ScrollReveal>
 
+          {/* Both links use `padding: '12px 6px'` with a matching negative
+              `marginInline`. Vertical padding on an inline element grows the hit
+              box without moving the text around it (20px glyph box → 44px); the
+              horizontal pair does the same sideways, which the short Arabic
+              WhatsApp label needs to clear 44px wide. The negative margin cancels
+              the horizontal shift, so the rendered sentence is unchanged. The
+              paragraph gap below is 20px, which is exactly the two 12px paddings
+              plus the line leading — the hit areas meet without overlapping. */}
           <ScrollReveal delay={0.2}>
             <p style={{ margin: '26px 0 0', fontSize: 16, color: 'var(--muted, #6c665e)' }}>
               {t('emailDirect')}{' '}
               <a
                 href={`mailto:${t('email')}`}
-                style={{ color: 'var(--accent, #0E7A69)', fontWeight: 600, textDecoration: 'none' }}
+                className="focus-ring"
+                style={{ color: 'var(--accent, #0E7A69)', fontWeight: 600, textDecoration: 'none', padding: '12px 6px', marginInline: -6 }}
               >
                 {t('email')}
               </a>
@@ -131,14 +140,15 @@ export default function Contact() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.25}>
-            <p style={{ margin: '12px 0 0', fontSize: 16, color: 'var(--muted, #6c665e)' }}>
+            <p style={{ margin: '20px 0 0', fontSize: 16, color: 'var(--muted, #6c665e)' }}>
               {t('whatsappDirect')}{' '}
               <a
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track('whatsapp_click')}
-                style={{ color: 'var(--accent, #0E7A69)', fontWeight: 600, textDecoration: 'none' }}
+                className="focus-ring"
+                style={{ color: 'var(--accent, #0E7A69)', fontWeight: 600, textDecoration: 'none', padding: '12px 6px', marginInline: -6 }}
               >
                 {t('whatsappLink')}
               </a>
@@ -181,6 +191,7 @@ export default function Contact() {
                     type="text"
                     name="name"
                     required
+                    className="focus-ring"
                     style={{
                       width: '100%',
                       background: 'transparent',
@@ -214,6 +225,7 @@ export default function Contact() {
                     type="email"
                     name="email"
                     required
+                    className="focus-ring"
                     style={{
                       width: '100%',
                       background: 'transparent',
@@ -247,6 +259,7 @@ export default function Contact() {
                     name="message"
                     rows={4}
                     required
+                    className="focus-ring"
                     style={{
                       width: '100%',
                       background: 'transparent',
@@ -268,6 +281,7 @@ export default function Contact() {
 
                 <motion.button
                   type="submit"
+                  className="focus-ring"
                   disabled={status === 'sending'}
                   whileHover={status === 'sending' ? {} : { opacity: 0.92 }}
                   whileTap={status === 'sending' ? {} : { scale: 0.98 }}
@@ -304,20 +318,27 @@ export default function Contact() {
                     }}
                   >
                     {t('error')}
-                    <span style={{ display: 'block', marginTop: 6 }}>
+                    {/* Stacked, not separated by a middot: side by side, the two
+                        44px hit boxes have to grow into each other across a ~10px
+                        separator and end up overlapping by 5px, so a tap near the
+                        boundary hits the wrong link. One per row also reads better
+                        at 320px. `inline-flex` + `minHeight` is enough here because
+                        each sits on its own line and cannot shift any text. */}
+                    <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: 4 }}>
                       <a
                         href={`mailto:${t('email')}`}
-                        style={{ color: 'var(--danger, #b3261e)', fontWeight: 600 }}
+                        className="focus-ring"
+                        style={{ color: 'var(--danger, #b3261e)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', minHeight: 44, minWidth: 44 }}
                       >
                         {t('email')}
                       </a>
-                      {' · '}
                       <a
                         href={WHATSAPP_URL}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => track('whatsapp_click')}
-                        style={{ color: 'var(--danger, #b3261e)', fontWeight: 600 }}
+                        className="focus-ring"
+                        style={{ color: 'var(--danger, #b3261e)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', minHeight: 44, minWidth: 44 }}
                       >
                         {t('whatsappLink')}
                       </a>

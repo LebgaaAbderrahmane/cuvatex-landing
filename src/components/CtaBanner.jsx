@@ -26,10 +26,14 @@ export default function CtaBanner() {
             {t('ctaBannerLead')}{' '}
             <motion.a
               href="#contact"
+              className="focus-ring"
               style={{
                 color: 'var(--accent, #0E7A69)',
                 textDecoration: 'none',
                 whiteSpace: 'nowrap',
+                // Vertical padding on an inline element grows the tap target to
+                // 44px+ without shifting the sentence it sits in.
+                padding: '9px 0',
               }}
               whileHover={{ opacity: 0.85 }}
             >

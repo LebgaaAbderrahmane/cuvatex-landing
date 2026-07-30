@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../theme/ThemeContext';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import LanguageSwitcher from './LanguageSwitcher';
 
-const sections = ['services', 'process', 'work', 'team', 'faq', 'contact'];
+const sections = ['services', 'process', 'work', 'pricing', 'team', 'faq', 'contact'];
 
 // Below this width the six nav links wrap onto extra rows and push the sticky
 // header to ~200px, so they move behind a toggle instead.
@@ -38,6 +38,25 @@ export default function Header() {
   const { theme, toggleTheme } = useTheme();
   const isMobile = useIsMobile();
   const [menuOpen, setMenuOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const headerRef = useRef(null);
+
+  // The header is the only element that knows its own height, and four other
+  // components need it (hero/clients fold height, sticky offsets in Services and
+  // Process). Publishing it as `--header-h` keeps one source of truth instead of
+  // the magic `56` / `67` constants that used to drift from reality.
+  useLayoutEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const publish = () => {
+      const h = el.getBoundingClientRect().height;
+      if (h > 0) document.documentElement.style.setProperty('--header-h', `${h}px`);
+    };
+    publish();
+    const observer = new ResizeObserver(publish);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Close the panel when we grow past the breakpoint, otherwise it stays
   // mounted and overlaps the desktop nav.
@@ -52,22 +71,32 @@ export default function Header() {
     return () => document.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
-  // Closing the panel unmounts the clicked <a> in the same tick the browser
-  // starts its `scroll-behavior: smooth` jump to the fragment, and the browser
-  // drops the scroll. Scrolling the target ourselves removes that dependency —
-  // the target section is never the element being unmounted.
+  // Closing the panel tears down the clicked <a> in the same task the browser is
+  // asked to smooth-scroll, and the scroll is dropped before its first frame —
+  // the page just never moves. Scrolling the target ourselves is not enough on
+  // its own: React batches `setMenuOpen(false)` and commits after the handler
+  // returns, so a `scrollIntoView` called here is still inside that same task.
+  //
+  // `requestAnimationFrame` is what actually fixes it — it puts the scroll after
+  // React's commit and after AnimatePresence has started the panel's exit, at
+  // which point nothing is left to cancel it. Verified by measurement: without
+  // the rAF, `scrollY` stays flat at 0 for the full 2.5 s after the click.
   function handleMobileNavClick(e, section) {
     e.preventDefault();
-    setMenuOpen(false);
     const el = document.getElementById(section);
     if (!el) return;
+    setMenuOpen(false);
     // pushState, not replaceState: keeps the back button working for in-page nav.
     history.pushState(null, '', `#${section}`);
-    el.scrollIntoView({ behavior: 'smooth' });
+    requestAnimationFrame(() => {
+      // Still scroll under reduced motion — only the smoothness is dropped.
+      el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
   }
 
   return (
     <motion.header
+      ref={headerRef}
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -92,6 +121,7 @@ export default function Header() {
       }}>
         <a
           href="#top"
+          className="focus-ring"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -112,17 +142,23 @@ export default function Header() {
           CUVATEX
         </a>
 
+        {/* Nav gap and font-size taper below ~1300px. Seven links at a flat
+            `gap: 22` / `fontSize: 15` overflow the bar at 768px and wrap the
+            header onto a second row (measured 121px), which would push every
+            anchor target under the header. Both clamps sit at their maximum from
+            ~1300px up, so the desktop appearance is unchanged. */}
         {!isMobile && (
           <nav style={{
             display: 'flex',
-            gap: 22,
+            gap: 'clamp(12px, 1.8vw, 22px)',
             alignItems: 'center',
-            fontSize: 15,
+            fontSize: 'clamp(13px, 1.15vw, 15px)',
           }}>
             {sections.map(section => (
               <a
                 key={section}
                 href={`#${section}`}
+                className="focus-ring"
                 style={linkStyle}
                 onMouseEnter={e => e.target.style.color = 'var(--fg, #15120f)'}
                 onMouseLeave={e => e.target.style.color = 'var(--muted, #6c665e)'}
@@ -140,13 +176,16 @@ export default function Header() {
             type="button"
             onClick={toggleTheme}
             whileTap={{ scale: 0.9 }}
+            className="focus-ring"
             aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 38,
-              height: 38,
+              // 44px is the minimum comfortable touch target; the header height is
+              // measured and published as `--header-h`, so growing this is safe.
+              width: 44,
+              height: 44,
               border: '1px solid var(--line, rgba(21,18,15,0.13))',
               background: 'transparent',
               color: 'var(--fg, #15120f)',
@@ -179,6 +218,7 @@ export default function Header() {
               type="button"
               onClick={() => setMenuOpen(o => !o)}
               whileTap={{ scale: 0.9 }}
+              className="focus-ring"
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
               aria-controls="mobile-nav"
@@ -234,6 +274,7 @@ export default function Header() {
                 <a
                   key={section}
                   href={`#${section}`}
+                  className="focus-ring"
                   onClick={e => handleMobileNavClick(e, section)}
                   style={{
                     ...linkStyle,

@@ -15,6 +15,27 @@ Audited 2026-07-27 against commit `b471be8` (branch `fix/hero-illustration-contr
 > both themes), plus a separate 5-check run against a build made with **no**
 > `VITE_WEB3FORMS_KEY`. All 26 pass. `oxlint` still reports exactly one warning (item 28).
 
+> **Update 2026-07-29 — P1 fix pass.** The whole P1 block is now closed:
+> **7, 8, 10, 12, 13, 15, 16** fixed; **9** and **14** were found already fixed by work
+> that landed after the audit was written (source-verified, no code needed); **11** closed
+> as **won't fix — by design**, at the owner's decision.
+>
+> Item 13 was scoped down with the owner: **Pricing only**, not all four missing links.
+> Ten desktop nav links would wrap the header onto a second row around 768–900 px, and
+> About / Clients / Testimonials are already passed while scrolling. `#about`, `#clients`
+> and `#testimonials` stay reachable by hash but absent from the nav — deliberate, not a
+> leftover.
+>
+> ⚠️ **Item 1 (P0) was found still broken** and is re-fixed here — see item 1. It was
+> verified broken against a clean worktree of `7073d6c`, so the 2026-07-28 "RESOLVED" was
+> wrong, not a regression from this pass. The other three P0 fixes (2, 3, 6) were re-run
+> against `vite preview` as a result and all hold — see the fix-order section.
+>
+> Re-verification: **513 automated browser checks** against the production preview build
+> (`vite build` + `vite preview`, Playwright) — see the *P1 responsive sweep* section near
+> the bottom for the matrix and what each check asserts. All 513 pass. `oxlint` still
+> reports exactly one warning (item 28); `vite build` passes.
+
 **Method:** full read of all ~4,200 lines of source; `vite build`; `oxlint`; Playwright
 driving the **production preview build** (`vite preview`) at 320 / 375 / 768 / 1024 /
 1440 px × en / fr / ar, light + dark theme, region-coded locales (`ar-DZ`, `fr-DZ`,
@@ -31,7 +52,60 @@ Placeholder copy is deliberately excluded, with one exception: item 4 is about
 
 ## P0 — breaks for real visitors
 
-### 1. Mobile menu links change the URL but never scroll (measured) — ✅ RESOLVED
+### 1. Mobile menu links change the URL but never scroll (measured) — ⚠️ REOPENED 2026-07-29, then ✅ RESOLVED
+
+> **The 2026-07-28 fix did not work in a production build.** Found while adding a mobile-nav
+> regression guard during the P1 pass. Verified against a clean **worktree of `7073d6c`**
+> (the commit the "RESOLVED" note was written for) — so this was not caused by the P1
+> changes; it was never actually fixed:
+>
+> | build | click `#mobile-nav a[href="#work"]` |
+> |---|---|
+> | `7073d6c` (claimed fixed) | hash `#work` ✓, `scrollY` **0 → 0** ✗ |
+> | P1 branch before this fix | hash `#work` ✓, `scrollY` **0 → 0** ✗ |
+>
+> The 2026-07-28 re-measurement was presumably taken against the dev server, where the
+> timing differs. **This is why P0 items need re-verifying against `vite preview`.**
+
+**Root cause, measured — it is not an interrupted scroll, the scroll never starts.**
+Sampling `scrollY` every 60 ms for 2.5 s after the click gives a flat `0,0,0,…` — no
+movement at any point. Isolation:
+
+| experiment | result |
+|---|---|
+| `scrollIntoView({behavior:'smooth'})` from outside React | 6840 ✓ |
+| same, with the panel left **open** | 6840 ✓ |
+| same, after closing the panel and waiting 600 ms | 6840 ✓ |
+| same, retried **after** a failed nav click | 6840 ✓ |
+| desktop nav link click | 7378 ✓ |
+| **mobile nav link click** | **0 ✗** |
+
+So the panel is not the problem and smooth scrolling is not broken — only a scroll requested
+*from inside that click handler* dies. The 2026-07-28 fix moved `scrollIntoView` into the
+handler, but React **batches** `setMenuOpen(false)` and commits after the handler returns:
+the scroll request and the panel teardown still land in the same task, and the scroll is
+discarded before its first frame. Reordering the two lines cannot help, because the commit
+is not where the line sits.
+
+**Fixed** by deferring the scroll one frame:
+
+```js
+setMenuOpen(false);
+history.pushState(null, '', `#${section}`);
+requestAnimationFrame(() => {
+  el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+});
+```
+
+`requestAnimationFrame` puts the scroll after React's commit and after `AnimatePresence` has
+started the panel's exit, at which point nothing remains to cancel it.
+
+Re-measured at 375 px against `vite preview`, in `en` and `ar`, with **and** without
+`prefers-reduced-motion` (the reduced-motion branch takes `behavior: 'auto'` and had never
+been executed by any test): `scrollY` **0 → > 100** in all four, hash correct, panel closed,
+and the target heading lands at or below the header bottom.
+
+<details><summary>the 2026-07-28 fix, which did not hold</summary>
 
 **Fixed in `src/components/Header.jsx`.** The mobile links no longer rely on the browser's
 own fragment scroll. `handleMobileNavClick` calls `preventDefault()`, closes the panel,
@@ -43,6 +117,8 @@ behave.
 Re-measured at 375 px, en: click `#mobile-nav a[href="#work"]` → `scrollY` **0 → 5671**
 (section was 5751 px down), hash `#work`, panel closed, `#work h2` lands **108 px** below the
 header bottom. Back button returns to `scrollY = 0`.
+
+</details>
 
 <details><summary>original finding</summary>
 
@@ -269,7 +345,37 @@ server-side visibility. There is no build-time guard and no runtime guard.
 
 ## P1 — visible defects
 
-### 7. The header height is hardcoded as 56 px; it is actually 67 / 73 px (measured)
+### 7. The header height is hardcoded as 56 px; it is actually 67 / 73 px (measured) — ✅ RESOLVED
+
+**Fixed by publishing the measured height as a CSS variable.** `Header.jsx` now holds a
+`ref` on its `<motion.header>` and a `ResizeObserver` that writes the real border-box
+height to `--header-h` on `documentElement`, on mount and on every resize. Consumers:
+
+| site | before | after |
+|---|---|---|
+| `Hero.jsx` `minHeight` | `calc(100dvh - 56px)` | `calc(100dvh - var(--header-h, 73px))` |
+| `Clients.jsx` `minHeight` | `calc(100dvh - 56px)` | same |
+| `Process.jsx` sticky `top` | `NAV_H = 67` | `var(--header-h, 73px)` |
+| `Services.jsx` sticky `top` | already measured, fallback `67` | unchanged mechanism, fallback `73` |
+
+`Services.jsx` kept its own `ResizeObserver` rather than reading the variable: its
+`cardSpace` / card `top` / card `height` are **JS arithmetic**, and a CSS variable cannot
+feed that. It observes the same `<header>` element, so the two agree by construction.
+
+Re-measured: `--header-h` equals the live header height (within 1 px) at **all 36**
+viewport × language × theme combinations, and the Services sticky title now lands
+**0 px** from the header bottom at 320 / 375 / 768 / 1440 in all three languages — it used
+to sit 11–17 px under it.
+
+Two things deliberately left alone, both noted rather than silently changed:
+
+- **The hero is still taller than a short phone screen.** At 375 × 667 it was 712 px; the
+  correct constant only buys back ~6 px. That is a spacing decision about the hero, not a
+  wrong constant, and is out of scope for this item.
+- `Process.jsx:15` `TITLE_BAR_CLEAR = 206` is still a literal. It is a derived number
+  ("bottom of the sticky title bar (185) + a gap"), not a header height.
+
+<details><summary>original finding</summary>
 
 `56` appears as a magic number in eight places — `Services.jsx` lines 42, 43, 44, 49, 113,
 121, 122 (`top`, `cardSpace`, `lastCardStickyTop`, `translateRange`, container height,
@@ -297,7 +403,45 @@ the exact devices it exists for.
 Fix direction: measure the header once and expose it as a CSS variable
 (`--header-h`), then use `var(--header-h)` everywhere instead of `56`.
 
-### 8. Theme and RTL flash on load (measured)
+</details>
+
+### 8. Theme and RTL flash on load (measured) — ✅ RESOLVED
+
+**Fixed by moving the colour tokens out of JS and into CSS**, which is what makes a
+before-paint fix possible without duplicating a single hex value into the HTML.
+
+1. `src/index.css` gained `:root { … }` and `:root[data-theme='dark'] { … }` holding the
+   ten tokens verbatim. This is now the single source of truth for the colours.
+2. `src/theme/ThemeContext.jsx` no longer writes ten inline custom properties; it sets
+   `document.documentElement.dataset.theme`. The `useTheme()` API is unchanged, so **no
+   component needed editing** — every `var(--token, fallback)` inline style still works.
+3. `index.html` gained a blocking inline `<script>` in `<head>` that reads
+   `localStorage['studio-theme']` and `localStorage['i18nextLng']` and sets `data-theme`,
+   `dir` and `lang` before the first paint. It falls back to `navigator.language` so a
+   first-time Algerian visitor also gets RTL on frame one. `<html>` now carries an explicit
+   `dir="ltr"` default.
+
+⚠️ The script must be **inline and blocking**. `defer`, `type="module"` or an external file
+all paint first, which is the entire bug.
+
+Verified by aborting the app bundle (`route('**/assets/*.js', abort)`) so only the inline
+script has run, with `studio-theme=dark` + `i18nextLng=ar` in storage:
+
+| sampled before any React code | result |
+|---|---|
+| `body` background | `rgb(19, 18, 16)` — dark ✓ |
+| `documentElement.dir` | `rtl` ✓ |
+| `documentElement.lang` | `ar` ✓ |
+
+Plus theme correctness re-checked across all 36 viewport × language × theme cells.
+
+Deliberately **not** added: `prefers-color-scheme` defaulting. It would change what
+first-time visitors see, which is a design decision this item did not ask for.
+
+Note this makes the CLAUDE.md theming section stale in one respect — updated there too:
+tokens live in `index.css`, `ThemeContext.jsx` owns the choice.
+
+<details><summary>original finding</summary>
 
 `ThemeProvider` writes the CSS variables in a `useEffect`. With `studio-theme=dark`
 stored, `body` background is sampled as `rgb(246,245,242)` (light) for ~300 ms, then flips
@@ -309,7 +453,13 @@ Arabic visitor gets a full LTR first paint before `App.jsx` corrects it.
 Fix direction: a small inline script in `index.html` that reads `localStorage` and sets the
 variables plus `dir` before first paint.
 
-### 9. The error message is brand green (measured) — ✅ RESOLVED
+</details>
+
+### 9. The error message is brand green (measured) — ✅ RESOLVED (re-verified 2026-07-29)
+
+Re-verified in the P1 pass, since the closing note asked for it rather than trusting the
+record: with a mocked `{success:false}`, the `role="alert"` block computes to
+`rgb(179, 38, 30)` in `en` / `fr` / `ar`, and both fallback links render. No code change.
 
 Fixed alongside item 6, since it is the same paragraph. A `--danger` token was added to
 **both** theme maps in `src/theme/ThemeContext.jsx` (`#b3261e` light, `#f2857c` dark — the
@@ -327,7 +477,17 @@ submission failure reads as a success. No danger token exists in either theme ma
 
 </details>
 
-### 10. The third hero orb is not centred (measured)
+### 10. The third hero orb is not centred (measured) — ✅ RESOLVED
+
+**Fixed in `src/components/HeroBackground.jsx`.** The `transform: 'translate(-50%, -50%)'`
+is gone; centring is now done with `marginTop` / `marginLeft` of
+`calc(clamp(120px, 18vw, 240px) / -2)` — half the orb's own width, expressed with the same
+`clamp()` so it stays correct at every breakpoint. Margins are a separate CSS property from
+`transform`, so Framer Motion's `x`/`y` animation can no longer clobber them.
+
+Re-measured at 1440: orb centre **720 px** against a viewport centre of 720 px (was 868 px).
+
+<details><summary>original finding</summary>
 
 `src/components/HeroBackground.jsx:67-89` sets `transform: 'translate(-50%, -50%)'` in the
 inline style *and* `animate={{ x, y }}`. Framer Motion writes its own `transform`, so the
@@ -338,7 +498,23 @@ centre of 720 px. The orb hangs off to the right of where the code says it shoul
 Fix direction: move the centring into `left/top` offsets, or into Motion's own
 `x: '-50%', y: '-50%'` initial values.
 
-### 11. The phone mockup covers a quarter of the laptop screen (measured; the verdict is a judgment call)
+</details>
+
+### 11. The phone mockup covers a quarter of the laptop screen — ⛔ CLOSED, WON'T FIX
+
+**Closed by the owner's decision on 2026-07-29 as intended composition, not a defect.**
+The audit's own measurement is the argument: the overlap is a constant **27 % of the phone
+width at every breakpoint** (1440 / 1024 / 375), which is the signature of a deliberate
+layered composition rather than a responsive break. Changing it would be a design change to
+the hero, not a bug fix.
+
+The two sub-observations stay on record and are *not* closed by this:
+- at 375 px the mockup's inner text renders at 7–8 px and is unreadable
+- the showcase still costs 12 image requests at that size (this is really item 5)
+
+Original measurements below.
+
+<details><summary>original finding</summary>
 
 In `HeroShowcase`, the phone (`bottom:3%; right:3%; width:30%`) overlaps the laptop screen
 by a constant **27 % of its width** at every breakpoint, and stands **135–155 px taller**
@@ -357,7 +533,9 @@ reads as clipped rather than layered. At 375 px the whole
 showcase is 335 × 223 px and the mockup's inner text (`shop.app`, `9:41`, `Mobile`) renders
 at 7–8 px — unreadable, but still costing 12 image requests.
 
-### 12. `prefers-reduced-motion` is ignored almost everywhere (measured)
+</details>
+
+### 12. `prefers-reduced-motion` is ignored almost everywhere (measured) — ✅ RESOLVED
 
 With `reducedMotion: 'reduce'`:
 - `ScrollReveal` fades 0 → 1 and translates 24 px → 0 over ~700 ms, tracking the
@@ -371,34 +549,257 @@ With `reducedMotion: 'reduce'`:
 
 `Process.jsx` is the only component that calls `useReducedMotion`.
 
+**Fixed in four layers**, because no single mechanism reaches all of it:
+
+1. `src/main.jsx` — `<App/>` is wrapped in `<MotionConfig reducedMotion="user">`. This
+   covers the bulk of the Framer animations: `ScrollReveal`'s 24 px slide, the orb drift,
+   the scroll-down bounce, the header slide-in, the burger morph, `BackToTop`, and every
+   `whileHover`/`whileTap` transform.
+2. **`MotionConfig` alone is not enough** — it strips *transform and layout* animations but
+   deliberately lets **opacity** through, and it cannot see non-Framer code at all. So:
+   - `Hero.jsx` — the kicker dot pulses `opacity`, which `MotionConfig` would keep running.
+     Explicitly gated on `useReducedMotion()`.
+   - `HeroShowcase.jsx` — the `setInterval` is gated. Without this the cross-fade dies but
+     the content still swaps, turning a fade into a **jump cut**, which is worse than the
+     original.
+   - `index.css` — an `@media (prefers-reduced-motion: reduce)` block neutralises the CSS
+     `marquee` (Framer cannot reach a CSS animation) and sets `scroll-behavior: auto`.
+   - the three `scrollIntoView` call sites (`Header.jsx` desktop + mobile nav, `Hero.jsx`)
+     pass `behavior: reduceMotion ? 'auto' : 'smooth'`. **The scroll itself is kept** —
+     only its smoothness is dropped. Skipping the scroll would re-break item 1.
+
+Re-measured with Playwright's `reducedMotion: 'reduce'`, sampling 4.5 s apart:
+
+| | before | after |
+|---|---|---|
+| marquee `transform` | changing | identical ✓ |
+| hero orb `transform` | changing | identical ✓ |
+| `HeroShowcase` label | `ShopFlow` → `Pulse` | unchanged ✓ |
+| `scroll-behavior` | `smooth` | `auto` ✓ |
+
+<details><summary>original finding</summary>
+
 Fix direction: wrap the app in `<MotionConfig reducedMotion="user">` for the Framer side,
 plus an `@media (prefers-reduced-motion: reduce)` block in `index.css` for the marquee, and
 gate the `HeroShowcase` interval.
 
-### 13. The nav omits four sections that exist (from code)
+</details>
+
+### 13. The nav omits four sections that exist (from code) — ✅ RESOLVED (scoped)
+
+**Pricing added; the other three left out on purpose.** `Header.jsx:7` is now
+`['services','process','work','pricing','team','faq','contact']`, with `nav.pricing` added
+to all three locale files (`Pricing` / `Tarifs` / `الأسعار`). `Pricing.jsx` already had
+`id="pricing"`.
+
+`#about`, `#clients` and `#testimonials` were **deliberately not added**, at the owner's
+decision: ten desktop links in a `flexWrap` bar wrap onto a second row around 768–900 px —
+which would grow the very header height item 7 just made dynamic — and all three sections
+are passed while scrolling anyway. They stay reachable by hash.
+
+⚠️ **Adding the 7th link wrapped the header at 768 px** — caught only by adding a check for
+it. At `gap: 22` / `fontSize: 15` the bar needs ~467 px of nav against ~425 px available at
+768 px, so it wrapped onto a second row: header **121 px** instead of 73. That is worse than
+the missing link, because every section uses `scrollMarginTop: 80`, so a 121 px header puts
+every anchor target back *under* the header — the exact defect item 7 had just closed.
+
+Note the ordinary overflow and `--header-h` checks **cannot see this**: the page still has
+no horizontal overflow, and `--header-h` still equals the (now doubled) header height, so
+both pass. It needs its own assertion, comparing the bar height against its tallest child.
+
+Fixed by tapering the nav in `Header.jsx`: `gap: 'clamp(12px, 1.8vw, 22px)'` and
+`fontSize: 'clamp(13px, 1.15vw, 15px)'`. Both clamps sit at their maximum from ~1300 px up,
+so the desktop appearance is unchanged; only 768–1300 px tightens.
+
+Re-measured: `header nav a[href="#pricing"]` present with non-empty text in `en` / `fr` /
+`ar`, and the header is a single row at **768 / 820 / 900 / 1024 / 1280 / 1440** px in all
+three languages (73 px, never 121).
+
+<details><summary>original finding</summary>
 
 `src/components/Header.jsx:7` lists `services, process, work, team, faq, contact`.
 `#pricing`, `#about`, `#clients` and `#testimonials` all render but are unreachable from
 the header. Pricing especially — it is the first thing a non-technical buyer looks for.
 
-### 14. "Show less" is hardcoded English (from code)
+</details>
 
-`src/components/Work.jsx:215` renders the literal string `Show less`, so French and Arabic
-visitors who expand the project grid get an English button. Every other label in that
-component goes through `t()`.
+### 14. "Show less" is hardcoded English (from code) — ✅ ALREADY FIXED (verified 2026-07-29)
 
-### 15. Focus ring is the UA default only (measured)
+**No code change needed.** Verified in the source rather than trusted from the closing
+note: `Work.jsx:350` renders `{t('workCtaLess')}`, and the key exists in all three locale
+files at `en/fr/ar.json:63` — `Show less` / `Voir moins` / `عرض أقل`. Fixed by the
+case-study work that landed after this audit was written.
+
+### 15. Focus ring is the UA default only (measured) — ✅ RESOLVED
+
+Two separate problems; both fixed.
+
+**Focus ring.** `.focus-ring:focus-visible` existed but was applied to only 6 elements, all
+in `Work.jsx` / `CaseStudy.jsx`. It is now on every interactive element on the page —
+`Header` (logo, 7 desktop links, theme toggle, burger, 7 mobile links), `LanguageSwitcher`
+(trigger + 3 options), `Hero` (CTA, scroll-down), `CtaBanner`, `Contact` (4 links, 3 form
+fields, submit), `Footer`, `BackToTop`, `Faq` (accordion triggers).
+
+A second class, `.focus-ring-inset`, was added for controls inside an `overflow: hidden`
+container, where the 4 px offset ring would be clipped: the language dropdown options and
+the FAQ accordion rows.
+
+**Skip link.** Did not exist. `App.jsx` now renders `<a href="#main" class="skip-link">` as
+the first child — the first tab stop on the page — and `<main>` gained `id="main"` and
+`tabIndex={-1}` so focus actually lands there rather than only the scroll position moving.
+`.skip-link` lives in `index.css` (positioned off-screen until `:focus`, never
+`display: none`, which would make it unfocusable). Its own ring is `--fg`, not `--accent`,
+because the accent ring would be invisible on the link's accent background. `main:focus`
+outline is suppressed so the skip does not draw a box around the whole page. New i18n key
+`skipToContent` in all three locales.
+
+Re-measured in **dark** theme, where the UA default was worst: first `Tab` focuses
+`a[href="#main"]`, it becomes visible (`x = 0`, was off-screen), its ring computes to
+`rgb(243, 239, 232)`; the next stop (logo) rings `rgb(51, 172, 156)` = `--accent`, replacing
+the old `rgb(16, 16, 16) auto 1px`. Pressing Enter moves `document.activeElement` to `main`.
+
+<details><summary>original finding</summary>
 
 First tab stop in dark theme reports `outline: rgb(16, 16, 16) auto 1px` — near-invisible
 against the `#131210` background. There is also no skip-to-content link. `src/index.css`
 is the right place for `:focus-visible`, and it does not touch the design.
 
-### 16. Eight touch targets under 44 px (measured)
+</details>
+
+### 16. Eight touch targets under 44 px (measured) — ✅ RESOLVED
+
+Two different fixes, because standalone buttons and inline text links cannot be treated the
+same way.
+
+**Standalone controls** — grown directly:
+
+| control | before | after |
+|---|---|---|
+| theme toggle (`Header.jsx`) | 38 × 38 | 44 × 44 |
+| language button (`LanguageSwitcher.jsx`) | 44 × 38 | 44 × 44 |
+| language dropdown options | ~44 × 33 | ≥ 44 × 44 (`padding: '12px 14px'`) |
+| footer mail link (`Footer.jsx`) | ~21 tall | `minHeight: 44` (it is a flex item, so this is layout-safe) |
+
+The header consequently grows 67 → 73 px on desktop. That is **only safe because item 7
+landed first** — every consumer now reads the measured `--header-h`, so nothing had to be
+re-tuned. This is the reason for the ordering.
+
+**Inline links inside a sentence** (`Contact` mail + WhatsApp, `Contact` error-state mail +
+WhatsApp, `CtaBanner`) — these cannot be made block-level without moving the text around
+them. They use `padding` plus a matching negative `marginInline` instead: on an *inline*
+element, padding grows the hit box while the negative margin cancels the layout shift, so
+the rendered sentence is byte-identical while the tap target reaches 44 px.
+
+Two things this only caught in the browser, not from the code:
+
+- `padding: '10px 0'` gives **40 px**, not 44 — an inline box is sized by the glyph box
+  (~20 px at 16 px font), not by `line-height`. It needs 12 px.
+- **Width matters too.** The Arabic WhatsApp label is short: 35 px wide with vertical-only
+  padding, and 43 px at 14 px font in the error block. Horizontal padding (6 px) is what
+  clears 44, which is why the negative `marginInline` is needed.
+- **The two error-state links could not use this trick.** Side by side across a `·`
+  separator only ~10 px wide, two boxes each grown 8 px per side **overlapped by 5 px** —
+  measured — so a tap near the boundary hits the wrong link. Growing them apart is not
+  possible in that space, so they were **stacked one per row** instead, which also reads
+  better at 320 px. Once stacked they need no inline trickery at all:
+  `display: inline-flex` + `minHeight: 44` + `minWidth: 44`.
+
+The Contact paragraph gap was widened 12 → 20 px so the two enlarged hit boxes meet rather
+than overlap; the footer's vertical padding dropped 32 → 22 px so the taller link row keeps
+the footer at roughly its previous height.
+
+Re-measured at 320 / 375 / 768 / 1440 × `en`/`fr`/`ar`: every listed control is ≥ 44 × 44,
+and the two Contact links do not overlap. "View all projects" and "Show less" measured
+≥ 44 already at `padding: '12px 26px'` — they were listed in the original finding but were
+not actually offenders.
+
+<details><summary>original finding</summary>
 
 Counted at 375 px in `ar` (the count shifts slightly per language, since label width
 changes): language button 44 × 38, theme toggle 38 × 38, "View all projects" 143 × 42,
 the CTA banner link (75 × 23), both `hello@cuvatex.com` links (~20 px tall) and the
 WhatsApp link (35 × 20).
+
+</details>
+
+### 31. Services cards spill over the Clients section at any width under 950 px (measured) — ✅ RESOLVED
+
+**Reported from the browser, not caught by the sweep.** In a half-width window the last
+service card's text printed *on top of* the "CLIENTS" heading — several lines stacked over
+each other.
+
+Cause: each card is pinned at `height: calc(100dvh - header - title)`. That only holds while
+the image and the text sit **side by side**. Below 950 px they wrap into a column and the
+content becomes ~950 px tall, which does not fit in any viewport-derived height. The card
+has a background but no `overflow`, so the excess simply painted over the next section.
+
+Measured before the fix — worst card content vs its own box:
+
+| viewport | card | content | overflow |
+|---|---|---|---|
+| 375 × 700 | 538 | 603 | **+65 px** |
+| 700 × 850 | 665 | 801 | **+136 px** |
+| 768 × 900 | 711 | 850 | **+139 px** |
+| 900 × 800 | 604 | 950 | **+345 px** |
+| 950 × 700 | 502 | 310 | ok |
+| 1440 × 900 | 697 | 416 | ok |
+
+So this was **not** a narrow-window edge case — it was broken on every phone, tablet and
+small laptop, and only correct at desktop width. The break is sharp between 900 and 950 px,
+which is where the two columns stop fitting.
+
+**Fixed in `src/components/Services.jsx`** in two parts:
+
+1. **Below 950 px the sticky stack is dropped entirely** (`STACK_QUERY`, `useIsStacked`).
+   The scope wrapper, the title and the cards all switch to `position: static` /
+   `height: auto`, so the section renders as an ordinary stacked list and the content
+   decides its own height. There is no card height that could have worked, so the mechanism
+   itself had to go at that size.
+2. **A measured floor under `cardSpace`** for the widths that keep the stack. A short window
+   produced the same defect at desktop width — 1440 × 600 gave a 397 px card holding 416 px
+   of content. `cardSpace` is now
+   `max(calc(100dvh - navH - titleH), tallestContent + 64px)`, with `tallestContent` from a
+   `ResizeObserver` over every card's inner box (`useMaxContentHeight`). Measured, not a
+   constant, because it moves with language, font swap and width.
+
+Re-verified at **18 viewport sizes × 3 languages**, deliberately including short windows
+(950 × 600, 1024 × 600, 1200 × 560, 1440 × 600): no card is shorter than its content, and
+`#services`' bottom edge never crosses `#clients`' top edge.
+
+### 32. The Clients marquee runs the wrong way in Arabic (measured) — ✅ RESOLVED
+
+In RTL the strip left a growing empty band on the right of the row while the cards bunched
+at the left. Measured at 1440/ar: **199 px** of empty row, and the first card clipped.
+
+Cause: the strip is a flex row with `width: max-content`, so in RTL it is laid out from the
+right edge leftwards. The single `marquee` keyframe translates **negatively** regardless, so
+in RTL it walks the strip off the left and uncovers the right.
+
+Fixed in `src/index.css` with a mirrored keyframe plus a direction-scoped override:
+
+```css
+@keyframes marquee-rtl { 0% { transform: translateX(0%); } 100% { transform: translateX(50%); } }
+[dir='rtl'] .marquee { animation-name: marquee-rtl; }
+```
+
+⚠️ The `animation` shorthand also had to move **out of the inline style** in `Clients.jsx`
+and into the `.marquee` class. An inline `animation` outranks any stylesheet rule, so
+neither this RTL override nor the item 12 reduced-motion `animation: none` could ever have
+taken effect from there — the reduced-motion rule only worked because it carried
+`!important`.
+
+Re-measured at 375 / 768 / 1440 in both directions: correct keyframe selected, and the strip
+covers the full row with no gap on either side.
+
+### 33. "40+" paints as "+40" in Arabic (measured) — ✅ RESOLVED
+
+The stats read `+40`, `+4`, `+30` on the Arabic page. The DOM text was always correct
+(`"40+"`); the bidi algorithm moves a trailing neutral character like `+` to the other side
+inside an RTL paragraph.
+
+Fixed on the number span in `Clients.jsx` with `direction: 'ltr'` + `unicodeBidi: 'isolate'`,
+which pins the number and its sign as one left-to-right run without affecting the Arabic
+label under it. Re-verified: renders `40+` / `4+` / `30+` / `98%` in Arabic.
 
 ---
 
@@ -531,13 +932,101 @@ For non-technical visitors, roughly in order of payoff:
 
 ---
 
+## P1 responsive sweep — 2026-07-29
+
+The P1 block had no whole-page responsive check of its own (the audit's responsive work
+lived in P0), and the case-study overlay had never been responsive-tested at all. Run
+against the **production preview build** — `vite build` + `vite preview`, not `vite dev`,
+because dev injects CSS through JS and would have given a false reading on the item 8
+first-paint test.
+
+Playwright is present in `node_modules` but **not declared in `package.json`**, so the
+scripts were kept outside the repo (scratchpad) — no new dependency, no `tests/` directory,
+no `playwright.config.js` added to a shared two-person repo. Re-running means re-writing
+them; the matrix below is the spec.
+
+**Matrix:** 320 / 375 / 414 / 768 / 1024 / 1440 px × `en-US` / `fr-DZ` / `ar-DZ` ×
+light / dark = 36 cells, plus targeted passes. **634 checks, all pass.**
+
+> **Round 2, same day.** Three further defects (items **31, 32, 33**) were reported from an
+> ordinary browser session and were **not** caught by any of the checks above. Two lessons
+> that changed the matrix:
+>
+> - **The width grid had a hole.** It jumped 768 → 1024, and the Services break sits at
+>   **950 px**. A defect that only exists between two sampled widths is invisible.
+> - **Viewport *height* was never varied** — every cell used 900 px. Item 31's desktop half
+>   needed a short window (1440 × 600) to show up.
+>
+> The item 31 checks therefore sweep **18 width × height pairs**, including deliberately
+> short windows, and assert section-to-section overlap rather than only page overflow.
+
+Per cell (36 × 8 = 288):
+- `documentElement.scrollWidth <= innerWidth` — no sideways scroll
+- no element wider than the viewport **unless a clipping ancestor contains it**. The naive
+  version of this check fails everywhere: the Clients marquee track is legitimately
+  2 980 px wide inside a 335 px `overflow: hidden` box. The check walks ancestors.
+- `--header-h` matches the live header height within 1 px (item 7)
+- `body` background matches the requested theme exactly (item 8)
+- `documentElement.dir` matches the locale (item 2 regression guard)
+- theme toggle / language button / footer mail / hero CTA all ≥ 44 × 44 (item 16)
+- zero console errors and zero page errors
+
+Targeted passes:
+- **First paint (item 8)** — app bundle aborted so only the inline `<head>` script has run;
+  dark + RTL + `lang=ar` all correct before any React code executes
+- **Reduced motion (item 12)** — marquee, orb and showcase sampled 4.5 s apart, all static;
+  `scroll-behavior: auto`
+- **Keyboard (item 15)** — first tab stop is the skip link, it becomes visible, its ring and
+  the next control's accent ring both render in dark theme, Enter moves focus to `main`
+- **Nav (item 13)** — `#pricing` link present with translated text in all three languages
+- **Orb (item 10)** — centre within 60 px of the viewport centre at 1440 (actual: exact)
+- **Case-study overlay** — opened at 320 / 375 / 768 / 1440 × 3 languages: no horizontal
+  overflow, no console errors
+- **Sticky title (item 7)** — Services title lands 0 px from the header bottom at
+  320 / 375 / 768 / 1440 × 3 languages
+- **Error state (items 9 + 16)** — web3forms mocked to `{success:false}`: alert computes to
+  `rgb(179, 38, 30)`, both fallback links render and both are ≥ 44 × 44 in all 3 languages
+- **Contact link overlap** — the two enlarged inline hit boxes meet without overlapping
+
+Later additions, after a review pointed out that the checks above are all blind to them —
+each of the three found a real defect:
+
+- **Header must stay one row** at 768 / 820 / 900 / 1024 / 1280 / 1440 × 3 languages,
+  asserted by comparing the bar height to its tallest child. *Neither* the overflow check
+  nor the `--header-h` check can detect a wrapped header. → found the 768 px wrap under
+  item 13.
+- **Mobile nav must actually scroll** — open the burger, click a panel link, assert
+  `scrollY > 100`, correct hash, panel closed, heading clears the header. Run with and
+  without `prefers-reduced-motion`. → found item 1 still broken, including at `7073d6c`.
+- **Error-state links must not overlap**, on whichever axis they are laid out. → found the
+  5 px overlap under item 16.
+
+Run with `picsum.photos` **reachable**: item 5 is deliberately still open, and blocking it
+would have flooded the results with broken-image noise unrelated to this pass.
+
+**Five defects were found by the sweep and fixed rather than waived**, none of them visible
+from reading the code: the 40 px inline links, the 35 px / 43 px Arabic WhatsApp labels, the
+5 px error-link overlap (all item 16), the 768 px header wrap (item 13), and item 1 —
+which the previous pass had recorded as resolved.
+
+Two lessons worth keeping:
+
+1. **Verify against `vite preview`, not `vite dev`.** Item 1's false "RESOLVED" is what that
+   difference costs.
+2. **A check that passes in both states is not a check.** `--header-h` matching the header
+   height stays true when the header doubles in height. Assert the property you actually
+   care about.
+
+---
+
 ## Checked and clean
 
 Re-verified against this commit, not carried over:
 
-- **The mobile header does not wrap.** Measured 73 px at 320 / 375 and 67 px at
-  768 / 1024 / 1440 in all three languages; the six nav links sit behind the hamburger
-  (`Header.jsx:163`).
+- **The header does not wrap** — re-measured 2026-07-29 after the 7th nav link and the
+  44 px controls landed: a single row at 320 / 375 / 414 / 768 / 820 / 900 / 1024 / 1280 /
+  1440 in all three languages (73 px throughout). It *did* wrap at 768 px in between; see
+  item 13.
 - **Anchor targets clear the header.** Navigating by hash, every section heading lands
   60–111 px below the header bottom at 375, and 98–175 px at 1440. (Getting there on
   mobile is item 1.)
@@ -560,20 +1049,39 @@ Re-verified against this commit, not carried over:
 
 ## Suggested fix order
 
-Items 1, 2, 3, 6 and 9 are done. What is left, in order:
+**P0 and P1 are both closed.** Done: 1 (re-fixed), 2, 3, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16.
+Closed won't-fix: 11. Still open from P0: 4 and 5 — both owner decisions, not code.
+
+Item 1's false "RESOLVED" raised the question of whether the other P0 re-measurements hold.
+Three of the four were incidentally re-covered by this pass's sweep, against `vite preview`:
+
+- **Item 2** — `dir` asserted per locale with region-coded `ar-DZ` / `fr-DZ` / `en-US`
+  across all 36 cells. Holds.
+- **Item 3** — horizontal overflow asserted at 320 and 375 in all three languages. Holds.
+- **Item 6** — both branches re-verified. `{success:false}`: fallback links render, alert is
+  red. **Empty `VITE_WEB3FORMS_KEY`** (separate build): **0** requests reach web3forms, the
+  error state appears immediately, both fallback links render at 44 px tall, and the console
+  carries the misconfiguration message naming both fixes. Holds.
+
+So item 1 was the only false "RESOLVED". No P0 claim is now resting on an unverified
+measurement.
+
+What is left, in order:
 
 1. **Item 4** — decide what the real numbers are, or delete them. Blocks launch, not code.
+   The single remaining launch blocker.
 2. **Item 5** — ship local placeholder assets. Reverted once by choice; still the single
-   biggest runtime dependency on a third party, and it now covers the case-study overlay too.
-3. **Item 7** — one `--header-h` variable replaces eight hardcoded `56`s.
-4. **Items 8, 10, 20** — near one-liners, batch them.
-5. **Item 12** — `<MotionConfig reducedMotion="user">` plus one media query.
-6. **Item 17** — delete `HeroIllustration.jsx`.
-7. **Item 22** — decide whether `.env` belongs in `.dockerignore` now that `--build-arg`
+   biggest runtime dependency on a third party, and it covers the case-study overlay too.
+3. **Item 20** — duplicate `id="top"`. A one-liner, and now the only trivial fix left.
+4. **Item 17** — delete `HeroIllustration.jsx` (691 lines, never imported).
+5. **Item 21 / 25** — payload and SEO. `whoWeAre.jpg` at 716 kB and the missing
+   `robots.txt` / `sitemap.xml` / JSON-LD are the cheapest remaining wins.
+6. **Item 22** — decide whether `.env` belongs in `.dockerignore` now that `--build-arg`
    works.
+7. **Items 18, 19, 23, 24, 26, 27, 28, 29, 30** — P2 cleanup, no user impact.
 
-> Note: items 14 (`Show less` hardcoded), 19 (no per-project i18n array) and part of 15
-> (focus ring) look addressed by the case-study work that landed in the tree separately —
-> `Work.jsx` now uses `t('workCtaLess')` and per-slug `projects.<slug>` keys, and
-> `index.css` has a `.focus-ring:focus-visible` rule. Not verified in this pass; re-audit
-> them rather than trusting this note.
+> The 2026-07-28 note about items 14, 19 and 15 has now been checked rather than trusted.
+> **14 is genuinely fixed** (`t('workCtaLess')`, key in all three locales) and **19 is
+> fixed** (per-slug `projects.<slug>` keys). **15 was only half true** — the
+> `.focus-ring:focus-visible` rule existed but reached just 6 elements and there was no
+> skip link; that gap is what the P1 pass closed.

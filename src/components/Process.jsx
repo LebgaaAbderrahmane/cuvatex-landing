@@ -8,10 +8,10 @@ import ScrollReveal from './ScrollReveal';
 // follows instead of silently desyncing.
 const CARD_H = 340;
 const CARD_HALF = CARD_H / 2;
-// Measured site header: 14px padding + 38px controls + 1px border. Constant at
-// every desktop width — the nav switches to a toggle at 767px, below the
-// `max-width: 768px` this component treats as mobile, so it never wraps taller.
-const NAV_H = 67;
+// `--header-h` is measured and published by Header on mount and on every resize,
+// so this no longer hardcodes a header height that can drift from reality.
+// The fallback covers the very first frame only.
+const NAV_H = 'var(--header-h, 73px)';
 const TITLE_BAR_CLEAR = 206;         // bottom of the sticky title bar (185) + a gap
 const STEP_GAP = 'clamp(120px, 18vh, 200px)';
 

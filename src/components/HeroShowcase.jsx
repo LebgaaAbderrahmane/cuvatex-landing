@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 
 const projects = [
   { id: 'shop', title: 'ShopFlow', cat: 'E-Commerce Platform', desktop: 'https://picsum.photos/seed/shop-d/800/500', mobile: 'https://picsum.photos/seed/shop-m/240/480' },
@@ -17,14 +17,18 @@ export default function HeroShowcase() {
   const [index, setIndex] = useState(0);
   const ref = useRef(null);
   const inView = useInView(ref, { once: false, margin: '-80px' });
+  const reduceMotion = useReducedMotion();
 
+  // MotionConfig removes the cross-fade but not the swap itself, which would
+  // leave the hero jump-cutting between projects — the loudest motion on the
+  // page. Under reduced motion the showcase holds on the first project instead.
   useEffect(() => {
-    if (!inView) return;
+    if (!inView || reduceMotion) return;
     const timer = setInterval(() => {
       setIndex(i => (i + 1) % projects.length);
     }, SHOW_MS);
     return () => clearInterval(timer);
-  }, [inView]);
+  }, [inView, reduceMotion]);
 
   const p = projects[index];
 

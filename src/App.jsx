@@ -19,7 +19,7 @@ import CaseStudy from './components/CaseStudy';
 import useCaseRoute from './hooks/useCaseRoute';
 
 export default function App() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { slug: caseSlug, open: openCase, close: closeCase } = useCaseRoute();
 
   // `resolvedLanguage` is always one of the supported codes; `language` can still
@@ -32,8 +32,14 @@ export default function App() {
 
   return (
     <div id="top" style={{ minHeight: '100vh' }}>
+      {/* First tab stop on the page: lets keyboard users jump the seven nav
+          links instead of tabbing through them on every section. Hidden
+          off-screen until focused — see `.skip-link` in index.css. */}
+      <a href="#main" className="skip-link">{t('skipToContent')}</a>
       <Header />
-      <main>
+      {/* tabIndex={-1} makes the <main> a valid focus target for the skip link;
+          without it the browser moves the scroll position but not the focus. */}
+      <main id="main" tabIndex={-1}>
         <Hero />
         <Services />
         <Clients />

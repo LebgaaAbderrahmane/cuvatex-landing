@@ -23,6 +23,7 @@ export default function BackToTop() {
           transition={{ duration: 0.2 }}
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.9 }}
+          className="focus-ring"
           aria-label="Back to top"
           style={{
             position: 'fixed',
