@@ -1,12 +1,8 @@
-import { useRef } from 'react';
 import { motion } from 'framer-motion';
 
 export default function HeroBackground() {
-  const ref = useRef(null);
-
   return (
     <div
-      ref={ref}
       style={{
         position: 'absolute',
         inset: 0,
