@@ -805,10 +805,15 @@ label under it. Re-verified: renders `40+` / `4+` / `30+` / `98%` in Arabic.
 
 ## P2 — code and repo quality, no user impact yet
 
-### 17. `HeroIllustration.jsx` is 691 lines of dead code
+### 17. `HeroIllustration.jsx` is 691 lines of dead code — ✅ RESOLVED 2026-08-09
 
 Never imported anywhere (`grep` finds only its own `export default`). It is the single
 largest source file in the project.
+
+**Fixed in the 2026-08-09 refactor.** File deleted. Re-verified before deleting that nothing
+imports it. Note for expectations: the bundle only moved 507.75 kB → 507.66 kB, because the
+file was already being tree-shaken out and never reached visitors. The win is maintenance,
+not payload.
 
 ### 18. Content hardcoded in JSX, against the CLAUDE.md rule
 
@@ -825,7 +830,7 @@ Unlike `services` / `steps` / `faq`, there is no array — all 8 cards render th
 `projectTitle` / `projectDesc` and the same `imgLabel` alt text. Putting real case studies
 in means restructuring the component, so **design the JSON shape before writing any copy.**
 
-### 20. Duplicate `id="top"` (measured)
+### 20. Duplicate `id="top"` (measured) — ✅ RESOLVED 2026-08-09
 
 `src/App.jsx:29` (the wrapper `div`) and `src/components/Hero.jsx:18` (the hero `section`).
 Invalid HTML; `document.getElementById('top')` resolves to the `div`. The logo link and the
@@ -851,13 +856,34 @@ any code that queries `#top` silently gets the wrong element.
   added to `.dockerignore` whenever the owner wants. (The web3forms key is not really a secret
   either way: Vite inlines it into the shipped JS bundle.)
 
-### 23. Breakpoint mismatch at exactly 768 px (measured)
+### 23. Breakpoint mismatch at exactly 768 px (measured) — ✅ RESOLVED 2026-08-09
 
 `Header.jsx:11` uses `max-width: 767px`; `Process.jsx:9` and `Work.jsx:14` use
 `max-width: 768px`. At exactly 768 px you get the desktop nav together with the mobile
 Process layout (measured: `desktopNav=true, hamburger=false, processGrid="691.219px"`,
 i.e. one column and no sticky visual panel). Harmless today, but the two numbers should
 come from one place.
+
+**Fixed in the 2026-08-09 refactor.** `Process` and `Work` moved to `max-width: 767px`, so
+all three read the same rule. Both now go through the shared `useMediaQuery` hook, though the
+query deliberately stays at the call site — `Services` uses `949px` for a different reason
+(its sticky stack) and must not be swept into the same constant.
+
+Verified by driving the real page at 766 / 767 / 768 / 769 px and asserting that the burger
+and the desktop nav are never both present, and that the Work card count matches the same
+side of the breakpoint:
+
+```
+width  burgerVisible  desktopNav  workCards   verdict
+766    true           false       3           OK
+767    true           false       3           OK
+768    false          true        6           OK
+769    false          true        6           OK
+```
+
+This is the one refactor change with a deliberate visual diff: at exactly 768 px the page
+grows (en: 15589 → 16624 px tall) because Work now shows 6 cards instead of 3. 390 px and
+1440 px are pixel-identical to before.
 
 ### 24. Services measures its title height once and never re-measures on content change (from code)
 
@@ -1072,16 +1098,115 @@ What is left, in order:
    The single remaining launch blocker.
 2. **Item 5** — ship local placeholder assets. Reverted once by choice; still the single
    biggest runtime dependency on a third party, and it covers the case-study overlay too.
-3. **Item 20** — duplicate `id="top"`. A one-liner, and now the only trivial fix left.
-4. **Item 17** — delete `HeroIllustration.jsx` (691 lines, never imported).
-5. **Item 21 / 25** — payload and SEO. `whoWeAre.jpg` at 716 kB and the missing
+3. **Item 38** — the WhatsApp number. A one-liner in `src/lib/contact.js` once the real
+   number exists, and the only thing still shipping a placeholder to visitors.
+4. **Item 21 / 25** — payload and SEO. `whoWeAre.jpg` at 716 kB and the missing
    `robots.txt` / `sitemap.xml` / JSON-LD are the cheapest remaining wins.
-6. **Item 22** — decide whether `.env` belongs in `.dockerignore` now that `--build-arg`
+5. **Item 22** — decide whether `.env` belongs in `.dockerignore` now that `--build-arg`
    works.
-7. **Items 18, 19, 23, 24, 26, 27, 28, 29, 30** — P2 cleanup, no user impact.
+6. **Items 18, 19, 24, 26, 27, 28, 29, 30, 39** — P2 cleanup, no user impact.
+
+> **Updated 2026-08-09.** Items 17, 20 and 23 were resolved by the structural refactor and
+> have been removed from this list rather than left prescribing finished work. Item 39 is
+> new and deliberately deferred; item 40 was withdrawn after review. See the
+> 2026-08-09 section above.
 
 > The 2026-07-28 note about items 14, 19 and 15 has now been checked rather than trusted.
 > **14 is genuinely fixed** (`t('workCtaLess')`, key in all three locales) and **19 is
 > fixed** (per-slug `projects.<slug>` keys). **15 was only half true** — the
 > `.focus-ring:focus-visible` rule existed but reached just 6 elements and there was no
 > skip link; that gap is what the P1 pass closed.
+
+---
+
+## P2 — found during the structural refactor, 2026-08-09
+
+Found while deduplicating components. The refactor itself was **structure only**: verified by
+Playwright screenshots across 3 languages × 2 themes × 3 viewports plus the Contact form and
+Header menu states, requiring a **zero-pixel diff** at every step. Items already listed above
+were updated in place rather than re-reported — see 17, 20 and 23.
+
+Two behaviour fixes did ship, in their own commits after the refactor commits, so that a
+pixel change could always be attributed to a fix and never to a mistake: item 23 above and
+item 35 below.
+
+### 31–33 are taken by the 2026-07-29 responsive sweep. New items start at 34.
+
+### 34. `getInitials` was defined twice with different behaviour — ✅ RESOLVED 2026-08-09
+
+`Team.jsx:7` had `name.split(' ').map(n => n[0]).join('')`. `Testimonials.jsx:5` also
+`.filter(Boolean)`, `.toUpperCase()` and `.slice(0, 2)`. Same name, same job, different
+output for any lowercase name, any name with a double space, and any name of three or more
+words — the two sections would have disagreed as soon as one was added.
+
+Both produce identical output for the three names currently in the app (`Alex Morgan`,
+`Sam Rivera`, `Jordan Lee` → `AM`, `SR`, `JL`), which is why nothing looked wrong. Merged
+into `src/lib/text.js` on the stricter Testimonials version. Zero pixel diff, as expected.
+
+### 35. Mobile first paint rendered the desktop layout for one frame — ✅ RESOLVED 2026-08-09
+
+`Process.jsx:35` and `Work.jsx:15` initialised their media-query state as `useState(false)`
+and corrected it in an effect. On a phone the first committed frame therefore used the
+desktop branch — for Work that is 6 cards where 3 belong — before snapping to the mobile
+layout. `Header.jsx:13` and `Services.jsx:23` already read `matchMedia` synchronously in a
+lazy initialiser and did not have the bug.
+
+All four now share `src/hooks/useMediaQuery.js`, which reads the value synchronously. The
+transient frame is not visible in a post-load screenshot, so this one is verified by
+reading the code path rather than by the image diff.
+
+### 36. `HeroShowcase` declared a `projects` const shadowing the real one — ✅ RESOLVED 2026-08-09
+
+`HeroShowcase.jsx:4` exported nothing but declared `const projects` — the same name as the
+real case-study registry exported from `src/data/projects.js` and imported under that name in
+`Work.jsx` and `CaseStudy.jsx`. Nothing was broken; the hazard was that reading the two files
+in sequence implied a relationship that does not exist. Renamed to `showcaseProjects`.
+
+### 37. Services recomputed `isEven` inline — ✅ RESOLVED 2026-08-09
+
+`Services.jsx:185` computed `const isEven = i % 2 === 0` and used it once at `:215`, while
+`:196` recomputed `i % 2 === 0` inline for the background instead of reusing it. Reused.
+
+### 38. WhatsApp link still ships an unresolved placeholder — ⏸ OPEN, needs the real number
+
+`https://wa.me/PHONE_NUMBER_PLACEHOLDER` is live in two places on the production site —
+`Contact.jsx` (the direct link) and `ContactForm.jsx` (the error fallback, which is exactly
+where a visitor lands when the form has already failed them). Both are marked with a
+`TODO(docs/AUDIT.md item 38)`.
+
+Not fixable without the number. **This is a live defect on a shipped page, not code
+tidiness** — it is listed under P2 only because it was found here.
+
+### 39. Services re-measures a header height that Header already publishes — ⏸ OPEN (overlaps item 24)
+
+`Services.jsx:88-101` runs its own `ResizeObserver` on `document.querySelector('header')` to
+get a height that `Header.jsx` already measures and publishes as `--header-h`. Two observers,
+one number, and Services keeps it in `useState(73)` — a fourth copy of the `73` fallback that
+appears as `var(--header-h, 73px)` in Hero, Clients and Process.
+
+**Deliberately not fixed.** Services' sticky card stack is driven by JS arithmetic over that
+measurement, and the screenshot suite used for this refactor captures at scroll 0, where the
+sticky behaviour does not appear. Changing it without scroll-scripted coverage would be a
+change nothing could verify. Same reason `Services`, `Process`, `Work` and `CaseStudy` were
+not split internally.
+
+### 40. `console.error` in the production bundle — ⛔ CLOSED, WON'T FIX
+
+Three calls in `Contact.jsx` (now `:26`, `:50`, `:55`). Originally listed as cleanup for this
+pass; **withdrawn after reading them.** The first reports a build with no
+`VITE_WEB3FORMS_KEY`, which is otherwise an invisible misconfiguration that silently breaks
+every form submission — the code comment above it says so explicitly. The other two report
+why a submission failed. All three are deliberate operator-facing diagnostics on a form whose
+failure mode is a lost lead. Removing them would make a real problem harder to find.
+
+### 41. One `scrollIntoView` still ignores `prefers-reduced-motion` — ⏸ OPEN
+
+`CaseStudy.jsx:418` calls `scrollIntoView({ behavior: 'smooth' })` with the behaviour
+hardcoded. The other two call sites gate it — `Hero.jsx:14` and `MobileMenu.jsx:74` both use
+`reduceMotion ? 'auto' : 'smooth'` — and `MotionConfig reducedMotion="user"` does not reach
+`scrollIntoView` at all, so this one animates for a visitor who asked for no motion.
+
+Same class as item 12, which closed the rest of them. One-line fix, and `useReducedMotion()`
+is already imported in that file. Not done here because it is a behaviour change inside
+`CaseStudy.jsx`, one of the four files the 2026-08-09 refactor deliberately left alone — see
+item 39 for why changes there need scroll-scripted verification first.

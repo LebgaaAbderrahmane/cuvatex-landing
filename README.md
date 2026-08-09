@@ -64,6 +64,13 @@ src/
 └── index.css     — Global styles
 ```
 
+## Docs
+
+| File | What it is |
+|------|-----------|
+| [`AGENTS.md`](AGENTS.md) | Architecture, conventions and rules — read this before editing code. Also what AI coding agents (Claude Code, Cursor, Copilot, Codex…) load automatically. |
+| [`docs/AUDIT.md`](docs/AUDIT.md) | 2026-07 accessibility / responsive audit and its fix log |
+
 ## License
 
 Private — CUVATEX
