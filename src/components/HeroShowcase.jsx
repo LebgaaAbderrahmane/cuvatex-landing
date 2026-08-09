@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useInView, useReducedMotion } from 'framer-motion';
+import { EASE } from '../lib/motion';
 
-const projects = [
+// Named `showcaseProjects`, not `projects`: these are decorative mockups for the
+// hero carousel and have nothing to do with the real case studies exported as
+// `projects` from src/data/projects.js. The two used to share a name, so reading
+// one file and then the other suggested a relationship that does not exist.
+const showcaseProjects = [
   { id: 'shop', title: 'ShopFlow', cat: 'E-Commerce Platform', desktop: 'https://picsum.photos/seed/shop-d/800/500', mobile: 'https://picsum.photos/seed/shop-m/240/480' },
   { id: 'dash', title: 'Pulse', cat: 'Analytics Dashboard', desktop: 'https://picsum.photos/seed/dash-d/800/500', mobile: 'https://picsum.photos/seed/dash-m/240/480' },
   { id: 'social', title: 'Vibe', cat: 'Social Platform', desktop: 'https://picsum.photos/seed/vibe-d/800/500', mobile: 'https://picsum.photos/seed/vibe-m/240/480' },
@@ -25,12 +30,12 @@ export default function HeroShowcase() {
   useEffect(() => {
     if (!inView || reduceMotion) return;
     const timer = setInterval(() => {
-      setIndex(i => (i + 1) % projects.length);
+      setIndex(i => (i + 1) % showcaseProjects.length);
     }, SHOW_MS);
     return () => clearInterval(timer);
   }, [inView, reduceMotion]);
 
-  const p = projects[index];
+  const p = showcaseProjects[index];
 
   return (
     <motion.div
@@ -38,7 +43,7 @@ export default function HeroShowcase() {
       initial={{ opacity: 0, scale: 0.88 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, margin: '-10% 0px' }}
-      transition={{ duration: 0.7, ease: [0.2, 0.6, 0.2, 1] }}
+      transition={{ duration: 0.7, ease: EASE }}
       style={{
         width: '100%',
         maxWidth: 700,
@@ -96,7 +101,7 @@ export default function HeroShowcase() {
           </div>
 
           <div style={{ position: 'relative', width: '100%', height: 'calc(100% - 36px)', overflow: 'hidden' }}>
-            {projects.map((proj, i) => (
+            {showcaseProjects.map((proj, i) => (
               <motion.img
                 key={proj.id}
                 src={proj.desktop}
@@ -153,7 +158,7 @@ export default function HeroShowcase() {
             </span>
           </span>
           <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
-            {projects.map((_, i) => (
+            {showcaseProjects.map((_, i) => (
               <span key={i} style={{
                 width: i === index ? 12 : 5,
                 height: 3,
@@ -200,7 +205,7 @@ export default function HeroShowcase() {
           </div>
 
           <div style={{ position: 'relative', width: '100%', height: 'calc(100% - 22px)', overflow: 'hidden' }}>
-            {projects.map((proj, i) => (
+            {showcaseProjects.map((proj, i) => (
               <motion.img
                 key={proj.id + '-m'}
                 src={proj.mobile}

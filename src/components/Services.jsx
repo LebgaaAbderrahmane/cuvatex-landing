@@ -1,5 +1,6 @@
-import { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import { useRef, useState, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '../hooks/useMediaQuery';
 
 // Each card pins at a fixed height of one viewport minus the header and title.
 // That only works while the image and the text sit side by side. Below 950px they
@@ -19,20 +20,6 @@ const serviceImages = [
 ];
 
 const nums = ['01', '02', '03', '04', '05', '06'];
-
-function useIsStacked() {
-  const [stacked, setStacked] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(STACK_QUERY).matches
-  );
-  useEffect(() => {
-    const mq = window.matchMedia(STACK_QUERY);
-    const onChange = e => setStacked(e.matches);
-    setStacked(mq.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-  return stacked;
-}
 
 // Watches every card's inner content and reports the tallest. Returns a callback
 // ref to attach to each inner; `count` re-arms it when the service list changes.
@@ -100,7 +87,7 @@ export default function Services() {
     return () => observer.disconnect();
   }, []);
 
-  const stacked = useIsStacked();
+  const stacked = useMediaQuery(STACK_QUERY);
 
   // One card's worth of viewport: what's left under the header and the title bar,
   // but never less than the tallest card's own content plus breathing room. On a
@@ -193,7 +180,7 @@ export default function Services() {
                   // out of the card and land on the section below.
                   height: stacked ? 'auto' : cardSpace,
                   zIndex: i,
-                  background: i % 2 === 0 ? 'var(--bg)' : 'var(--surface)',
+                  background: isEven ? 'var(--bg)' : 'var(--surface)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',

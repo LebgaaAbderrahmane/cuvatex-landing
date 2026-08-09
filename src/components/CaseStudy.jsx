@@ -12,8 +12,8 @@ import {
 import { X, ArrowRight } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { findProject, nextProject, heroImage, shotImage } from '../data/projects';
+import { EASE } from '../lib/motion';
 
-const EASE = [0.2, 0.6, 0.2, 1];
 const FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 export default function CaseStudy({ slug, onOpen, onClose }) {

@@ -1,7 +1,8 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, useReducedMotion, useTransform } from 'framer-motion';
 import ScrollReveal from './ScrollReveal';
+import useMediaQuery from '../hooks/useMediaQuery';
 
 // The card's height drives where it parks and how much runway the steps need, so
 // everything below is derived from it — resize the card and the scroll geometry
@@ -32,23 +33,16 @@ const CARD_TOP = `max(calc(${FOCUS} - ${CARD_HALF}px), ${TITLE_BAR_CLEAR}px)`;
 const RUNWAY_TOP = `100px`;
 const RUNWAY_BOTTOM = `${CARD_H / 3 + 20}px`;
 
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 768px)');
-    setIsMobile(mq.matches);
-    function handler(e) { setIsMobile(e.matches); }
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
-  return isMobile;
-}
+// Matches Header's breakpoint exactly. These were 768px and 767px respectively,
+// so at a window of exactly 768px the desktop nav rendered above the mobile
+// layout — docs/AUDIT.md item 23.
+const MOBILE_QUERY = '(max-width: 767px)';
 
 export default function Process() {
   const { t } = useTranslation();
   const steps = t('steps', { returnObjects: true });
   const stepList = Array.isArray(steps) ? steps : [];
-  const isMobile = useIsMobile();
+  const isMobile = useMediaQuery(MOBILE_QUERY);
   const reduceMotion = useReducedMotion();
 
   const trackRef = useRef(null);

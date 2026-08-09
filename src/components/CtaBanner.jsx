@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import ScrollReveal from './ScrollReveal';
-
-const dirArrow = { en: '→', fr: '→', ar: '←' };
+import { dirArrow } from '../lib/text';
 
 export default function CtaBanner() {
   const { t, i18n } = useTranslation();
@@ -39,7 +38,7 @@ export default function CtaBanner() {
             >
               {t('ctaBannerLink')}{' '}
               {/* resolvedLanguage, not language: the latter can be 'ar-DZ'. */}
-              <span aria-hidden="true">{dirArrow[i18n.resolvedLanguage] || '→'}</span>
+              <span aria-hidden="true">{dirArrow(i18n.resolvedLanguage)}</span>
             </motion.a>
           </p>
         </ScrollReveal>

@@ -3,8 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import ScrollReveal from './ScrollReveal';
 import HeroShowcase from './HeroShowcase';
 import HeroBackground from './HeroBackground';
-
-const dirArrow = { en: '\u2192', fr: '\u2192', ar: '\u2190' };
+import { dirArrow } from '../lib/text';
 
 export default function Hero() {
   const { t, i18n } = useTranslation();
@@ -16,10 +15,12 @@ export default function Hero() {
   };
 
   return (
+    // No `id="top"` here: App.jsx's wrapper div already carries it, and two
+    // elements sharing an id is invalid HTML. This copy was inert anyway — the
+    // browser resolves `#top` to the first match, so the logo link and the
+    // BackToTop button were always landing on the div. docs/AUDIT.md item 20.
     <section
-      id="top"
       style={{
-        scrollMarginTop: 0,
         // `--header-h` is measured and published by Header; 73 is the mobile
         // fallback for the first frame, before the observer has run.
         minHeight: 'calc(100dvh - var(--header-h, 73px))',
@@ -123,7 +124,7 @@ export default function Hero() {
                 >
                   {t('cta')}
                   {/* resolvedLanguage, not language: the latter can be 'ar-DZ'. */}
-                  <span aria-hidden="true">{dirArrow[i18n.resolvedLanguage] || '\u2192'}</span>
+                  <span aria-hidden="true">{dirArrow(i18n.resolvedLanguage)}</span>
                 </motion.a>
                 <p style={{
                   margin: '16px 0 0',
