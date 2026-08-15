@@ -1,17 +1,18 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, useReducedMotion, useTransform } from 'framer-motion';
 import ScrollReveal from './ScrollReveal';
+import useMediaQuery from '../hooks/useMediaQuery';
 
 // The card's height drives where it parks and how much runway the steps need, so
 // everything below is derived from it — resize the card and the scroll geometry
 // follows instead of silently desyncing.
 const CARD_H = 340;
 const CARD_HALF = CARD_H / 2;
-// Measured site header: 14px padding + 38px controls + 1px border. Constant at
-// every desktop width — the nav switches to a toggle at 767px, below the
-// `max-width: 768px` this component treats as mobile, so it never wraps taller.
-const NAV_H = 67;
+// `--header-h` is measured and published by Header on mount and on every resize,
+// so this no longer hardcodes a header height that can drift from reality.
+// The fallback covers the very first frame only.
+const NAV_H = 'var(--header-h, 73px)';
 const TITLE_BAR_CLEAR = 206;         // bottom of the sticky title bar (185) + a gap
 const STEP_GAP = 'clamp(120px, 18vh, 200px)';
 
@@ -32,23 +33,16 @@ const CARD_TOP = `max(calc(${FOCUS} - ${CARD_HALF}px), ${TITLE_BAR_CLEAR}px)`;
 const RUNWAY_TOP = `100px`;
 const RUNWAY_BOTTOM = `${CARD_H / 3 + 20}px`;
 
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 768px)');
-    setIsMobile(mq.matches);
-    function handler(e) { setIsMobile(e.matches); }
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
-  return isMobile;
-}
+// Matches Header's breakpoint exactly. These were 768px and 767px respectively,
+// so at a window of exactly 768px the desktop nav rendered above the mobile
+// layout — docs/AUDIT.md item 23.
+const MOBILE_QUERY = '(max-width: 767px)';
 
 export default function Process() {
   const { t } = useTranslation();
   const steps = t('steps', { returnObjects: true });
   const stepList = Array.isArray(steps) ? steps : [];
-  const isMobile = useIsMobile();
+  const isMobile = useMediaQuery(MOBILE_QUERY);
   const reduceMotion = useReducedMotion();
 
   const trackRef = useRef(null);

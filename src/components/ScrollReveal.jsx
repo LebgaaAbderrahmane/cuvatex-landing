@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { EASE } from '../lib/motion';
 
 const variants = {
   hidden: { opacity: 0, y: 24 },
@@ -17,7 +18,7 @@ export default function ScrollReveal({ children, delay = 0, className, style, ro
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: '-8% 0px', root }}
-      transition={{ duration: 0.7, ease: [0.2, 0.6, 0.2, 1], delay }}
+      transition={{ duration: 0.7, ease: EASE, delay }}
     >
       {children}
     </motion.div>

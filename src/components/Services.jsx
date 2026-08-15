@@ -1,5 +1,14 @@
 import { useRef, useState, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '../hooks/useMediaQuery';
+
+// Each card pins at a fixed height of one viewport minus the header and title.
+// That only works while the image and the text sit side by side. Below 950px they
+// wrap into a column and the content becomes ~950px tall — measured overflowing a
+// 504px card by 445px at 900x700, spilling over the section below it. There is no
+// height that fixes that, so the whole sticky mechanism is dropped here and the
+// services render as an ordinary stacked list.
+const STACK_QUERY = '(max-width: 949px)';
 
 const serviceImages = [
   'https://picsum.photos/seed/services-web/800/600',
@@ -12,13 +21,52 @@ const serviceImages = [
 
 const nums = ['01', '02', '03', '04', '05', '06'];
 
+// Watches every card's inner content and reports the tallest. Returns a callback
+// ref to attach to each inner; `count` re-arms it when the service list changes.
+function useMaxContentHeight(count) {
+  const [maxH, setMaxH] = useState(0);
+  const nodes = useRef(new Set());
+  const observer = useRef(null);
+
+  useLayoutEffect(() => {
+    const recalc = () => {
+      let max = 0;
+      for (const el of nodes.current) {
+        max = Math.max(max, el.getBoundingClientRect().height);
+      }
+      setMaxH(Math.ceil(max));
+    };
+    observer.current = new ResizeObserver(recalc);
+    for (const el of nodes.current) observer.current.observe(el);
+    recalc();
+    return () => observer.current?.disconnect();
+  }, [count]);
+
+  return {
+    maxH,
+    ref: el => {
+      if (!el) return;
+      nodes.current.add(el);
+      observer.current?.observe(el);
+    },
+  };
+}
+
 export default function Services() {
   const { t } = useTranslation();
   const services = t('services', { returnObjects: true });
   const n = Array.isArray(services) ? services.length : 0;
   const titleRef = useRef(null);
   const [titleH, setTitleH] = useState(0);
-  const [navH, setNavH] = useState(67);
+  // Tallest card's content. A card is pinned at a fixed height, so on a short
+  // window that height can come out smaller than what is inside it and the text
+  // spills onto the next section (measured: 1440x600 gave a 397px card holding
+  // 416px of content). Measured rather than a constant, because it changes with
+  // the language, the font swap and the width.
+  const contentH = useMaxContentHeight(n);
+  // Fallback only — useLayoutEffect below replaces it with the measured header
+  // before first paint. Same number as the `--header-h` fallback elsewhere.
+  const [navH, setNavH] = useState(73);
 
   // Every offset below is derived from these two heights, so a stale value drifts
   // the whole section. One ResizeObserver covers window resize, the title
@@ -39,8 +87,14 @@ export default function Services() {
     return () => observer.disconnect();
   }, []);
 
-  // One card's worth of viewport: what's left under the header and the title bar.
-  const cardSpace = `calc(100dvh - ${navH}px - ${titleH}px)`;
+  const stacked = useMediaQuery(STACK_QUERY);
+
+  // One card's worth of viewport: what's left under the header and the title bar,
+  // but never less than the tallest card's own content plus breathing room. On a
+  // short window the viewport term wins and the card would clip; the floor is what
+  // stops that. `max()` keeps both terms live, so it still tracks a resize.
+  const floor = contentH.maxH > 0 ? `${contentH.maxH + 64}px` : '0px';
+  const cardSpace = `max(calc(100dvh - ${navH}px - ${titleH}px), ${floor})`;
 
   return (
     <section
@@ -60,14 +114,18 @@ export default function Services() {
           Anything else leaves a hole: translating the title out by JS moved the title
           but not the cards, so a title-height band of empty page opened under the
           header while card 06 was still pinned. */}
-      <div style={{ position: 'relative', height: `calc(${titleH}px + ${n} * ${cardSpace})` }}>
+      <div style={{
+        position: 'relative',
+        height: stacked ? 'auto' : `calc(${titleH}px + ${n} * ${cardSpace})`,
+      }}>
         <div
           ref={titleRef}
           style={{
-            position: 'sticky',
+            position: stacked ? 'static' : 'sticky',
             top: navH,
             zIndex: 49,
             background: 'var(--bg)',
+            paddingInline: stacked ? 'clamp(20px, 5vw, 48px)' : 0,
           }}
         >
           <div style={{
@@ -105,36 +163,45 @@ export default function Services() {
         {/* n + 1, not n: the extra card of runway is what gives the last card the same
             full-screen hold as the others. It overflows the scope above by exactly that
             one card — the spacer after the scope gives the overflow real height. */}
-        <div style={{ height: `calc(${n + 1} * ${cardSpace})`, position: 'relative', zIndex: 1 }}>
+        <div style={{
+          height: stacked ? 'auto' : `calc(${n + 1} * ${cardSpace})`,
+          position: 'relative',
+          zIndex: 1,
+        }}>
           {n > 0 && services.map((s, i) => {
             const isEven = i % 2 === 0;
             return (
               <div
                 key={s.title}
                 style={{
-                  position: 'sticky',
+                  position: stacked ? 'static' : 'sticky',
                   top: `calc(${navH}px + ${titleH}px)`,
-                  height: cardSpace,
+                  // Stacked: natural height, so the wrapped column can never spill
+                  // out of the card and land on the section below.
+                  height: stacked ? 'auto' : cardSpace,
                   zIndex: i,
-                  background: i % 2 === 0 ? 'var(--bg)' : 'var(--surface)',
+                  background: isEven ? 'var(--bg)' : 'var(--surface)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   paddingLeft: 'clamp(20px, 5vw, 48px)',
                   paddingRight: 'clamp(20px, 5vw, 48px)',
+                  paddingBlock: stacked ? 'clamp(44px, 9vw, 72px)' : 0,
                   borderTop: i === 0 ? 'none' : '1px solid var(--line, rgba(21,18,15,0.13))',
                 }}
               >
-                <div style={{
-                  maxWidth: 1160,
-                  margin: '0 auto',
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'clamp(32px, 5vw, 72px)',
-                  flexDirection: isEven ? 'row' : 'row-reverse',
-                  flexWrap: 'wrap',
-                }}>
+                <div
+                  ref={contentH.ref}
+                  style={{
+                    maxWidth: 1160,
+                    margin: '0 auto',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'clamp(32px, 5vw, 72px)',
+                    flexDirection: isEven ? 'row' : 'row-reverse',
+                    flexWrap: 'wrap',
+                  }}>
                   <div style={{
                     flex: '1 1 400px',
                     borderRadius: 8,
@@ -271,8 +338,10 @@ export default function Services() {
       </div>
 
       {/* The card container hangs one card below the sticky scope's box. This gives
-          that overhang real height so the next section starts under it, not over it. */}
-      <div aria-hidden style={{ height: cardSpace }} />
+          that overhang real height so the next section starts under it, not over it.
+          Stacked mode has no overhang — both boxes are natural height — so the spacer
+          would just be a screen-tall hole after the last card. */}
+      {!stacked && <div aria-hidden style={{ height: cardSpace }} />}
     </section>
   );
 }

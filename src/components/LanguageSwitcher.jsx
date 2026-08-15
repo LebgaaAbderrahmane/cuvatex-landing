@@ -44,14 +44,17 @@ export default function LanguageSwitcher() {
         type="button"
         onClick={() => setOpen(o => !o)}
         whileTap={{ scale: 0.9 }}
+        className="focus-ring"
         aria-label="Switch language"
         aria-expanded={open}
         style={{
           display: 'inline-flex',
           alignItems: 'center',
+          justifyContent: 'center',
           gap: 4,
+          // 44x44 minimum touch target — matches the theme toggle beside it.
           width: 44,
-          height: 38,
+          height: 44,
           border: '1px solid var(--line, rgba(21,18,15,0.13))',
           background: 'transparent',
           color: 'var(--fg, #15120f)',
@@ -108,13 +111,17 @@ export default function LanguageSwitcher() {
                 <button
                   key={code}
                   type="button"
+                  // Inset ring: the dropdown clips overflow, so an offset ring
+                  // would be cut off on the top and bottom options.
+                  className="focus-ring-inset"
                   onClick={() => setLang(code)}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: 8,
                     width: '100%',
-                    padding: '8px 14px',
+                    // 13px text ≈ 20px line box, so 12px block padding clears 44px.
+                    padding: '12px 14px',
                     border: 'none',
                     background: 'transparent',
                     color: active ? 'var(--accent, #0E7A69)' : 'var(--muted, #6c665e)',

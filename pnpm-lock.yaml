@@ -29,6 +29,9 @@ importers:
       react-i18next:
         specifier: ^17.0.10
         version: 17.0.10(i18next@26.3.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@types/react':
         specifier: ^19.2.17
@@ -314,6 +317,9 @@ packages:
       babel-plugin-react-compiler:
         optional: true
 
+  cookie-es@3.1.1:
+    resolution: {integrity: sha512-UaXxwISYJPTr9hwQxMFYZ7kNhSXboMXP+Z3TRX6f1/NyaGPfuNUZOWP1pUEb75B2HjfklIYLVRfWiFZJyC6Npg==}
+
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
@@ -496,6 +502,16 @@ packages:
       react-native:
         optional: true
       typescript:
+        optional: true
+
+  react-router@8.3.0:
+    resolution: {integrity: sha512-qyPMvW83jGIct3yiieisxdk9M745anqhpIMKN5m1t6yBMfgVPpt77aHOqs5fUlEJRMCGffg9BaQLH9oPVOL7xQ==}
+    engines: {node: '>=22.22.0'}
+    peerDependencies:
+      react: '>=19.2.7'
+      react-dom: '>=19.2.7'
+    peerDependenciesMeta:
+      react-dom:
         optional: true
 
   react@19.2.8:
@@ -728,6 +744,8 @@ snapshots:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.1.5
 
+  cookie-es@3.1.1: {}
+
   csstype@3.2.3: {}
 
   detect-libc@2.1.2: {}
@@ -863,6 +881,13 @@ snapshots:
       i18next: 26.3.6
       react: 19.2.8
       use-sync-external-store: 1.6.0(react@19.2.8)
+    optionalDependencies:
+      react-dom: 19.2.8(react@19.2.8)
+
+  react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+    dependencies:
+      cookie-es: 3.1.1
+      react: 19.2.8
     optionalDependencies:
       react-dom: 19.2.8(react@19.2.8)
 

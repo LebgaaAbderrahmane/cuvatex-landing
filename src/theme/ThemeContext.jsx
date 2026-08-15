@@ -1,47 +1,27 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
-const themes = {
-  light: {
-    '--bg': '#f6f5f2', '--surface': '#ffffff', '--fg': '#15120f',
-    '--muted': '#6c665e', '--line': 'rgba(21,18,15,0.13)',
-    '--accent': '#0E7A69', '--accent-fg': '#ffffff',
-    '--bg-header': 'rgba(246,245,242,0.82)',
-    '--scrim': 'rgba(21,18,15,0.55)',
-    '--danger': '#b3261e',
-  },
-  dark: {
-    '--bg': '#131210', '--surface': '#1b1a17', '--fg': '#f3efe8',
-    '--muted': '#a39c92', '--line': 'rgba(243,239,232,0.15)',
-    '--accent': '#33AC9C', '--accent-fg': '#05231f',
-    '--bg-header': 'rgba(19,18,16,0.82)',
-    '--scrim': 'rgba(5,4,3,0.72)',
-    // Lighter than the light-theme red: #b3261e is unreadable on #131210.
-    '--danger': '#f2857c',
-  },
-};
+// The colour values themselves live in `src/index.css` under `:root` and
+// `:root[data-theme='dark']`. Keeping them in CSS is what lets the inline script
+// in index.html pick the right theme before the first paint — it only has to set
+// one attribute, with no colours duplicated into the HTML. This module owns the
+// *choice*: which theme is active, and persisting it.
+const THEMES = ['light', 'dark'];
+const STORAGE_KEY = 'studio-theme';
 
 const ThemeContext = createContext();
-
-function applyThemeVars(theme) {
-  const vars = themes[theme] || themes.light;
-  const root = document.documentElement;
-  for (const [key, val] of Object.entries(vars)) {
-    root.style.setProperty(key, val);
-  }
-}
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     try {
-      const stored = localStorage.getItem('studio-theme');
-      if (stored === 'dark' || stored === 'light') return stored;
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (THEMES.includes(stored)) return stored;
     } catch {}
     return 'light';
   });
 
   useEffect(() => {
-    applyThemeVars(theme);
-    try { localStorage.setItem('studio-theme', theme); } catch {}
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem(STORAGE_KEY, theme); } catch {}
   }, [theme]);
 
   const toggleTheme = useCallback(() => {

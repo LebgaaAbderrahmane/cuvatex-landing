@@ -3,10 +3,12 @@
     "services": "Services",
     "process": "Process",
     "work": "Work",
+    "pricing": "Pricing",
     "team": "Team",
     "faq": "FAQ",
     "contact": "Contact"
   },
+  "skipToContent": "Skip to content",
   "cta": "Start a project",
   "heroKicker": "Idea · Design · Build · Launch",
   "heroTitle": "We design and build complete software products end to end.",
@@ -60,8 +62,15 @@
   "workTitle": "Selected work",
   "workIntro": "Case studies coming soon.",
   "workCta": "View all projects",
-  "workCtaLess": "Show less",
+  "workPageTitle": "Projects we have built",
+  "workPageIntro": "A look at what we have shipped — the problem each client arrived with, and what we built to solve it.",
   "imgLabel": "project image",
+  "notFound": {
+    "title": "This page does not exist",
+    "body": "The link may be old, or the address may have a typo. Here is the way back.",
+    "home": "Go to homepage",
+    "work": "See our work"
+  },
   "tags": {
     "web": "Web app",
     "api": "Backend",
@@ -71,8 +80,7 @@
   },
   "caseStudy": {
     "view": "View case study",
-    "close": "Close",
-    "esc": "Esc",
+    "back": "All projects",
     "overview": "Overview",
     "challenge": "The challenge",
     "solution": "What we built",
@@ -189,7 +197,6 @@
     "Turns designs into accessible, responsive interfaces that feel effortless.",
     "Shapes how the product looks, feels, and flows, from first idea to final pixel."
   ],
-  "photoLabel": "photo",
   "faqTitle": "Common questions",
   "faq": [
     { "q": "How much does a project cost?", "a": "It depends on what you need. Tell us about your project and we give you a clear, fixed price before any work starts. No hidden costs." },

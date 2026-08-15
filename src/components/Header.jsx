@@ -1,30 +1,33 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../theme/ThemeContext';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { Link, useLocation } from 'react-router';
 import LanguageSwitcher from './LanguageSwitcher';
+import ThemeToggle from './ThemeToggle';
+import { MobileMenuButton, MobileMenuPanel } from './MobileMenu';
+import useMediaQuery from '../hooks/useMediaQuery';
+import { isCurrentSection } from '../lib/nav';
 
-const sections = ['services', 'process', 'work', 'team', 'faq', 'contact'];
+// Drives both the desktop nav and the mobile panel. Each entry needs a
+// `nav.<key>` label in all three locale files.
+//
+// `to` is absolute on purpose. A bare `#services` only resolves on the homepage,
+// so from /work/atlas-retail it would scroll nowhere; `/#services` navigates home
+// first and ScrollManager finishes the scroll. Every anchor here needs a matching
+// section `id` in pages/Home.jsx — except `work`, which is a page of its own.
+const sections = [
+  { key: 'services', to: '/#services' },
+  { key: 'process', to: '/#process' },
+  { key: 'work', to: '/work' },
+  { key: 'pricing', to: '/#pricing' },
+  { key: 'team', to: '/#team' },
+  { key: 'faq', to: '/#faq' },
+  { key: 'contact', to: '/#contact' },
+];
 
 // Below this width the six nav links wrap onto extra rows and push the sticky
 // header to ~200px, so they move behind a toggle instead.
 const MOBILE_QUERY = '(max-width: 767px)';
-
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(MOBILE_QUERY).matches
-  );
-
-  useEffect(() => {
-    const mq = window.matchMedia(MOBILE_QUERY);
-    function onChange(e) { setIsMobile(e.matches); }
-    mq.addEventListener('change', onChange);
-    setIsMobile(mq.matches);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-
-  return isMobile;
-}
 
 const linkStyle = {
   textDecoration: 'none',
@@ -33,11 +36,30 @@ const linkStyle = {
   transition: 'color 0.2s',
 };
 
+
 export default function Header() {
   const { t } = useTranslation();
-  const { theme, toggleTheme } = useTheme();
-  const isMobile = useIsMobile();
+  const { pathname } = useLocation();
+  const isMobile = useMediaQuery(MOBILE_QUERY);
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef(null);
+
+  // The header is the only element that knows its own height, and four other
+  // components need it (hero/clients fold height, sticky offsets in Services and
+  // Process). Publishing it as `--header-h` keeps one source of truth instead of
+  // the magic `56` / `67` constants that used to drift from reality.
+  useLayoutEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const publish = () => {
+      const h = el.getBoundingClientRect().height;
+      if (h > 0) document.documentElement.style.setProperty('--header-h', `${h}px`);
+    };
+    publish();
+    const observer = new ResizeObserver(publish);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Close the panel when we grow past the breakpoint, otherwise it stays
   // mounted and overlaps the desktop nav.
@@ -52,22 +74,9 @@ export default function Header() {
     return () => document.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
-  // Closing the panel unmounts the clicked <a> in the same tick the browser
-  // starts its `scroll-behavior: smooth` jump to the fragment, and the browser
-  // drops the scroll. Scrolling the target ourselves removes that dependency —
-  // the target section is never the element being unmounted.
-  function handleMobileNavClick(e, section) {
-    e.preventDefault();
-    setMenuOpen(false);
-    const el = document.getElementById(section);
-    if (!el) return;
-    // pushState, not replaceState: keeps the back button working for in-page nav.
-    history.pushState(null, '', `#${section}`);
-    el.scrollIntoView({ behavior: 'smooth' });
-  }
-
   return (
     <motion.header
+      ref={headerRef}
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -90,8 +99,11 @@ export default function Header() {
         gap: 20,
         flexWrap: 'wrap',
       }}>
-        <a
-          href="#top"
+        {/* Home, not "scroll to the top of whatever page this is" — on a project
+            page those are two different things, and a logo means home. */}
+        <Link
+          to="/"
+          className="focus-ring"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -110,145 +122,76 @@ export default function Header() {
             style={{ height: 28, width: 'auto', display: 'block' }}
           />
           CUVATEX
-        </a>
+        </Link>
 
+        {/* Nav gap and font-size taper below ~1300px. Seven links at a flat
+            `gap: 22` / `fontSize: 15` overflow the bar at 768px and wrap the
+            header onto a second row (measured 121px), which would push every
+            anchor target under the header. Both clamps sit at their maximum from
+            ~1300px up, so the desktop appearance is unchanged. */}
         {!isMobile && (
           <nav style={{
             display: 'flex',
-            gap: 22,
+            gap: 'clamp(12px, 1.8vw, 22px)',
             alignItems: 'center',
-            fontSize: 15,
+            fontSize: 'clamp(13px, 1.15vw, 15px)',
           }}>
-            {sections.map(section => (
-              <a
-                key={section}
-                href={`#${section}`}
-                style={linkStyle}
-                onMouseEnter={e => e.target.style.color = 'var(--fg, #15120f)'}
-                onMouseLeave={e => e.target.style.color = 'var(--muted, #6c665e)'}
-              >
-                {t(`nav.${section}`)}
-              </a>
-            ))}
+            {sections.map(section => {
+              const current = isCurrentSection(section.to, pathname);
+              const restColor = current ? 'var(--accent, #0E7A69)' : 'var(--muted, #6c665e)';
+              return (
+                <Link
+                  key={section.key}
+                  to={section.to}
+                  className="focus-ring"
+                  // The colour alone is not enough: it is invisible to a screen
+                  // reader and to anyone who cannot separate the two greens.
+                  aria-current={current ? 'page' : undefined}
+                  style={{ ...linkStyle, color: restColor, position: 'relative' }}
+                  // currentTarget, not target: the underline below is a child, and
+                  // hovering it would otherwise recolour the bar instead of the word.
+                  onMouseEnter={e => { e.currentTarget.style.color = current ? 'var(--accent, #0E7A69)' : 'var(--fg, #15120f)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = restColor; }}
+                >
+                  {t(`nav.${section.key}`)}
+                  {current && (
+                    // Sits outside the text box rather than adding padding, so
+                    // marking a link does not reflow the row or the header height.
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        position: 'absolute',
+                        insetInline: 0,
+                        bottom: -6,
+                        height: 2,
+                        background: 'var(--accent, #0E7A69)',
+                      }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
         )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <LanguageSwitcher />
-
-          <motion.button
-            type="button"
-            onClick={toggleTheme}
-            whileTap={{ scale: 0.9 }}
-            aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 38,
-              height: 38,
-              border: '1px solid var(--line, rgba(21,18,15,0.13))',
-              background: 'transparent',
-              color: 'var(--fg, #15120f)',
-              borderRadius: 2,
-              cursor: 'pointer',
-            }}
-          >
-            {theme === 'dark' ? (
-              <svg width="18" height="18" viewBox="0 0 18 18" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" aria-hidden="true">
-                <circle cx="9" cy="9" r="3.3" />
-                <line x1="9" y1="1.2" x2="9" y2="3" />
-                <line x1="9" y1="15" x2="9" y2="16.8" />
-                <line x1="1.2" y1="9" x2="3" y2="9" />
-                <line x1="15" y1="9" x2="16.8" y2="9" />
-                <line x1="3.5" y1="3.5" x2="4.8" y2="4.8" />
-                <line x1="13.2" y1="13.2" x2="14.5" y2="14.5" />
-                <line x1="3.5" y1="14.5" x2="4.8" y2="13.2" />
-                <line x1="13.2" y1="4.8" x2="14.5" y2="3.5" />
-              </svg>
-            ) : (
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                <circle cx="9" cy="9" r="7" fill="currentColor" />
-                <circle cx="12.4" cy="6.6" r="6" fill="var(--bg-header, #f6f5f2)" />
-              </svg>
-            )}
-          </motion.button>
-
+          <ThemeToggle />
           {isMobile && (
-            <motion.button
-              type="button"
-              onClick={() => setMenuOpen(o => !o)}
-              whileTap={{ scale: 0.9 }}
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={menuOpen}
-              aria-controls="mobile-nav"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 44,
-                height: 44,
-                border: '1px solid var(--line, rgba(21,18,15,0.13))',
-                background: 'transparent',
-                color: 'var(--fg, #15120f)',
-                borderRadius: 2,
-                cursor: 'pointer',
-              }}
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" aria-hidden="true">
-                <motion.line x1="3" y1="6" x2="17" y2="6" animate={{ y: menuOpen ? 4 : 0, rotate: menuOpen ? 45 : 0 }} style={{ transformOrigin: '10px 6px' }} transition={{ duration: 0.2 }} />
-                <motion.line x1="3" y1="14" x2="17" y2="14" animate={{ y: menuOpen ? -4 : 0, rotate: menuOpen ? -45 : 0 }} style={{ transformOrigin: '10px 14px' }} transition={{ duration: 0.2 }} />
-              </svg>
-            </motion.button>
+            <MobileMenuButton
+              open={menuOpen}
+              onToggle={() => setMenuOpen(o => !o)}
+            />
           )}
         </div>
       </div>
 
-      <AnimatePresence>
-        {isMobile && menuOpen && (
-          <motion.nav
-            id="mobile-nav"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.2, 0.6, 0.2, 1] }}
-            style={{
-              // Overlay, not in-flow: an in-flow panel changes document height,
-              // so closing it after an anchor click shifts the whole page up by
-              // the panel height and the target heading ends up off-screen.
-              position: 'absolute',
-              top: '100%',
-              insetInline: 0,
-              overflow: 'hidden',
-              background: 'var(--bg, #f6f5f2)',
-              borderBottom: '1px solid var(--line, rgba(21,18,15,0.13))',
-              boxShadow: '0 8px 20px rgba(0,0,0,0.10)',
-            }}
-          >
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              padding: '8px clamp(20px, 5vw, 48px) 16px',
-            }}>
-              {sections.map(section => (
-                <a
-                  key={section}
-                  href={`#${section}`}
-                  onClick={e => handleMobileNavClick(e, section)}
-                  style={{
-                    ...linkStyle,
-                    fontSize: 17,
-                    padding: '13px 0',
-                    borderBottom: '1px solid var(--line, rgba(21,18,15,0.13))',
-                  }}
-                >
-                  {t(`nav.${section}`)}
-                </a>
-              ))}
-            </div>
-          </motion.nav>
-        )}
-      </AnimatePresence>
+      <MobileMenuPanel
+        open={isMobile && menuOpen}
+        sections={sections}
+        linkStyle={linkStyle}
+        onClose={() => setMenuOpen(false)}
+      />
     </motion.header>
   );
 }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="/Cuvatex_logo.png" />
@@ -10,6 +10,39 @@
       content="A team that builds software together, from the first idea to launch. Websites, mobile apps, and custom software for businesses."
     />
     <meta name="theme-color" content="#0E7A69" />
+    <!-- NOTE: update to the real deployed domain when live, same as og:url below -->
+    <link rel="canonical" href="https://cuvatex.com/" />
+
+    <!--
+      Runs before the first paint, so a returning dark-mode visitor never sees a
+      white flash and an Arabic visitor never sees a left-to-right first frame.
+      React sets the same three attributes later; this only wins the first frame.
+      Deliberately blocking and inline — an external or deferred script paints first.
+      Keys must match src/theme/ThemeContext.jsx (studio-theme) and the
+      i18next-browser-languagedetector default (i18nextLng).
+    -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        try {
+          var theme = localStorage.getItem('studio-theme');
+          if (theme === 'dark' || theme === 'light') root.dataset.theme = theme;
+
+          // Same precedence as i18next-browser-languagedetector: an explicit
+          // stored choice wins, otherwise fall back to the browser's own language
+          // so a first-time Algerian visitor also gets RTL on frame one.
+          // Either source may carry a region code such as 'ar-DZ'.
+          var lang = (localStorage.getItem('i18nextLng') || navigator.language || '')
+            .split('-')[0];
+          if (lang === 'en' || lang === 'fr' || lang === 'ar') {
+            root.setAttribute('lang', lang);
+            root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+          }
+        } catch (e) {
+          /* private mode / blocked storage — fall through to the markup defaults */
+        }
+      })();
+    </script>
 
     <!-- Open Graph (link previews on WhatsApp, LinkedIn, Facebook…) -->
     <!-- NOTE: update og:url / og:image to the real deployed domain when live -->
@@ -39,6 +72,19 @@
     />
     <meta name="twitter:image" content="https://cuvatex.com/og-image.png" />
     <meta name="twitter:image:alt" content="CUVATEX — We design and build complete software products" />
+
+    <!-- Structured data: Organization. `sameAs` (social profile links) intentionally
+         omitted — none exist yet; add once the site has real social profiles. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "CUVATEX",
+      "url": "https://cuvatex.com/",
+      "logo": "https://cuvatex.com/Cuvatex_logo.png",
+      "description": "A team that builds software together, from the first idea to launch. Websites, mobile apps, and custom software for businesses."
+    }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

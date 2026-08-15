@@ -2,7 +2,7 @@
 
 A multilingual portfolio site for CUVATEX — a software product team.
 
-**Stack:** React 19, Vite 8, Framer Motion, i18next, pnpm
+**Stack:** React 19, Vite 8, React Router, Framer Motion, i18next, pnpm
 
 ## Quick start
 
@@ -56,13 +56,35 @@ pnpm preview
 
 ```
 src/
-├── components/   — React components (Header, Hero, Services, etc.)
+├── pages/        — One file per route (Home, WorkList, Project, NotFound)
+├── components/   — Reusable pieces (Header, Hero, Services, ProjectCard, etc.)
+├── data/         — Project list and image helpers
+├── hooks/        — Shared React hooks
+├── lib/          — Pure helpers, no React
 ├── i18n/         — Translation JSON files (en, fr, ar)
 ├── theme/        — Theme context (light/dark)
-├── App.jsx       — Root layout
+├── App.jsx       — Shell: header, routes, footer
 ├── main.jsx      — Entry point
 └── index.css     — Global styles
 ```
+
+### Pages
+
+| Route | What it shows |
+|-------|---------------|
+| `/` | The main page — everything about the studio |
+| `/work` | Every project |
+| `/work/:slug` | One case study, e.g. `/work/atlas-retail` |
+
+`nginx.conf` gives the production image an SPA fallback. Without it, opening
+`/work/atlas-retail` directly or reloading it returns 404.
+
+## Docs
+
+| File | What it is |
+|------|-----------|
+| [`AGENTS.md`](AGENTS.md) | Architecture, conventions and rules — read this before editing code. Also what AI coding agents (Claude Code, Cursor, Copilot, Codex…) load automatically. |
+| [`docs/AUDIT.md`](docs/AUDIT.md) | 2026-07 accessibility / responsive audit and its fix log |
 
 ## License
 
