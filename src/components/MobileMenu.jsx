@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link, useLocation } from 'react-router';
 import { EASE } from '../lib/motion';
+import { isCurrentSection } from '../lib/nav';
 
 // Two exports rather than one component, because the trigger and the panel sit
 // in different parents inside the header — the button is in the right-hand
@@ -47,33 +49,18 @@ export function MobileMenuButton({ open, onToggle }) {
   );
 }
 
-/** The drop-down panel of nav links. */
+/**
+ * The drop-down panel of nav links.
+ *
+ * These used to be raw anchors with a hand-written click handler that closed the
+ * panel, pushed the hash and scrolled inside a `requestAnimationFrame` — the rAF
+ * being what stopped React's commit from eating the scroll. All of that now lives
+ * in ScrollManager, one level up, so the desktop nav and the mobile panel cannot
+ * disagree about what a nav click does. Closing the panel is all that is left.
+ */
 export function MobileMenuPanel({ open, sections, linkStyle, onClose }) {
   const { t } = useTranslation();
-  const reduceMotion = useReducedMotion();
-
-  // Closing the panel tears down the clicked <a> in the same task the browser is
-  // asked to smooth-scroll, and the scroll is dropped before its first frame —
-  // the page just never moves. Scrolling the target ourselves is not enough on
-  // its own: React batches the close and commits after the handler returns, so a
-  // `scrollIntoView` called here is still inside that same task.
-  //
-  // `requestAnimationFrame` is what actually fixes it — it puts the scroll after
-  // React's commit and after AnimatePresence has started the panel's exit, at
-  // which point nothing is left to cancel it. Verified by measurement: without
-  // the rAF, `scrollY` stays flat at 0 for the full 2.5 s after the click.
-  function handleNavClick(e, section) {
-    e.preventDefault();
-    const el = document.getElementById(section);
-    if (!el) return;
-    onClose();
-    // pushState, not replaceState: keeps the back button working for in-page nav.
-    history.pushState(null, '', `#${section}`);
-    requestAnimationFrame(() => {
-      // Still scroll under reduced motion — only the smoothness is dropped.
-      el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
-    });
-  }
+  const { pathname } = useLocation();
 
   return (
     <AnimatePresence>
@@ -102,22 +89,45 @@ export function MobileMenuPanel({ open, sections, linkStyle, onClose }) {
             flexDirection: 'column',
             padding: '8px clamp(20px, 5vw, 48px) 16px',
           }}>
-            {sections.map(section => (
-              <a
-                key={section}
-                href={`#${section}`}
-                className="focus-ring"
-                onClick={e => handleNavClick(e, section)}
-                style={{
-                  ...linkStyle,
-                  fontSize: 17,
-                  padding: '13px 0',
-                  borderBottom: '1px solid var(--line, rgba(21,18,15,0.13))',
-                }}
-              >
-                {t(`nav.${section}`)}
-              </a>
-            ))}
+            {sections.map(section => {
+              const current = isCurrentSection(section.to, pathname);
+              return (
+                <Link
+                  key={section.key}
+                  to={section.to}
+                  className="focus-ring"
+                  onClick={onClose}
+                  aria-current={current ? 'page' : undefined}
+                  style={{
+                    ...linkStyle,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    fontSize: 17,
+                    // 48px of tappable row, not a 17px word.
+                    padding: '15px 0',
+                    borderBottom: '1px solid var(--line, rgba(21,18,15,0.13))',
+                    color: current ? 'var(--accent, #0E7A69)' : linkStyle.color,
+                  }}
+                >
+                  {/* A square, not an underline: these rows already sit between
+                      border lines, so a second horizontal rule would read as one
+                      of them. Same marker the section eyebrows use. */}
+                  {current && (
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        width: 7,
+                        height: 7,
+                        flex: 'none',
+                        background: 'var(--accent, #0E7A69)',
+                      }}
+                    />
+                  )}
+                  {t(`nav.${section.key}`)}
+                </Link>
+              );
+            })}
           </div>
         </motion.nav>
       )}

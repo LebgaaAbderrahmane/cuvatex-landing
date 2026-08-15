@@ -62,8 +62,15 @@
   "workTitle": "Selected work",
   "workIntro": "Case studies coming soon.",
   "workCta": "View all projects",
-  "workCtaLess": "Show less",
+  "workPageTitle": "Projects we have built",
+  "workPageIntro": "A look at what we have shipped — the problem each client arrived with, and what we built to solve it.",
   "imgLabel": "project image",
+  "notFound": {
+    "title": "This page does not exist",
+    "body": "The link may be old, or the address may have a typo. Here is the way back.",
+    "home": "Go to homepage",
+    "work": "See our work"
+  },
   "tags": {
     "web": "Web app",
     "api": "Backend",
@@ -73,8 +80,7 @@
   },
   "caseStudy": {
     "view": "View case study",
-    "close": "Close",
-    "esc": "Esc",
+    "back": "All projects",
     "overview": "Overview",
     "challenge": "The challenge",
     "solution": "What we built",

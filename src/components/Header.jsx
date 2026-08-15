@@ -1,14 +1,29 @@
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import { Link, useLocation } from 'react-router';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemeToggle from './ThemeToggle';
 import { MobileMenuButton, MobileMenuPanel } from './MobileMenu';
 import useMediaQuery from '../hooks/useMediaQuery';
+import { isCurrentSection } from '../lib/nav';
 
-// Drives both the desktop nav and the mobile panel. Each entry needs a matching
-// section `id` in App.jsx and a `nav.<key>` label in all three locale files.
-const sections = ['services', 'process', 'work', 'pricing', 'team', 'faq', 'contact'];
+// Drives both the desktop nav and the mobile panel. Each entry needs a
+// `nav.<key>` label in all three locale files.
+//
+// `to` is absolute on purpose. A bare `#services` only resolves on the homepage,
+// so from /work/atlas-retail it would scroll nowhere; `/#services` navigates home
+// first and ScrollManager finishes the scroll. Every anchor here needs a matching
+// section `id` in pages/Home.jsx — except `work`, which is a page of its own.
+const sections = [
+  { key: 'services', to: '/#services' },
+  { key: 'process', to: '/#process' },
+  { key: 'work', to: '/work' },
+  { key: 'pricing', to: '/#pricing' },
+  { key: 'team', to: '/#team' },
+  { key: 'faq', to: '/#faq' },
+  { key: 'contact', to: '/#contact' },
+];
 
 // Below this width the six nav links wrap onto extra rows and push the sticky
 // header to ~200px, so they move behind a toggle instead.
@@ -21,8 +36,10 @@ const linkStyle = {
   transition: 'color 0.2s',
 };
 
+
 export default function Header() {
   const { t } = useTranslation();
+  const { pathname } = useLocation();
   const isMobile = useMediaQuery(MOBILE_QUERY);
   const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef(null);
@@ -82,8 +99,10 @@ export default function Header() {
         gap: 20,
         flexWrap: 'wrap',
       }}>
-        <a
-          href="#top"
+        {/* Home, not "scroll to the top of whatever page this is" — on a project
+            page those are two different things, and a logo means home. */}
+        <Link
+          to="/"
           className="focus-ring"
           style={{
             display: 'flex',
@@ -103,7 +122,7 @@ export default function Header() {
             style={{ height: 28, width: 'auto', display: 'block' }}
           />
           CUVATEX
-        </a>
+        </Link>
 
         {/* Nav gap and font-size taper below ~1300px. Seven links at a flat
             `gap: 22` / `fontSize: 15` overflow the bar at 768px and wrap the
@@ -117,18 +136,41 @@ export default function Header() {
             alignItems: 'center',
             fontSize: 'clamp(13px, 1.15vw, 15px)',
           }}>
-            {sections.map(section => (
-              <a
-                key={section}
-                href={`#${section}`}
-                className="focus-ring"
-                style={linkStyle}
-                onMouseEnter={e => e.target.style.color = 'var(--fg, #15120f)'}
-                onMouseLeave={e => e.target.style.color = 'var(--muted, #6c665e)'}
-              >
-                {t(`nav.${section}`)}
-              </a>
-            ))}
+            {sections.map(section => {
+              const current = isCurrentSection(section.to, pathname);
+              const restColor = current ? 'var(--accent, #0E7A69)' : 'var(--muted, #6c665e)';
+              return (
+                <Link
+                  key={section.key}
+                  to={section.to}
+                  className="focus-ring"
+                  // The colour alone is not enough: it is invisible to a screen
+                  // reader and to anyone who cannot separate the two greens.
+                  aria-current={current ? 'page' : undefined}
+                  style={{ ...linkStyle, color: restColor, position: 'relative' }}
+                  // currentTarget, not target: the underline below is a child, and
+                  // hovering it would otherwise recolour the bar instead of the word.
+                  onMouseEnter={e => { e.currentTarget.style.color = current ? 'var(--accent, #0E7A69)' : 'var(--fg, #15120f)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = restColor; }}
+                >
+                  {t(`nav.${section.key}`)}
+                  {current && (
+                    // Sits outside the text box rather than adding padding, so
+                    // marking a link does not reflow the row or the header height.
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        position: 'absolute',
+                        insetInline: 0,
+                        bottom: -6,
+                        height: 2,
+                        background: 'var(--accent, #0E7A69)',
+                      }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
         )}
 

@@ -1199,14 +1199,21 @@ every form submission — the code comment above it says so explicitly. The othe
 why a submission failed. All three are deliberate operator-facing diagnostics on a form whose
 failure mode is a lost lead. Removing them would make a real problem harder to find.
 
-### 41. One `scrollIntoView` still ignores `prefers-reduced-motion` — ⏸ OPEN
+### 41. One `scrollIntoView` still ignores `prefers-reduced-motion` — ✅ FIXED
 
-`CaseStudy.jsx:418` calls `scrollIntoView({ behavior: 'smooth' })` with the behaviour
-hardcoded. The other two call sites gate it — `Hero.jsx:14` and `MobileMenu.jsx:74` both use
+`CaseStudy.jsx:418` called `scrollIntoView({ behavior: 'smooth' })` with the behaviour
+hardcoded. The other two call sites gate it — `Hero.jsx:14` and `MobileMenu.jsx:74` both used
 `reduceMotion ? 'auto' : 'smooth'` — and `MotionConfig reducedMotion="user"` does not reach
-`scrollIntoView` at all, so this one animates for a visitor who asked for no motion.
+`scrollIntoView` at all, so this one animated for a visitor who asked for no motion.
 
-Same class as item 12, which closed the rest of them. One-line fix, and `useReducedMotion()`
-is already imported in that file. Not done here because it is a behaviour change inside
-`CaseStudy.jsx`, one of the four files the 2026-08-09 refactor deliberately left alone — see
-item 39 for why changes there need scroll-scripted verification first.
+Same class as item 12, which closed the rest of them. Left open at the time because it was a
+behaviour change inside `CaseStudy.jsx`, one of the four files the 2026-08-09 refactor
+deliberately left alone — see item 39.
+
+**Closed by the router change.** `CaseStudy.jsx` is gone: case studies are pages at
+`/work/<slug>` now, and the call site was the "Start a project like this" button, which had
+to `onClose()` and then wait out a 400 ms `setTimeout` before it could scroll the page
+underneath. It is a plain `<Link to="/#contact">` today. Every navigation scroll in the app
+goes through `ScrollManager.jsx`, which gates on `useReducedMotion()` in one place —
+`MobileMenu.jsx:74` is gone for the same reason. Two of the three call sites this item
+compared therefore no longer exist; `Hero.jsx:14` is the only hand-gated one left.

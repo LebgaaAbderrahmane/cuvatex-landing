@@ -24,7 +24,24 @@ There is no test suite.
 
 ## Architecture
 
-Single-page marketing/portfolio site. React 19 + Vite 8. No router — `App.jsx` stacks section components (`Hero`, `Services`, `Clients`, `Process`, `Work`, `Testimonials`, `CtaBanner`, `About`, `Team`, `Faq`, `Pricing`, `Contact`), then `Footer`, `BackToTop` and the `CaseStudy` overlay; navigation is anchor links.
+Marketing/portfolio site. React 19 + Vite 8 + `react-router` (v8, `BrowserRouter`).
+
+`App.jsx` is the shell only — skip link, `Header`, `<main>`, `Routes`, `Footer`, `BackToTop`,
+`ScrollManager`. Four routes, all in `src/pages/`:
+
+| Route | Page | What it is |
+|-------|------|-----------|
+| `/` | `Home.jsx` | The long sales page: `Hero`, `Services`, `Clients`, `Process`, `Work`, `Testimonials`, `CtaBanner`, `About`, `Team`, `Faq`, `Pricing`, `Contact` |
+| `/work` | `WorkList.jsx` | Every project, one `ProjectCard` each |
+| `/work/:slug` | `Project.jsx` | One case study |
+| `*` | `NotFound.jsx` | 404 |
+
+The homepage `Work` section is a **teaser** — the first three projects plus a link to
+`/work`. Case studies used to be a `#case/<slug>` overlay driven by a hand-written
+`useCaseRoute` hook; both are gone.
+
+Because there are real paths now, the prod image needs an SPA fallback or `/work/<slug>`
+404s on reload — that is what `nginx.conf` is for. Do not delete it.
 
 Three cross-cutting systems drive almost every component. Understand them before editing:
 
@@ -39,32 +56,61 @@ The token **values** live in `src/index.css` under `:root` (light) and `:root[da
 - The colors are in CSS, not JS, so the blocking inline script in `index.html` can set the theme (and `dir`/`lang`) **before first paint** by setting one attribute — that is what stops the white flash on dark-mode return visits. Do not move tokens back into JS, and do not make that script `defer`/`module`.
 
 ### 2b. Header height is measured, not hardcoded
-`Header.jsx` publishes its real height to `--header-h` via a `ResizeObserver`. Anything that needs to sit under the header uses `var(--header-h, 73px)` (`Hero`, `Clients`, `Process`). `Services.jsx` keeps its own observer because its offsets are JS arithmetic, which a CSS variable cannot feed. Never hardcode a header height — it changes with viewport and with control sizes.
+`Header.jsx` publishes its real height to `--header-h` via a `ResizeObserver`. Use `var(--header-h, 73px)` for **fold heights** — `Hero`, `Clients` and `NotFound` subtract it from `100dvh`. `Services.jsx` keeps its own observer because its offsets are JS arithmetic, which a CSS variable cannot feed. Never hardcode a header height — it changes with viewport and with control sizes.
+
+Do **not** use it as top padding on a page: the header is `position: sticky`, so it already takes layout space, and the padding would add a dead gap. Anchor targets are handled by `scrollMarginTop` in `Section.jsx`.
+
+**The header is the only sticky element on any page, and it should stay that way.** A project page briefly had a second sticky bar under it; on a 664px phone viewport the two together froze ~140px — better than one pixel in six — for the whole length of a long read, in exchange for a control that phone users reach by swiping back anyway. `Project.jsx` now repeats its "All projects" link at the foot of the article instead.
 
 ### 2c. Motion respects `prefers-reduced-motion`
-`main.jsx` wraps the app in `<MotionConfig reducedMotion="user">`, which handles most Framer animations. It does **not** cover: opacity-only animations, `setInterval`-driven content swaps, CSS `@keyframes`, or `scrollIntoView({behavior:'smooth'})`. Those are gated by hand — see `Hero.jsx`, `HeroShowcase.jsx`, the media query in `index.css`, and the `scrollIntoView` calls in `Hero.jsx` and `MobileMenu.jsx`. New animations of those four kinds need the same treatment. (`CaseStudy.jsx` has one ungated `scrollIntoView` — `docs/AUDIT.md` item 41.)
+`main.jsx` wraps the app in `<MotionConfig reducedMotion="user">`, which handles most Framer animations. It does **not** cover: opacity-only animations, `setInterval`-driven content swaps, CSS `@keyframes`, or `scrollIntoView({behavior:'smooth'})`. Those are gated by hand — see `Hero.jsx`, `HeroShowcase.jsx`, the media query in `index.css`, and the `scrollIntoView` in `ScrollManager.jsx`. New animations of those four kinds need the same treatment. (The ungated `scrollIntoView` that used to live in `CaseStudy.jsx` — `docs/AUDIT.md` item 41 — went with the overlay.)
+
+### 2c-bis. `ScrollManager` owns scroll and focus on navigation
+`src/components/ScrollManager.jsx` renders nothing and sits inside `BrowserRouter`. React Router does neither of these jobs itself, so every one of them lives in that one file:
+- **Back / Forward (`POP`) → hands off.** The browser restores the offset. Scrolling here would throw a visitor returning from a project page to the top of the homepage instead of the Work section they clicked from.
+- **Hash in the URL → `scrollIntoView`**, gated on reduced motion. Also runs on first paint, where the browser's own attempt at `/#contact` found nothing rendered yet.
+- **No hash → `scrollTo({ behavior: 'instant' })`.** Explicitly `instant`, not a temporary inline `scroll-behavior` override: two-argument `scrollTo(0, 0)` reads the *computed* value and can still pick up `html { scroll-behavior: smooth }` from `index.css` and animate.
+- **Focus → `<main>`** on a real page change, or a keyboard user's next Tab restarts from the top of the document.
+
+**It must stay a `useLayoutEffect`.** That runs after React commits the new page but before the browser paints it, so nothing is ever painted at the *previous* page's scroll offset. With a `useEffect` + `requestAnimationFrame` — one frame later — two things broke, and both are easy to reintroduce:
+1. Clicking a project card from the bottom of the homepage rendered the case study at y=2635 and visibly slid up to 0.
+2. `useInView({ once: true })` latches during that same frame. The metric counters in `Project.jsx` sit ~1000px down, so they counted themselves up while the page flew past and read as already finished when the reader arrived.
+
+Do not re-add per-link scroll handlers. `MobileMenu.jsx` used to have one; it is gone.
 
 ### 2d. Shared building blocks
-Four modules exist so the same thing is not written twice. Reach for them before writing a new one:
+These exist so the same thing is not written twice. Reach for them before writing a new one:
 
 | Module | What it owns |
 |--------|-------------|
-| `src/components/ui/Section.jsx` | The `<section>` + centred 1160px container shell. Used by About, Faq, Pricing, Team, Testimonials, Work, Contact. **Not** by Services, Clients, Process or Hero — each of those has its own layout contract, documented in the file. |
+| `src/components/ui/Section.jsx` | The `<section>` + centred 1160px container shell. Used by About, Faq, Pricing, Team, Testimonials, Work, Contact. **Not** by Services, Clients, Process, Hero, `WorkList` or `Project` — each of those has its own layout contract, documented in the file. |
 | `src/components/ui/SectionHeader.jsx` | The eyebrow + accent dot + `<h2>` pair. The body paragraph that follows stays at the call site; it varies too much to share. |
-| `src/hooks/useMediaQuery.js` | All viewport queries. The query string is passed in, because the breakpoints are different rules, not copies: `767px` collapses the nav and switches the Work/Process layouts, `949px` drops the Services sticky stack. |
-| `src/lib/` | Pure helpers with no React in them: `motion.js` (the `EASE` curve), `text.js` (`getInitials`, `dirArrow`), `contact.js` (`WHATSAPP_URL`, linked from two components). |
+| `src/components/ProjectCard.jsx` | One project card, used by the homepage teaser (`Work.jsx`) and by `/work` (`WorkList.jsx`). Any change to a card goes here, or the two pages drift. |
+| `src/components/ScrollManager.jsx` | Scroll and focus on navigation — see 2c-bis. |
+| `src/hooks/useMediaQuery.js` | All media queries. The query string is passed in, because the breakpoints are different rules, not copies: `767px` collapses the nav and switches the Process layout, `949px` drops the Services sticky stack, `560px` shortens the case-study hero, and `(hover: none)` — a capability, not a width — decides whether a card's label rests visible. |
+| `src/components/CtaBanner.jsx` | The "Have a project in mind? / Let's talk" strip. Mid-homepage **and** at the foot of `/work`, so its link is `/#contact`, not `#contact`. |
+| `src/lib/` | Pure helpers with no React in them: `motion.js` (the `EASE` curve), `text.js` (`getInitials`, `dirArrow`), `contact.js` (`WHATSAPP_URL`, linked from two components), `nav.js` (`isCurrentSection`, shared by the desktop nav and the mobile panel so the two cannot disagree). |
 
 `Section` and `SectionHeader` take **no default prop values**. Every difference between sections — padding max, background, title measure — is passed explicitly, so a forgotten prop breaks loudly instead of silently snapping one section onto another's spacing.
 
-### 2e. Four files are deliberately not split
-`Services`, `Process`, `Work` and `CaseStudy` are the largest components and stay that way on purpose. Each computes layout from measured scroll positions — Services' sticky stack, Process' scroll-driven step activation, and the `layoutId` shared-element transition spanning Work and CaseStudy. Adding or moving a wrapper element shifts that maths silently, and a screenshot taken at scroll 0 will not catch it. Splitting them needs scroll-scripted coverage first.
+`WorkList` and `Project` write their own shell rather than using `Section`: `Section` always draws a top border, and both are the first thing under the header, where that border would sit against the header's own and read as one 2px rule. Both also carry an `<h1>`, not `SectionHeader`'s `<h2>`.
+
+### 2e. Three files are deliberately not split
+`Services`, `Process` and `Project` are the largest components and stay that way on purpose. `Services` and `Process` compute layout from measured scroll positions — Services' sticky stack, Process' scroll-driven step activation. Adding or moving a wrapper element shifts that maths silently, and a screenshot taken at scroll 0 will not catch it.
+
+`Project.jsx` is different: it is long because a case study has many optional blocks, not because of scroll maths. The `layoutId` shared-element transition that used to couple `Work` and `CaseStudy` went away with the overlay, so `Work` is now small and splitting `Project` is a normal refactor rather than a risky one.
+
+**Every block in `Project.jsx` renders only when its data exists** (`hasBody`, `metrics.length > 0`, `shots > 0`, and `Meta` / `Block` returning `null`). Five of eight projects are still one-liners with `shots: 0`; a stub must produce a short page, not a long one full of empty headings. Keep that rule when adding a block.
 
 ### 3. Trilingual with RTL (en / fr / ar)
 `ar` is right-to-left. `dir` on `<html>` is set to `rtl` for Arabic in two places — `App.jsx` (on language change) and `LanguageSwitcher.jsx` (on manual switch) — keep them consistent. The duplication is logged as `docs/AUDIT.md` item 30. Because of RTL, use **logical CSS properties** (`marginInlineEnd`, `paddingInlineStart`, ...) instead of physical `left`/`right`. The Arabic font (`IBM Plex Sans Arabic`) is loaded in `index.html`.
 
 ### Other conventions
 - **Scroll animations:** wrap content in `<ScrollReveal>` (`src/components/ScrollReveal.jsx`) — a Framer Motion `whileInView` fade-up, `once: true`. Reuse it rather than writing new motion variants per section.
-- **Anchor nav:** the `sections` array in `Header.jsx` (`services`, `process`, `work`, `pricing`, `team`, `faq`, `contact`) drives both the desktop nav and the mobile panel (`MobileMenu.jsx`, which receives it as a prop — `Header.jsx` stays the single source), and each entry needs a matching section `id` **and** a `nav.<key>` label in all three locale files. `#about`, `#clients` and `#testimonials` render but are intentionally left out of the nav — seven links is what fits on one header row. Change one, change all three.
+- **Nav:** the `sections` array in `Header.jsx` is a list of `{ key, to }` and drives both the desktop nav and the mobile panel (`MobileMenu.jsx`, which receives it as a prop — `Header.jsx` stays the single source). Six entries are **absolute** hash links (`/#services`, …) and `work` is a **route** (`/work`). Absolute, not bare `#services`: a bare hash only resolves on the homepage, so from `/work/atlas-retail` it would scroll nowhere. Each entry needs a `nav.<key>` label in all three locale files, and each hash entry needs a matching section `id` in `pages/Home.jsx`. `#about`, `#clients` and `#testimonials` render but are intentionally left out of the nav — seven links is what fits on one header row. Change one, change all three.
+
+  The current page is marked with `aria-current="page"` plus accent colour — an underline on desktop, the eyebrow square on mobile. Colour alone would be invisible to a screen reader and to anyone who cannot separate the two greens. `isCurrentSection` (`src/lib/nav.js`) decides, and returns `false` for every hash entry: those all live on `/`, so testing them against the pathname would mark six links at once. A case study still marks "Work" — the reader is inside that part of the site.
+- **Links:** use `<Link>` from `react-router` for anything that leaves the current page, including `/#section` anchors, so `ScrollManager` sees the navigation. Plain `<a href="#…">` is fine only for a same-page jump that the browser can do alone (`#top` in `BackToTop`, `#main` in the skip link, `#contact` in `Hero` and `CtaBanner` — all homepage-only). A `<Link>` that needs Framer variants must be wrapped with `motion.create(Link)` **at module scope**; calling it inside the component remounts the link on every render. And because `index.css` styles bare `a` with `--accent`, any link wrapping non-link content needs `color: 'inherit'` and `textDecoration: 'none'`.
 - **Accessibility:** every interactive element carries `className="focus-ring"` (or `focus-ring-inset` inside an `overflow: hidden` container). Both rules live in `index.css`, since inline styles cannot express `:focus-visible`. New buttons and links need one of them.
 - `src/index.css` is only a reset + base `html/body` typography; all component styling is inline.
 - **Analytics:** `src/analytics.js` loads Umami (`VITE_UMAMI_SCRIPT_URL`, `VITE_UMAMI_WEBSITE_ID`) from `main.jsx`, and only in production builds. Record conversions with `track('event_name')` — it no-ops when the tracker is absent.
@@ -87,6 +133,8 @@ without the repo owner asking for it in that moment.
 | `CLAUDE.md` | Thin file that imports `AGENTS.md` for Claude Code |
 | `docs/` | Long-form project documents (audits, notes, decisions) |
 | `docs/AUDIT.md` | Accessibility / responsive / code-quality audit and its fix log. Items are numbered and referenced from code comments — keep the numbering stable |
+| `src/pages/` | One file per route. Page-level layout lives here; `src/components/` stays reusable |
+| `nginx.conf` | The prod server block. Without its `try_files … /index.html`, every route path 404s on reload |
 
 Root markdown is limited to `README.md`, `AGENTS.md` and `CLAUDE.md`. Any **new long-form
 markdown** — audit, plan, decision record, research note — goes in `docs/` and gets a row

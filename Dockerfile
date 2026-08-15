@@ -23,6 +23,9 @@ ARG VITE_UMAMI_WEBSITE_ID
 RUN pnpm build
 
 FROM nginx:alpine AS prod
+# Replaces the stock server block. The default one 404s every router path
+# (/work, /work/<slug>) on reload or on a pasted link — see nginx.conf.
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

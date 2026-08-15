@@ -62,7 +62,14 @@
   "workTitle": "Projets sélectionnés",
   "workIntro": "Études de cas à venir.",
   "workCta": "Voir tous les projets",
-  "workCtaLess": "Voir moins",
+  "workPageTitle": "Les projets que nous avons livrés",
+  "workPageIntro": "Un aperçu de ce que nous avons livré : le problème apporté par chaque client, et ce que nous avons construit pour le résoudre.",
+  "notFound": {
+    "title": "Cette page n'existe pas",
+    "body": "Le lien est peut-être ancien, ou l'adresse contient une faute. Voici comment revenir.",
+    "home": "Aller à l'accueil",
+    "work": "Voir nos projets"
+  },
   "imgLabel": "image du projet",
   "tags": {
     "web": "App web",
@@ -73,8 +80,7 @@
   },
   "caseStudy": {
     "view": "Voir l'étude de cas",
-    "close": "Fermer",
-    "esc": "Échap",
+    "back": "Tous les projets",
     "overview": "Aperçu",
     "challenge": "Le défi",
     "solution": "Ce que nous avons construit",

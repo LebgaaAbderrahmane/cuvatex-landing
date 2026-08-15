@@ -1,8 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router';
 import ScrollReveal from './ScrollReveal';
 import { dirArrow } from '../lib/text';
 
+// Module scope: `motion.create` inside the component remounts the link every render.
+const MotionLink = motion.create(Link);
+
+// Used twice — mid-homepage, and at the foot of /work, where a visitor who has
+// just read the whole project list otherwise runs into the footer with nothing
+// to do. That is why the link is `/#contact` and not `#contact`: a bare hash
+// only resolves on the homepage.
 export default function CtaBanner() {
   const { t, i18n } = useTranslation();
 
@@ -23,8 +31,8 @@ export default function CtaBanner() {
             color: 'var(--fg, #15120f)',
           }}>
             {t('ctaBannerLead')}{' '}
-            <motion.a
-              href="#contact"
+            <MotionLink
+              to="/#contact"
               className="focus-ring"
               style={{
                 color: 'var(--accent, #0E7A69)',
@@ -39,7 +47,7 @@ export default function CtaBanner() {
               {t('ctaBannerLink')}{' '}
               {/* resolvedLanguage, not language: the latter can be 'ar-DZ'. */}
               <span aria-hidden="true">{dirArrow(i18n.resolvedLanguage)}</span>
-            </motion.a>
+            </MotionLink>
           </p>
         </ScrollReveal>
       </div>
