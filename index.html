@@ -10,6 +10,8 @@
       content="A team that builds software together, from the first idea to launch. Websites, mobile apps, and custom software for businesses."
     />
     <meta name="theme-color" content="#0E7A69" />
+    <!-- NOTE: update to the real deployed domain when live, same as og:url below -->
+    <link rel="canonical" href="https://cuvatex.com/" />
 
     <!--
       Runs before the first paint, so a returning dark-mode visitor never sees a
@@ -70,6 +72,19 @@
     />
     <meta name="twitter:image" content="https://cuvatex.com/og-image.png" />
     <meta name="twitter:image:alt" content="CUVATEX — We design and build complete software products" />
+
+    <!-- Structured data: Organization. `sameAs` (social profile links) intentionally
+         omitted — none exist yet; add once the site has real social profiles. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "CUVATEX",
+      "url": "https://cuvatex.com/",
+      "logo": "https://cuvatex.com/Cuvatex_logo.png",
+      "description": "A team that builds software together, from the first idea to launch. Websites, mobile apps, and custom software for businesses."
+    }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
