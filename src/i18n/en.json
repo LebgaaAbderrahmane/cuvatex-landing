@@ -6,7 +6,8 @@
     "pricing": "Pricing",
     "team": "Team",
     "faq": "FAQ",
-    "contact": "Contact"
+    "contact": "Contact",
+    "about": "About"
   },
   "skipToContent": "Skip to content",
   "cta": "Start a project",
@@ -23,6 +24,9 @@
     { "title": "The system behind your product", "desc": "The engine that stores your data, keeps things fast, and keeps them running reliably.", "tags": ["Node.js", "PostgreSQL", "REST", "GraphQL"], "badge": "99.9% uptime", "features": ["Scalable from day one", "Secured against OWASP top threats", "Automated backups & monitoring"] },
     { "title": "Custom software", "desc": "Software built around how your business actually works, instead of forcing you into a ready-made tool.", "tags": ["Python", "Docker", "AWS"], "badge": "Tailor-made", "features": ["Built around your workflow, not against it", "Integrates with your existing tools", "No vendor lock-in — you own the code"] }
   ],
+  "servicesPageTitle": "Everything we build",
+  "servicesPageIntro": "A closer look at what we do — the details behind each service, from a single new feature to a product built from scratch.",
+  "servicesCta": "See all services",
   "clientsEyebrow": "Clients",
   "clientsTitle": "Who we work with",
   "clientsBody": "We work with small businesses, shops and restaurants, clinics and professionals, and startups building their first product. If you are not sure whether your project fits, ask us.",
@@ -191,6 +195,8 @@
   "aboutTitle": "Who we are",
   "aboutBody": "We are a team of engineers and designers who take on one product at a time. You work directly with the people building your product, not a manager or an account handler.",
   "aboutExtra": "Every project starts with understanding your users and your market, then moves through design and development in tight loops until we ship something you are proud of. No handoffs, no layers, just the people building your product talking directly to you.",
+  "aboutCta": "Read more about us",
+  "aboutPageNote": "More about how we work and the people behind CUVATEX is coming soon.",
   "roles": ["Software Engineer", "Frontend Developer", "Product Designer"],
   "bios": [
     "Designs the systems and APIs that keep products fast and reliable as they grow.",
@@ -218,5 +224,51 @@
   "sending": "Sending…",
   "sent": "Thanks, we will be in touch soon.",
   "error": "Something went wrong. Please try again or email us directly.",
+  "footerNav": { "home": "Home" },
+  "footerPagesHeading": "Pages",
+  "footerLegalHeading": "Legal",
+  "footerContactHeading": "Contact",
+  "footerFollowHeading": "Follow us",
+  "footerSocial": {
+    "instagram": "Instagram",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "x": "X (Twitter)"
+  },
+  "legal": {
+    "termsNav": "Terms of Service",
+    "privacyNav": "Privacy Policy",
+    "lastUpdated": "Last updated: August 2026",
+    "placeholderNotice": "This page is a placeholder. It has not been reviewed by a lawyer yet, and should not be treated as final legal advice.",
+    "terms": {
+      "title": "Terms of Service",
+      "sections": [
+        { "heading": "Agreement to Terms", "body": "By using this website or working with CUVATEX, you agree to these terms. If you do not agree, please do not use our services." },
+        { "heading": "Services", "body": "CUVATEX designs and builds software products — websites, web apps, mobile apps, product design, and custom backend systems. The exact scope of each project is agreed with the client before work starts." },
+        { "heading": "Client Responsibilities", "body": "Clients agree to give timely feedback, and to provide the content, access, and information needed to complete the work. Delays on the client's side can delay delivery." },
+        { "heading": "Payment Terms", "body": "Projects are priced with a fixed quote agreed before work starts. Invoices are due on the schedule agreed in the project proposal. Late payment may pause work until it is resolved." },
+        { "heading": "Intellectual Property", "body": "Once a project is paid in full, the client owns the final deliverables. CUVATEX may show completed work in its own portfolio unless the client asks otherwise in writing." },
+        { "heading": "Limitation of Liability", "body": "CUVATEX works carefully, but is not liable for indirect or incidental damages arising from the use of a delivered product, to the extent allowed by law." },
+        { "heading": "Termination", "body": "Either party can end an engagement with written notice. Work completed up to that point is billed at the agreed rate." },
+        { "heading": "Governing Law", "body": "The jurisdiction that governs these terms is still to be decided, and will be confirmed here once set." },
+        { "heading": "Changes to These Terms", "body": "These terms may be updated from time to time. Continuing to use our services after a change means you accept the updated terms." },
+        { "heading": "Contact", "body": "Questions about these terms? Reach out through our contact page or by email." }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "sections": [
+        { "heading": "Overview", "body": "This page explains what information CUVATEX collects through this website, and how it is used." },
+        { "heading": "Information We Collect", "body": "When you use the contact form, we collect the name, email, and message you provide. We also collect basic, anonymous analytics about how visitors use the site." },
+        { "heading": "How We Use Your Information", "body": "We use contact form details only to reply to your message. Analytics data is used in aggregate, to understand how the site is used and where it can be improved." },
+        { "heading": "Data Sharing", "body": "Contact form submissions are processed by Web3Forms, a third-party form-delivery service, in order to deliver your message to us. We do not sell your information to anyone." },
+        { "heading": "Cookies", "body": "This site uses Umami, a privacy-friendly analytics tool that does not use cookies and does not track visitors individually." },
+        { "heading": "Data Retention", "body": "Contact form messages are kept only as long as needed to respond to your inquiry, unless we are required to keep them longer by law." },
+        { "heading": "Your Rights", "body": "You can ask us to access or delete any information we hold about you by contacting us through the email on our contact page." },
+        { "heading": "Changes to This Policy", "body": "This policy may be updated from time to time. Check back here for the latest version." },
+        { "heading": "Contact", "body": "Questions about this policy? Reach out through our contact page or by email." }
+      ]
+    }
+  },
   "footer": "© 2026 CUVATEX. Available for new projects."
 }

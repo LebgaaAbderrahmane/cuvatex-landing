@@ -9,8 +9,7 @@ const MotionLink = motion.create(Link);
 
 // Used twice — mid-homepage, and at the foot of /work, where a visitor who has
 // just read the whole project list otherwise runs into the footer with nothing
-// to do. That is why the link is `/#contact` and not `#contact`: a bare hash
-// only resolves on the homepage.
+// to do. Contact is a real page now, so this is a normal cross-page link.
 export default function CtaBanner() {
   const { t, i18n } = useTranslation();
 
@@ -32,7 +31,7 @@ export default function CtaBanner() {
           }}>
             {t('ctaBannerLead')}{' '}
             <MotionLink
-              to="/#contact"
+              to="/contact"
               className="focus-ring"
               style={{
                 color: 'var(--accent, #0E7A69)',

@@ -10,3 +10,15 @@
  * Format: country code, no `+`, no spaces — e.g. `https://wa.me/213XXXXXXXXX`.
  */
 export const WHATSAPP_URL = 'https://wa.me/PHONE_NUMBER_PLACEHOLDER';
+
+/**
+ * TODO(docs/AUDIT.md item 42): unresolved placeholder — no real phone number yet.
+ *
+ * It lives here, not in `Footer.jsx`, for the same reason as `WHATSAPP_URL`
+ * above: a shared value belongs in one place, not copied into every component
+ * that needs it. Two exports rather than one, because a display string and a
+ * `tel:` URL are not the same format — `tel:` cannot contain spaces. Update
+ * both together when the real number arrives.
+ */
+export const PHONE_DISPLAY = '+1 000 000 0000';
+export const PHONE_URL = 'tel:+10000000000';

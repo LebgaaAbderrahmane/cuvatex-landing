@@ -274,10 +274,10 @@ function ProjectBody({ slug, project }) {
             borderTop: '1px solid var(--line, rgba(21,18,15,0.13))',
           }}>
             {/* Was a close() plus a 400ms setTimeout waiting for the overlay to
-                unmount before scrolling. ScrollManager handles the hash now, and
-                it respects prefers-reduced-motion — AUDIT.md item 41. */}
+                unmount before scrolling. Contact is a real page now — a plain
+                cross-page link, no scroll handoff needed. */}
             <Link
-              to="/#contact"
+              to="/contact"
               className="focus-ring"
               style={{
                 display: 'inline-flex',

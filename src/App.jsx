@@ -8,6 +8,11 @@ import ScrollManager from './components/ScrollManager';
 import Home from './pages/Home';
 import WorkList from './pages/WorkList';
 import Project from './pages/Project';
+import ServicesList from './pages/ServicesList';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
 import NotFound from './pages/NotFound';
 
 // The shell every route shares. The page content itself lives in src/pages.
@@ -41,8 +46,13 @@ export default function App() {
         <main id="main" tabIndex={-1}>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/services" element={<ServicesList />} />
             <Route path="/work" element={<WorkList />} />
             <Route path="/work/:slug" element={<Project />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

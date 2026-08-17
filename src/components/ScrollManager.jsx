@@ -35,8 +35,8 @@ export default function ScrollManager() {
     const changedPage = prevPath.current !== pathname;
     prevPath.current = pathname;
 
-    // First paint. A visitor landing on `/#contact` gets no scroll from the
-    // browser, because at HTML-parse time React has not rendered `#contact` yet —
+    // First paint. A visitor landing on `/#pricing` gets no scroll from the
+    // browser, because at HTML-parse time React has not rendered `#pricing` yet —
     // so that one case is ours to handle. Without a hash, do nothing: the browser
     // restores its own offset on reload and we would only fight it.
     if (isFirst && !hash) return undefined;

@@ -1,11 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router';
 import ScrollReveal from './ScrollReveal';
 import Section from './ui/Section';
 import SectionHeader from './ui/SectionHeader';
+import { dirArrow } from '../lib/text';
+
+const MotionLink = motion.create(Link); // module scope: avoids remount on render
 
 export default function About() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <Section
@@ -37,18 +41,14 @@ export default function About() {
             {t('aboutBody')}
           </p>
         </ScrollReveal>
-
-        <ScrollReveal delay={0.2}>
-          <p style={{
-            margin: '16px 0 0',
-            color: 'var(--muted, #6c665e)',
-            fontSize: 'clamp(15px, 1.4vw, 17px)',
-            lineHeight: 1.7,
-            maxWidth: '58ch',
-          }}>
-            {t('aboutExtra')}
-          </p>
-        </ScrollReveal>
+        <MotionLink
+          to="/about"
+          className="focus-ring"
+          whileHover={{ opacity: 0.75 }}
+          style={{ display: 'inline-block', marginTop: 20, color: 'var(--accent, #0E7A69)', fontWeight: 600, textDecoration: 'none', fontSize: 15, padding: '10px 0' }}
+        >
+          {t('aboutCta')} {dirArrow(i18n.resolvedLanguage)}
+        </MotionLink>
       </div>
 
       <ScrollReveal delay={0.25}>
@@ -66,11 +66,7 @@ export default function About() {
             src="/whoWeAre.jpg"
             alt="CUVATEX team workspace"
             loading="lazy"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
         </motion.div>
       </ScrollReveal>

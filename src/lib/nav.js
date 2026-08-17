@@ -4,10 +4,11 @@
 /**
  * Is this nav entry the page we are on?
  *
- * Only route entries can be, so today that is `work` alone. The other six
- * entries in `Header.jsx`'s `sections` point at hashes on the homepage; testing
- * those against the pathname would mark all six at once on `/`, which tells the
- * visitor nothing.
+ * Every entry in `Header.jsx`'s `sections` is a real route today, so this
+ * mostly just compares paths. The `#` guard stays anyway: it costs nothing,
+ * and it is what stops a future hash-based nav entry from getting marked
+ * "current" on every homepage section at once, which happened the last time
+ * this array mixed routes and hash anchors.
  *
  * `startsWith` so a case study at `/work/atlas-retail` still marks "Work" — a
  * visitor reading one is still inside that part of the site.

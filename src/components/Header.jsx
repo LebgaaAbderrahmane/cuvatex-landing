@@ -11,18 +11,15 @@ import { isCurrentSection } from '../lib/nav';
 // Drives both the desktop nav and the mobile panel. Each entry needs a
 // `nav.<key>` label in all three locale files.
 //
-// `to` is absolute on purpose. A bare `#services` only resolves on the homepage,
-// so from /work/atlas-retail it would scroll nowhere; `/#services` navigates home
-// first and ScrollManager finishes the scroll. Every anchor here needs a matching
-// section `id` in pages/Home.jsx — except `work`, which is a page of its own.
+// Pages only, on purpose — Process, Pricing, Team and FAQ stay on the homepage as
+// sections but are not linked here; a visitor finds them by scrolling, same as
+// `#about` used to work before About got its own page. Every entry below is a
+// real route now, so there are no `/#section` hash links left to reason about.
 const sections = [
-  { key: 'services', to: '/#services' },
-  { key: 'process', to: '/#process' },
+  { key: 'services', to: '/services' },
   { key: 'work', to: '/work' },
-  { key: 'pricing', to: '/#pricing' },
-  { key: 'team', to: '/#team' },
-  { key: 'faq', to: '/#faq' },
-  { key: 'contact', to: '/#contact' },
+  { key: 'about', to: '/about' },
+  { key: 'contact', to: '/contact' },
 ];
 
 // Below this width the six nav links wrap onto extra rows and push the sticky

@@ -1,9 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { motion, useReducedMotion } from 'framer-motion';
+import { Link } from 'react-router';
 import ScrollReveal from './ScrollReveal';
 import HeroShowcase from './HeroShowcase';
 import HeroBackground from './HeroBackground';
 import { dirArrow } from '../lib/text';
+
+// Module scope: `motion.create` inside the component remounts the link every render.
+const MotionLink = motion.create(Link);
 
 export default function Hero() {
   const { t, i18n } = useTranslation();
@@ -104,8 +108,10 @@ export default function Hero() {
 
             <ScrollReveal delay={0.3}>
               <div style={{ marginTop: 44 }}>
-                <motion.a
-                  href="#contact"
+                {/* Contact is a real page now, so this is a normal cross-page
+                    link rather than a same-page anchor jump. */}
+                <MotionLink
+                  to="/contact"
                   className="focus-ring"
                   style={{
                     display: 'inline-flex',
@@ -125,7 +131,7 @@ export default function Hero() {
                   {t('cta')}
                   {/* resolvedLanguage, not language: the latter can be 'ar-DZ'. */}
                   <span aria-hidden="true">{dirArrow(i18n.resolvedLanguage)}</span>
-                </motion.a>
+                </MotionLink>
                 <p style={{
                   margin: '16px 0 0',
                   fontSize: 14,

@@ -6,7 +6,8 @@
     "pricing": "Tarifs",
     "team": "Équipe",
     "faq": "FAQ",
-    "contact": "Contact"
+    "contact": "Contact",
+    "about": "À propos"
   },
   "skipToContent": "Aller au contenu",
   "cta": "Démarrer un projet",
@@ -23,6 +24,9 @@
     { "title": "Le système derrière votre produit", "desc": "Le moteur qui stocke vos données, garde tout rapide et fonctionne de façon fiable.", "tags": ["Node.js", "PostgreSQL", "REST", "GraphQL"], "badge": "99,9% de disponibilité", "features": ["Passage à l'échelle dès le premier jour", "Sécurisé contre les menaces OWASP", "Sauvegardes automatisées et surveillance"] },
     { "title": "Logiciels sur mesure", "desc": "Un logiciel conçu autour du fonctionnement réel de votre entreprise, au lieu de vous imposer un outil tout fait.", "tags": ["Python", "Docker", "AWS"], "badge": "Sur mesure", "features": ["Conçu autour de votre flux de travail", "Intègre vos outils existants", "Pas de verrouillage — vous possédez le code"] }
   ],
+  "servicesPageTitle": "Tout ce que nous construisons",
+  "servicesPageIntro": "Un regard plus détaillé sur ce que nous faisons — les détails derrière chaque service, d'une simple nouvelle fonctionnalité à un produit construit de zéro.",
+  "servicesCta": "Voir tous les services",
   "clientsEyebrow": "Clients",
   "clientsTitle": "Avec qui nous travaillons",
   "clientsBody": "Nous travaillons avec des petites entreprises, des commerces et des restaurants, des cliniques et des professionnels, et des startups qui lancent leur premier produit. Si vous n'êtes pas sûr que votre projet nous convienne, demandez-nous.",
@@ -191,6 +195,8 @@
   "aboutTitle": "Qui nous sommes",
   "aboutBody": "Nous sommes une équipe d'ingénieurs et de designers qui prennent un seul produit à la fois. Vous travaillez directement avec les personnes qui construisent votre produit, pas un manager ni un chargé de compte.",
   "aboutExtra": "Chaque projet commence par la compréhension de vos utilisateurs et de votre marché, puis progresse à travers le design et le développement en cycles serrés jusqu'à ce que nous livrions quelque chose dont vous êtes fier. Sans intermédiaires, sans couches, juste les personnes qui construisent votre produit qui vous parlent directement.",
+  "aboutCta": "En savoir plus sur nous",
+  "aboutPageNote": "Plus de détails sur notre façon de travailler et les personnes derrière CUVATEX, bientôt disponibles.",
   "roles": ["Ingénieur logiciel", "Développeuse frontend", "Designer produit"],
   "bios": [
     "Conçoit les systèmes et les API qui gardent les produits rapides et fiables à mesure qu'ils grandissent.",
@@ -218,5 +224,51 @@
   "sending": "Envoi…",
   "sent": "Merci, nous vous répondrons bientôt.",
   "error": "Une erreur est survenue. Réessayez ou écrivez-nous directement.",
+  "footerNav": { "home": "Accueil" },
+  "footerPagesHeading": "Pages",
+  "footerLegalHeading": "Mentions légales",
+  "footerContactHeading": "Contact",
+  "footerFollowHeading": "Nous suivre",
+  "footerSocial": {
+    "instagram": "Instagram",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "x": "X (Twitter)"
+  },
+  "legal": {
+    "termsNav": "Conditions d'utilisation",
+    "privacyNav": "Politique de confidentialité",
+    "lastUpdated": "Dernière mise à jour : août 2026",
+    "placeholderNotice": "Cette page est un texte provisoire. Elle n'a pas encore été relue par un juriste et ne doit pas être considérée comme un avis juridique définitif.",
+    "terms": {
+      "title": "Conditions d'utilisation",
+      "sections": [
+        { "heading": "Acceptation des conditions", "body": "En utilisant ce site ou en travaillant avec CUVATEX, vous acceptez ces conditions. Si vous n'êtes pas d'accord, merci de ne pas utiliser nos services." },
+        { "heading": "Services", "body": "CUVATEX conçoit et développe des produits logiciels — sites web, applications web, applications mobiles, design produit et systèmes backend sur mesure. Le périmètre exact de chaque projet est convenu avec le client avant le début des travaux." },
+        { "heading": "Responsabilités du client", "body": "Le client s'engage à fournir des retours dans des délais raisonnables, ainsi que le contenu, les accès et les informations nécessaires à la réalisation du projet. Un retard côté client peut retarder la livraison." },
+        { "heading": "Conditions de paiement", "body": "Les projets sont facturés selon un devis fixe convenu avant le début des travaux. Les factures sont dues selon le calendrier fixé dans la proposition de projet. Un retard de paiement peut suspendre les travaux jusqu'à régularisation." },
+        { "heading": "Propriété intellectuelle", "body": "Une fois le projet payé intégralement, le client devient propriétaire des livrables finaux. CUVATEX peut présenter le travail réalisé dans son propre portfolio, sauf demande contraire écrite du client." },
+        { "heading": "Limitation de responsabilité", "body": "CUVATEX travaille avec soin, mais ne peut être tenu responsable des dommages indirects ou accessoires liés à l'utilisation d'un produit livré, dans la limite permise par la loi." },
+        { "heading": "Résiliation", "body": "Chaque partie peut mettre fin à une collaboration avec un préavis écrit. Le travail déjà réalisé est facturé au tarif convenu." },
+        { "heading": "Droit applicable", "body": "La juridiction qui régit ces conditions reste à définir et sera précisée ici une fois fixée." },
+        { "heading": "Modifications de ces conditions", "body": "Ces conditions peuvent être mises à jour de temps à autre. Continuer à utiliser nos services après une modification signifie que vous acceptez les nouvelles conditions." },
+        { "heading": "Contact", "body": "Des questions sur ces conditions ? Contactez-nous via notre page de contact ou par e-mail." }
+      ]
+    },
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "sections": [
+        { "heading": "Aperçu", "body": "Cette page explique quelles informations CUVATEX collecte via ce site, et comment elles sont utilisées." },
+        { "heading": "Informations que nous collectons", "body": "Lorsque vous utilisez le formulaire de contact, nous collectons le nom, l'e-mail et le message que vous fournissez. Nous collectons aussi des statistiques anonymes de base sur l'utilisation du site." },
+        { "heading": "Comment nous utilisons vos informations", "body": "Les informations du formulaire de contact ne servent qu'à répondre à votre message. Les données statistiques sont utilisées de façon globale, pour comprendre comment le site est utilisé et où il peut être amélioré." },
+        { "heading": "Partage des données", "body": "Les messages du formulaire de contact sont traités par Web3Forms, un service tiers de transmission de formulaires, afin de nous faire parvenir votre message. Nous ne vendons vos informations à personne." },
+        { "heading": "Cookies", "body": "Ce site utilise Umami, un outil d'analyse respectueux de la vie privée qui n'utilise pas de cookies et ne suit pas les visiteurs individuellement." },
+        { "heading": "Conservation des données", "body": "Les messages du formulaire de contact ne sont conservés que le temps nécessaire pour répondre à votre demande, sauf obligation légale de conservation plus longue." },
+        { "heading": "Vos droits", "body": "Vous pouvez nous demander d'accéder aux informations que nous détenons sur vous ou de les supprimer, en nous contactant via l'e-mail indiqué sur notre page de contact." },
+        { "heading": "Modifications de cette politique", "body": "Cette politique peut être mise à jour de temps à autre. Revenez consulter cette page pour la dernière version." },
+        { "heading": "Contact", "body": "Des questions sur cette politique ? Contactez-nous via notre page de contact ou par e-mail." }
+      ]
+    }
+  },
   "footer": "© 2026 CUVATEX. Disponible pour de nouveaux projets."
 }

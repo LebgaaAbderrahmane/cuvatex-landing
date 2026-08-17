@@ -3,10 +3,12 @@ import { useState, useEffect } from 'react';
 /**
  * Subscribes to a CSS media query and re-renders when it flips.
  *
- * Replaces four near-identical hand-rolled copies (Header, Services, Process,
- * Work). The query stays at the call site because those are *different* rules,
- * not copies of one: 767px collapses the nav and switches the Work and Process
- * layouts, 949px drops the Services sticky stack.
+ * Replaced four near-identical hand-rolled copies (Header, Services, Process,
+ * Work) when it was written. The query stays at the call site because those
+ * were *different* rules, not copies of one — 767px still collapses the nav
+ * and switches the Work and Process layouts. (Services' own query, 949px for
+ * its old sticky stack, went away with that layout — Services is a plain
+ * `Section` user now and no longer needs this hook at all.)
  *
  * The initial value is read synchronously, so the first render already matches
  * the real viewport. Two of the four copies this replaced started at `false` and

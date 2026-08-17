@@ -885,7 +885,15 @@ This is the one refactor change with a deliberate visual diff: at exactly 768 px
 grows (en: 15589 → 16624 px tall) because Work now shows 6 cards instead of 3. 390 px and
 1440 px are pixel-identical to before.
 
-### 24. Services measures its title height once and never re-measures on content change (from code)
+### 24. Services measures its title height once and never re-measures on content change (from code) — ✅ RESOLVED
+
+**Fixed by removing the mechanism, not the bug.** `Services.jsx` is a homepage teaser now
+(3 cards, `Section` + `SectionHeader`, no sticky stack) — the full 6-service detail moved to
+`/services` (`src/pages/ServicesList.jsx`), which is natural-height, not sticky. There is no
+`titleRef`, no measured height, and no card `top`/`height` derived from one anymore, so this
+class of bug has nothing left to happen to.
+
+<details><summary>original finding</summary>
 
 `Services.jsx:25-32` reads `titleRef.getBoundingClientRect().height` on mount and on
 `window.resize`. Neither the web-font swap (IBM Plex arrives async from Google Fonts) nor a
@@ -893,6 +901,8 @@ runtime language change re-triggers it, and every card `top` / `height` in the s
 is derived from that one number. Did not reproduce at 900 px — the en and ar titles are both
 147 px there — but any width where the translated heading wraps differently will offset the
 whole stack. A `ResizeObserver` on the title removes the whole class of problem.
+
+</details>
 
 ### 25. SEO / metadata gaps (measured)
 
@@ -1169,30 +1179,41 @@ in sequence implied a relationship that does not exist. Renamed to `showcaseProj
 
 ### 38. WhatsApp link still ships an unresolved placeholder — ⏸ OPEN, needs the real number
 
-`https://wa.me/PHONE_NUMBER_PLACEHOLDER` is live in two places on the production site —
-`Contact.jsx` (the direct link) and `ContactForm.jsx` (the error fallback, which is exactly
-where a visitor lands when the form has already failed them). Both are marked with a
-`TODO(docs/AUDIT.md item 38)`.
+`https://wa.me/PHONE_NUMBER_PLACEHOLDER` is live in three places now — `ContactPage.jsx`
+(`/contact`, the direct link — moved here from the now-deleted `Contact.jsx`),
+`ContactForm.jsx` (the error fallback, which is exactly where a visitor lands when the form
+has already failed them), and `Footer.jsx` (the new footer's WhatsApp link, item 42). All are
+marked with a `TODO(docs/AUDIT.md item 38)`.
 
 Not fixable without the number. **This is a live defect on a shipped page, not code
 tidiness** — it is listed under P2 only because it was found here.
 
-### 39. Services re-measures a header height that Header already publishes — ⏸ OPEN (overlaps item 24)
+### 39. Services re-measures a header height that Header already publishes — ✅ RESOLVED (overlapped item 24, same fix)
+
+**Fixed the same way as item 24**: `Services.jsx` no longer has a sticky stack, so it no
+longer needs the header's height for anything — no second `ResizeObserver`, no `useState(73)`
+fourth copy of the fallback. It reads `var(--header-h, 73px)` nowhere at all now, same as
+`Work.jsx`, the teaser it's modeled on.
+
+<details><summary>original finding</summary>
 
 `Services.jsx:88-101` runs its own `ResizeObserver` on `document.querySelector('header')` to
 get a height that `Header.jsx` already measures and publishes as `--header-h`. Two observers,
 one number, and Services keeps it in `useState(73)` — a fourth copy of the `73` fallback that
 appears as `var(--header-h, 73px)` in Hero, Clients and Process.
 
-**Deliberately not fixed.** Services' sticky card stack is driven by JS arithmetic over that
-measurement, and the screenshot suite used for this refactor captures at scroll 0, where the
-sticky behaviour does not appear. Changing it without scroll-scripted coverage would be a
-change nothing could verify. Same reason `Services`, `Process`, `Work` and `CaseStudy` were
-not split internally.
+**Deliberately not fixed** at the time this was written. Services' sticky card stack was
+driven by JS arithmetic over that measurement, and the screenshot suite used for that
+refactor captured at scroll 0, where the sticky behaviour does not appear. Changing it
+without scroll-scripted coverage would have been a change nothing could verify. Same reason
+`Services`, `Process`, `Work` and `CaseStudy` were not split internally at the time.
+
+</details>
 
 ### 40. `console.error` in the production bundle — ⛔ CLOSED, WON'T FIX
 
-Three calls in `Contact.jsx` (now `:26`, `:50`, `:55`). Originally listed as cleanup for this
+Three calls, originally in `Contact.jsx`, now in `ContactPage.jsx` (`/contact`) since that
+component moved there whole. Originally listed as cleanup for this
 pass; **withdrawn after reading them.** The first reports a build with no
 `VITE_WEB3FORMS_KEY`, which is otherwise an invisible misconfiguration that silently breaks
 every form submission — the code comment above it says so explicitly. The other two report
@@ -1213,7 +1234,18 @@ deliberately left alone — see item 39.
 **Closed by the router change.** `CaseStudy.jsx` is gone: case studies are pages at
 `/work/<slug>` now, and the call site was the "Start a project like this" button, which had
 to `onClose()` and then wait out a 400 ms `setTimeout` before it could scroll the page
-underneath. It is a plain `<Link to="/#contact">` today. Every navigation scroll in the app
-goes through `ScrollManager.jsx`, which gates on `useReducedMotion()` in one place —
+underneath. Contact is a page now too (`/contact`), so that button is a plain
+`<Link to="/contact">` today — not even a hash link anymore. Every navigation scroll in the
+app goes through `ScrollManager.jsx`, which gates on `useReducedMotion()` in one place —
 `MobileMenu.jsx:74` is gone for the same reason. Two of the three call sites this item
-compared therefore no longer exist; `Hero.jsx:14` is the only hand-gated one left.
+compared therefore no longer exist; the "scroll to services" button in `Hero.jsx` is the
+only hand-gated `scrollIntoView` left.
+
+### 42. Footer phone number is an unresolved placeholder — ⏸ OPEN, needs the real number
+
+The new footer (`src/components/Footer.jsx`, added alongside `/services`, `/about`,
+`/contact`, `/terms` and `/privacy`) lists a phone number for the first time on this site.
+`PHONE_DISPLAY`/`PHONE_URL` in `src/lib/contact.js` are placeholders (`+1 000 000 0000` /
+`tel:+10000000000`), marked with a `TODO(docs/AUDIT.md item 42)` next to the existing
+`WHATSAPP_URL` placeholder (item 38). Same fix, same file, same moment when the real number
+exists — update both together.
