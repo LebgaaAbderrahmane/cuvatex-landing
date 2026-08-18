@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router';
 import ScrollReveal from '../components/ScrollReveal';
 import ContactForm from '../components/ContactForm';
 import { track } from '../analytics';
@@ -7,25 +8,20 @@ import { WHATSAPP_URL } from '../lib/contact';
 
 const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
 
-// Writes its own shell instead of using ui/Section, for the same reason
-// WorkList and NotFound do: Section always draws a top border, and this page
-// is the first thing under the sticky header — its own border would sit
-// directly against the header's own and read as one 2px rule. There is an
-// <h1> here rather than SectionHeader's <h2>, because on this page the form
-// *is* the page.
+// Own shell instead of ui/Section — same reason as WorkList/NotFound: Section's
+// top border would double against the sticky header's.
 export default function ContactPage() {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const defaultService = searchParams.get('service');
   // status: 'idle' | 'sending' | 'sent' | 'error'
   const [status, setStatus] = useState('idle');
 
   async function onSubmit(e) {
     e.preventDefault();
 
-    // Vite inlines VITE_WEB3FORMS_KEY at build time. A build with no .env and no
-    // --build-arg produces `undefined` here, and every submit would POST
-    // access_key="undefined" and be rejected. Fail immediately instead, and say so
-    // in the console — otherwise the misconfiguration is invisible to whoever
-    // deployed it.
+    // A build with no key would silently POST access_key="undefined" — fail
+    // loudly instead so a bad deploy shows up in the console.
     if (!WEB3FORMS_KEY) {
       console.error(
         '[contact] VITE_WEB3FORMS_KEY is missing from this build. ' +
@@ -63,9 +59,6 @@ export default function ContactPage() {
   }
 
   return (
-    // No `background` override here (the old homepage section had one, to
-    // separate it from the section above it): this page has no section above
-    // it, so there is nothing to separate from.
     <section
       id="contact"
       style={{ padding: 'clamp(40px, 7vw, 88px) clamp(20px, 5vw, 48px) clamp(64px, 10vw, 120px)' }}
@@ -74,10 +67,7 @@ export default function ContactPage() {
         maxWidth: 1160,
         margin: '0 auto',
         display: 'grid',
-        // `min(300px, 100%)` rather than a bare 300px: at a 320px viewport this
-        // container is narrower than 300px after the padding above, and a bare
-        // 300px minimum would force the page to scroll sideways instead of
-        // collapsing cleanly to one column.
+        // min(300px, 100%), not a bare 300px, or a 320px viewport scrolls sideways.
         gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))',
         gap: 'clamp(40px, 6vw, 80px)',
         alignItems: 'start',
@@ -130,14 +120,8 @@ export default function ContactPage() {
             </p>
           </ScrollReveal>
 
-          {/* Both links use `padding: '12px 6px'` with a matching negative
-              `marginInline`. Vertical padding on an inline element grows the hit
-              box without moving the text around it (20px glyph box → 44px); the
-              horizontal pair does the same sideways, which the short Arabic
-              WhatsApp label needs to clear 44px wide. The negative margin cancels
-              the horizontal shift, so the rendered sentence is unchanged. The
-              paragraph gap below is 20px, which is exactly the two 12px paddings
-              plus the line leading — the hit areas meet without overlapping. */}
+          {/* padding + matching negative marginInline grows the tap target to
+              44px without shifting the surrounding text. */}
           <ScrollReveal delay={0.24}>
             <p style={{ margin: '26px 0 0', fontSize: 16, color: 'var(--muted, #6c665e)' }}>
               {t('emailDirect')}{' '}
@@ -169,7 +153,7 @@ export default function ContactPage() {
         </div>
 
         <ScrollReveal delay={0.2}>
-          <ContactForm status={status} onSubmit={onSubmit} />
+          <ContactForm status={status} onSubmit={onSubmit} defaultService={defaultService} />
         </ScrollReveal>
       </div>
     </section>

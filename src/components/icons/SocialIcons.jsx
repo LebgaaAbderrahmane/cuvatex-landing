@@ -1,13 +1,6 @@
-// Hand-rolled monoline social icons. `lucide-react` (pinned `^1.26.0` in
-// package.json) ships no brand/social icons at all — no Instagram, LinkedIn,
-// GitHub or X exist in that package's set — so these fill the gap the same
-// way MobileMenu's burger SVG does: `stroke="currentColor"`, no fill.
-//
-// Deliberately geometric abstractions (a rounded badge holding a camera dot,
-// a signal line, code brackets, a cross), not traced recreations of each
-// platform's registered logo. All four share one badge shape so they read as
-// one row instead of four unrelated marks. `aria-hidden` on every icon: the
-// accessible label lives on the surrounding link in Footer.jsx, not here.
+// Hand-rolled monoline social icons — lucide-react ships no brand icons.
+// Geometric abstractions, not traced logos; `aria-hidden` since the
+// accessible label lives on the link in Footer.jsx, not here.
 
 const commonProps = {
   viewBox: '0 0 20 20',

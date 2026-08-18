@@ -12,12 +12,8 @@ loadAnalytics();
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ThemeProvider>
-      {/* `reducedMotion="user"` drops every transform and layout animation in the
-          app when the OS asks for reduced motion, without touching opacity — so
-          content still fades in and nothing disappears. What it cannot reach is
-          handled at the source: the CSS marquee and smooth scrolling in
-          index.css, the opacity pulse in Hero, and the carousel in
-          HeroShowcase. */}
+      {/* Handles reduced motion app-wide except opacity, CSS animations, and
+          setInterval swaps — those are gated by hand at the source. */}
       <MotionConfig reducedMotion="user">
         <App />
       </MotionConfig>

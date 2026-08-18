@@ -7,11 +7,7 @@ import ServiceDivider from './ServiceDivider';
 import Section from './ui/Section';
 import SectionHeader from './ui/SectionHeader';
 
-// Teaser only, mirroring Work.jsx: the homepage shows the first three
-// services and hands the rest to /services — it is a sales page, not the
-// catalogue. Rows, not a card grid: a grid of squares here would repeat
-// Work's grid of squares one section down the page. The card itself lives
-// in ServiceCard so this and the full page cannot drift apart.
+// Teaser only, mirroring Work.jsx — the rest lives on /services.
 const TEASER_COUNT = 3;
 
 const MotionLink = motion.create(Link);
@@ -69,7 +65,6 @@ export default function Services() {
             fontWeight: 600,
             fontSize: 14,
             letterSpacing: '0.04em',
-            // 48px tall: a thumb target, not a mouse target.
             padding: '14px 26px',
             borderRadius: 2,
             transition: 'background 0.2s, color 0.2s',

@@ -13,14 +13,10 @@
     <!-- NOTE: update to the real deployed domain when live, same as og:url below -->
     <link rel="canonical" href="https://cuvatex.com/" />
 
-    <!--
-      Runs before the first paint, so a returning dark-mode visitor never sees a
-      white flash and an Arabic visitor never sees a left-to-right first frame.
-      React sets the same three attributes later; this only wins the first frame.
-      Deliberately blocking and inline — an external or deferred script paints first.
-      Keys must match src/theme/ThemeContext.jsx (studio-theme) and the
-      i18next-browser-languagedetector default (i18nextLng).
-    -->
+    <!-- Runs before first paint so a returning dark-mode/Arabic visitor gets
+         no flash of the wrong theme or direction. Must stay blocking and
+         inline, not deferred. Keys must match ThemeContext.jsx (studio-theme)
+         and i18next-browser-languagedetector (i18nextLng). -->
     <script>
       (function () {
         var root = document.documentElement;
@@ -28,10 +24,6 @@
           var theme = localStorage.getItem('studio-theme');
           if (theme === 'dark' || theme === 'light') root.dataset.theme = theme;
 
-          // Same precedence as i18next-browser-languagedetector: an explicit
-          // stored choice wins, otherwise fall back to the browser's own language
-          // so a first-time Algerian visitor also gets RTL on frame one.
-          // Either source may carry a region code such as 'ar-DZ'.
           var lang = (localStorage.getItem('i18nextLng') || navigator.language || '')
             .split('-')[0];
           if (lang === 'en' || lang === 'fr' || lang === 'ar') {
@@ -39,7 +31,7 @@
             root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
           }
         } catch (e) {
-          /* private mode / blocked storage — fall through to the markup defaults */
+          // private mode / blocked storage — fall through to markup defaults
         }
       })();
     </script>

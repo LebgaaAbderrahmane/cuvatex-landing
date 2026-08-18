@@ -1,5 +1,6 @@
 {
   "nav": {
+    "home": "Accueil",
     "services": "Services",
     "process": "Méthode",
     "work": "Projets",
@@ -15,6 +16,7 @@
   "heroTitle": "Nous concevons et développons des produits logiciels complets, de bout en bout.",
   "heroNote": "Une équipe qui construit des logiciels ensemble, de la première idée au lancement.",
   "heroAvailability": "Disponibles pour de nouveaux projets, nous répondons sous deux jours ouvrés.",
+  "heroBadges": ["⭐ Note de 4,9", "🟢 En production", "📱 iOS + Android"],
   "servicesTitle": "Ce que nous faisons",
   "services": [
     { "title": "Sites et applications web", "desc": "Des sites et applications web rapides, faciles à utiliser et conçus pour durer.", "tags": ["React", "Next.js", "TypeScript"], "badge": "50+ livrés", "features": ["Adaptés à tous les écrans", "Optimisés pour le référencement", "Temps de chargement rapides garantis"] },
@@ -27,6 +29,7 @@
   "servicesPageTitle": "Tout ce que nous construisons",
   "servicesPageIntro": "Un regard plus détaillé sur ce que nous faisons — les détails derrière chaque service, d'une simple nouvelle fonctionnalité à un produit construit de zéro.",
   "servicesCta": "Voir tous les services",
+  "serviceCta": "Demander un devis",
   "clientsEyebrow": "Clients",
   "clientsTitle": "Avec qui nous travaillons",
   "clientsBody": "Nous travaillons avec des petites entreprises, des commerces et des restaurants, des cliniques et des professionnels, et des startups qui lancent leur premier produit. Si vous n'êtes pas sûr que votre projet nous convienne, demandez-nous.",
@@ -219,6 +222,8 @@
   "email": "hello@cuvatex.com",
   "nameLabel": "Nom",
   "emailLabel": "E-mail",
+  "serviceLabel": "De quel service avez-vous besoin ?",
+  "serviceOptionOther": "Autre / pas encore sûr",
   "msgLabel": "Que voulez-vous construire ?",
   "send": "Envoyer",
   "sending": "Envoi…",

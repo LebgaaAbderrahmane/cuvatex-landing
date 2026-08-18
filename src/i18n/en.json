@@ -1,5 +1,6 @@
 {
   "nav": {
+    "home": "Home",
     "services": "Services",
     "process": "Process",
     "work": "Work",
@@ -15,6 +16,7 @@
   "heroTitle": "We design and build complete software products end to end.",
   "heroNote": "A team that builds software together, from the first idea to launch.",
   "heroAvailability": "Available for new projects, we reply within 2 business days.",
+  "heroBadges": ["⭐ 4.9 rating", "🟢 Live in production", "📱 iOS + Android"],
   "servicesTitle": "What we do",
   "services": [
     { "title": "Websites & web apps", "desc": "Fast, easy-to-use websites and web applications built to last.", "tags": ["React", "Next.js", "TypeScript"], "badge": "50+ shipped", "features": ["Responsive on every device", "SEO-optimised out of the box", "Fast load times guaranteed"] },
@@ -27,6 +29,7 @@
   "servicesPageTitle": "Everything we build",
   "servicesPageIntro": "A closer look at what we do — the details behind each service, from a single new feature to a product built from scratch.",
   "servicesCta": "See all services",
+  "serviceCta": "Get a quote",
   "clientsEyebrow": "Clients",
   "clientsTitle": "Who we work with",
   "clientsBody": "We work with small businesses, shops and restaurants, clinics and professionals, and startups building their first product. If you are not sure whether your project fits, ask us.",
@@ -219,6 +222,8 @@
   "email": "hello@cuvatex.com",
   "nameLabel": "Name",
   "emailLabel": "Email",
+  "serviceLabel": "What service do you need?",
+  "serviceOptionOther": "Other / not sure yet",
   "msgLabel": "What do you want to build?",
   "send": "Send message",
   "sending": "Sending…",

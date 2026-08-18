@@ -4,14 +4,18 @@ import { Link } from 'react-router';
 import ScrollReveal from './ScrollReveal';
 import HeroShowcase from './HeroShowcase';
 import HeroBackground from './HeroBackground';
+import useMediaQuery from '../hooks/useMediaQuery';
 import { dirArrow } from '../lib/text';
 
 // Module scope: `motion.create` inside the component remounts the link every render.
 const MotionLink = motion.create(Link);
 
+const MOBILE_QUERY = '(max-width: 767px)'; // must match Header's breakpoint exactly
+
 export default function Hero() {
   const { t, i18n } = useTranslation();
   const reduceMotion = useReducedMotion();
+  const isMobile = useMediaQuery(MOBILE_QUERY);
 
   const handleScrollDown = () => {
     document.getElementById('services')
@@ -19,15 +23,11 @@ export default function Hero() {
   };
 
   return (
-    // No `id="top"` here: App.jsx's wrapper div already carries it, and two
-    // elements sharing an id is invalid HTML. This copy was inert anyway — the
-    // browser resolves `#top` to the first match, so the logo link and the
-    // BackToTop button were always landing on the div. docs/AUDIT.md item 20.
     <section
       style={{
-        // `--header-h` is measured and published by Header; 73 is the mobile
-        // fallback for the first frame, before the observer has run.
-        minHeight: 'calc(100dvh - var(--header-h, 73px))',
+        // Full-screen fold only above mobile — on phone, forcing the stacked
+        // text+picture into exactly one screen is what crops the picture.
+        minHeight: isMobile ? undefined : 'calc(100dvh - var(--header-h, 73px))',
         display: 'flex',
         flexDirection: 'column',
         padding: '0 clamp(20px, 5vw, 48px)',
@@ -44,6 +44,12 @@ export default function Hero() {
         maxWidth: 1160,
         margin: '0 auto',
         width: '100%',
+        // On mobile the hero no longer fills the screen, so this content isn't
+        // vertically centered anymore — it sits right at the top, flush against
+        // the sticky header. This gap replaces the buffer that centering used
+        // to give it, so scrolling doesn't slide the headline under the header
+        // from the very first pixel.
+        paddingTop: isMobile ? 28 : 0,
       }}>
         <div style={{
           display: 'flex',
@@ -72,9 +78,7 @@ export default function Hero() {
                     background: 'var(--accent, #0E7A69)',
                     display: 'inline-block',
                   }}
-                  // MotionConfig's reduced-motion mode only strips transform and
-                  // layout animations — opacity keeps running, so gate it here.
-                  animate={reduceMotion ? { opacity: 1 } : { opacity: [1, 0.3, 1] }}
+                  animate={reduceMotion ? { opacity: 1 } : { opacity: [1, 0.3, 1] }} // MotionConfig doesn't gate opacity
                   transition={reduceMotion ? { duration: 0 } : { duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                 />
                 {t('heroKicker')}
@@ -108,8 +112,6 @@ export default function Hero() {
 
             <ScrollReveal delay={0.3}>
               <div style={{ marginTop: 44 }}>
-                {/* Contact is a real page now, so this is a normal cross-page
-                    link rather than a same-page anchor jump. */}
                 <MotionLink
                   to="/contact"
                   className="focus-ring"
@@ -150,6 +152,9 @@ export default function Hero() {
         </div>
       </div>
 
+      {/* Desktop only — a phone visitor already knows to swipe, and this hero
+          stack is tall enough on mobile without a non-essential scroll hint. */}
+      {!isMobile && (
       <motion.button
         onClick={handleScrollDown}
         className="focus-ring"
@@ -180,6 +185,7 @@ export default function Hero() {
           <path d="M6 9l6 6 6-6" />
         </svg>
       </motion.button>
+      )}
     </section>
   );
 }

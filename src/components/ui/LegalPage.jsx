@@ -1,12 +1,8 @@
 import ScrollReveal from '../ScrollReveal';
 
-// Shared shell for /terms and /privacy. Writes its own <section> rather than
-// using ui/Section, for the same reason NotFound and WorkList do: Section
-// always draws a top border, and these pages are the first thing under the
-// sticky header, where that border would sit directly against the header's
-// own borderBottom and read as one 2px rule. There is an <h1> here rather
-// than SectionHeader's <h2>, because each of these pages is one flat
-// article, not a section inside a longer page.
+// Shared shell for /terms and /privacy. Own <section>, not ui/Section — same
+// reason as NotFound/WorkList: Section's top border would double against the
+// sticky header's.
 export default function LegalPage({ eyebrow, title, updated, notice, sections }) {
   const list = Array.isArray(sections) ? sections : [];
 
@@ -58,11 +54,7 @@ export default function LegalPage({ eyebrow, title, updated, notice, sections })
           </p>
         </ScrollReveal>
 
-        {/* Same bordered, var(--surface) treatment Project.jsx uses for
-            caseStudy.soon — a case study with no written body yet. This page
-            has the same kind of gap: the text below exists, but has not been
-            reviewed by a lawyer, and a visitor deciding whether to trust it
-            needs to see that before the sections below, not after. */}
+        {/* Same treatment as Project.jsx's caseStudy.soon callout. */}
         <ScrollReveal delay={0.22}>
           <p style={{
             margin: 'clamp(24px, 3.5vw, 36px) 0 0',
@@ -89,13 +81,8 @@ export default function LegalPage({ eyebrow, title, updated, notice, sections })
   );
 }
 
-// One {heading, body} row. Same fixed-label-column + flowing-body-column
-// shape as Project.jsx's Block, reused here because legal.terms.sections and
-// legal.privacy.sections are shaped exactly like a case study's overview /
-// challenge / solution blocks — flexWrap alone stacks the columns on a
-// narrow phone, the same way Block does, with no separate breakpoint needed.
-// `first` skips the top divider so the rule does not double up against the
-// notice callout's own border just above it.
+// One {heading, body} row — same layout as Project.jsx's Block.
+// `first` skips the top divider so it doesn't double against the notice callout above it.
 function LegalSection({ heading, body, first }) {
   return (
     <ScrollReveal>

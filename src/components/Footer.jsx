@@ -3,9 +3,8 @@ import { Link } from 'react-router';
 import { WHATSAPP_URL, PHONE_URL, PHONE_DISPLAY } from '../lib/contact';
 import { InstagramIcon, LinkedinIcon, GithubIcon, XIcon } from './icons/SocialIcons';
 
-// Pages column. Home is not in Header's `sections` array — the logo covers
-// that job there — but a footer lists it explicitly, since nobody scans a
-// footer looking for a logo to click.
+// Home isn't in Header's `sections` (the logo covers that job there), but the
+// footer lists it explicitly.
 const footerLinks = [
   { key: 'home', to: '/', labelKey: 'footerNav.home' },
   { key: 'services', to: '/services', labelKey: 'nav.services' },
@@ -19,9 +18,7 @@ const legalLinks = [
   { key: 'privacy', to: '/privacy', labelKey: 'legal.privacyNav' },
 ];
 
-// Placeholder profile URLs — same "flag it, don't block on it" spirit as
-// WHATSAPP_URL in src/lib/contact.js. None of these accounts exist yet; swap
-// in the real profile URLs once they do.
+// Placeholder profile URLs — none of these accounts exist yet.
 const socials = [
   { key: 'instagram', href: 'https://instagram.com/', Icon: InstagramIcon },
   { key: 'linkedin', href: 'https://linkedin.com/', Icon: LinkedinIcon },
@@ -42,10 +39,7 @@ const headingStyle = {
   color: fgColor,
 };
 
-// Every text link in this file reuses the tap-target trick the single mailto
-// link used before this rewrite: `display: inline-flex` + `alignItems:
-// center` + `minHeight: 44` turns a line of text into a full 44px tappable
-// row without adding visible padding around the label.
+// inline-flex + minHeight: 44 turns each text link into a full tappable row.
 const linkStyle = {
   textDecoration: 'none',
   color: mutedColor,
@@ -56,9 +50,8 @@ const linkStyle = {
   transition: 'color 0.2s',
 };
 
-// currentTarget, not target: several links below wrap an icon, and hovering
-// the icon would set `target` to the child SVG instead of the link itself —
-// the same fix Header.jsx already documents for its underline.
+// currentTarget, not target — several links wrap an icon, and hovering it
+// would otherwise target the child SVG instead of the link.
 function onLinkEnter(e) { e.currentTarget.style.color = fgColor; }
 function onLinkLeave(e) { e.currentTarget.style.color = mutedColor; }
 
@@ -77,10 +70,6 @@ export default function Footer() {
           gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
           gap: '40px clamp(24px, 4vw, 48px)',
         }}>
-          {/* Brand. No separate tagline string here on purpose — all copy
-              lives in i18n JSON, and no footer-tagline key exists, so this
-              stays the wordmark alone, same image + label as Header's logo
-              link. */}
           <div>
             <Link
               to="/"
@@ -200,8 +189,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar: the existing copyright string, unchanged, plus the
-            two legal links. */}
         <div style={{
           marginTop: 'clamp(32px, 5vw, 48px)',
           paddingTop: 20,

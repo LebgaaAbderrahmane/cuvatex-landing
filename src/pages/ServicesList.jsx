@@ -4,20 +4,9 @@ import ServiceCard from '../components/ServiceCard';
 import ServiceDivider from '../components/ServiceDivider';
 import CtaBanner from '../components/CtaBanner';
 
-// Own shell, not ui/Section, for the same reason WorkList is: Section always
-// draws a top border, and this page is the first thing under the sticky
-// header — that border would sit directly against the header's own bottom
-// border and read as one 2px rule. An <h1> here, not SectionHeader's <h2>,
-// because on this page the list *is* the page.
-//
-// Full-width rows rather than a grid: the `features` list needs more
-// horizontal room than a narrow grid column gives. Same ServiceCard rows as
-// the homepage teaser (just `detailed`, and all 6 instead of 3), so the
-// teaser reads as a preview of this page rather than an unrelated section —
-// see ServiceCard's own comment for why *that* consistency is the good kind.
-// ServiceDivider between rows echoes which side the next row's photo lands
-// on, the plain hairline under the intro paragraph does not — it separates
-// the intro from the list, not one alternating row from the next.
+// Own shell, not ui/Section — same reason as WorkList: Section's top border
+// would double against the sticky header's. Full-width rows, not a grid: the
+// `features` list needs more room than a narrow grid column gives.
 export default function ServicesList() {
   const { t } = useTranslation();
   const services = t('services', { returnObjects: true });
@@ -96,8 +85,6 @@ export default function ServicesList() {
       </div>
     </section>
 
-    {/* Someone who read every service is the warmest visitor this page gets.
-        Without this they reach the footer with nothing to do. */}
     <CtaBanner />
     </>
   );

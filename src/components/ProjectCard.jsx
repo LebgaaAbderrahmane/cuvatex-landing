@@ -8,28 +8,21 @@ import useMediaQuery from '../hooks/useMediaQuery';
 
 // One card, used by the homepage teaser (Work.jsx) and the full index
 // (pages/WorkList.jsx). Written once so the two cannot drift apart.
-//
-// Created at module scope: `motion.create` inside the component would hand React
-// a new component type every render and remount the card on each keystroke.
-const MotionLink = motion.create(Link);
+const MotionLink = motion.create(Link); // module scope, or a new type remounts the card every render
 
-// Capability query, not a width — a small laptop window still hovers, and a large
-// tablet still does not. Everything below keys off what the input can actually do.
+// Capability query, not a width — a small laptop still hovers, a large tablet doesn't.
 const NO_HOVER = '(hover: none)';
 
 export default function ProjectCard({ slug, tagKey, index = 0 }) {
   const { t, i18n } = useTranslation();
   const reduce = useReducedMotion();
   const rtl = i18n.dir() === 'rtl';
-  // On a touch screen the hover state never fires, so a card whose only "this is
-  // a link" signal is a hover reveal reads as a plain image. There, the badge and
-  // the label rest in their visible state instead.
+  // Touch screens never fire hover, so the badge/label rest visible there instead.
   const noHover = useMediaQuery(NO_HOVER);
 
   const title = t(`projects.${slug}.title`);
 
-  // Hover and keyboard focus drive the same variant, so the affordance is not
-  // mouse-only.
+  // Hover and keyboard focus drive the same variant, so it's not mouse-only.
   const cardV = { rest: { y: 0 }, hover: { y: reduce ? 0 : -6 } };
   const imgV = { rest: { scale: 1 }, hover: { scale: reduce ? 1 : 1.05 } };
   const veilV = { rest: { opacity: noHover ? 0.85 : 0 }, hover: { opacity: 1 } };
@@ -47,13 +40,8 @@ export default function ProjectCard({ slug, tagKey, index = 0 }) {
   };
 
   return (
-    // Outer element owns the entry animation, the link owns hover/focus, so the
-    // two do not overwrite each other's animation state.
-    //
-    // `whileInView` rather than a plain `animate`: on the index page most cards
-    // start below the fold, and a mount-time animation would play them out while
-    // nobody is looking. Staggering by column (not by index) keeps the last card
-    // of a long list from waiting half a second for its turn.
+    // Outer div owns the entry animation, the link owns hover/focus, so the two
+    // don't overwrite each other's animation state.
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -78,8 +66,7 @@ export default function ProjectCard({ slug, tagKey, index = 0 }) {
           display: 'flex',
           flexDirection: 'column',
           width: '100%',
-          // `a { color: var(--accent) }` in index.css would repaint the whole card.
-          color: 'inherit',
+          color: 'inherit', // index.css's `a { color: var(--accent) }` would repaint the whole card
           textDecoration: 'none',
           textAlign: rtl ? 'right' : 'left',
         }}
@@ -130,7 +117,6 @@ export default function ProjectCard({ slug, tagKey, index = 0 }) {
               pointerEvents: 'none',
             }}
           >
-            {/* The glyph points away from the reading direction, so it flips in Arabic. */}
             <ArrowUpRight size={18} style={{ transform: rtl ? 'scaleX(-1)' : 'none' }} />
           </motion.span>
 

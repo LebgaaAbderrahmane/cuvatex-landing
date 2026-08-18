@@ -1,12 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { motion, useReducedMotion } from 'framer-motion';
+import { Link } from 'react-router';
+import { ArrowRight } from 'lucide-react';
 import { EASE } from '../lib/motion';
+import { SERVICE_SLUGS } from '../lib/services';
 
-// Unlike data/projects.js, where each project is keyed by a stable slug,
-// services have no slug — the i18n `services[]` array is just an ordered
-// list. serviceImages[index] and nums[index] are positionally coupled to
-// that array: if it is ever reordered, these silently mismatch. There is no
-// slug here to catch that the way there is for projects.
+const MotionLink = motion.create(Link); // module scope, or a new type remounts the link every render
+
+// Positionally coupled to i18n's services[] array — no slug like projects.js
+// has, so reordering services[] silently mismatches these images.
 const serviceImages = [
   'https://picsum.photos/seed/services-web/800/600',
   'https://picsum.photos/seed/services-mvp/800/600',
@@ -20,33 +22,18 @@ const nums = ['01', '02', '03', '04', '05', '06'];
 
 const viewport = { once: true, margin: '-10% 0px' };
 
-// One card, two consumers: the homepage teaser (Services.jsx, plain) and the
-// full /services page (ServicesList.jsx, `detailed`) — written once so the
-// two cannot drift apart, the same reason ProjectCard exists.
-//
-// Both modes share one row layout — photo one side, number/title/description
-// the other, alternating by index. `detailed` only adds the badge/tags/
-// feature list; it does not change the shape. Earlier the teaser used a grid
-// of square cards instead — image on top, text below, three across — and it
-// read as a copy of Work's card grid one section later. Rows fix that by
-// being a different silhouette, not just different words in the same box.
-//
-// The entrance motion repeats the alternation instead of fading everything
-// up the same way: each row slides in from the side its own photo sits on,
-// and the number arrives fractionally before its title/description, so the
-// rhythm the layout sets up visually is also what scrolling past it feels
-// like — see ServiceDivider for the matching hairline between rows.
+// One card, two consumers: the homepage teaser (plain) and /services
+// (`detailed`, adds badge/tags/feature list) — same reason ProjectCard exists.
+// Rows alternate side by index; see ServiceDivider for the matching hairline.
 export default function ServiceCard({ service, index = 0, detailed = false }) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const reduce = useReducedMotion();
   const rtl = i18n.dir() === 'rtl';
   const image = serviceImages[index] || serviceImages[0];
   const num = nums[index] || nums[0];
   const isEven = index % 2 === 0;
 
-  // `row` flips which physical side is first once dir="rtl", so "isEven"
-  // alone does not say which side the photo lands on — this does. Keep in
-  // sync with ServiceDivider's identical calculation.
+  // Keep in sync with ServiceDivider's identical calculation.
   const photoOnLeft = isEven === !rtl;
   const slideFrom = reduce ? 0 : (photoOnLeft ? -36 : 36);
 
@@ -82,8 +69,6 @@ export default function ServiceCard({ service, index = 0, detailed = false }) {
       </motion.div>
 
       <div style={{ flex: '1 1 360px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {/* Leads the beat: arrives with the photo, title/description follow
-            a fraction of a second behind it (see the delay below). */}
         <motion.span
           initial={{ opacity: 0, x: slideFrom }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -194,6 +179,29 @@ export default function ServiceCard({ service, index = 0, detailed = false }) {
                 </li>
               ))}
             </ul>
+          )}
+
+          {detailed && (
+            <MotionLink
+              to={`/contact?service=${SERVICE_SLUGS[index] || ''}`}
+              className="focus-ring"
+              whileHover={{ x: reduce ? 0 : (rtl ? -3 : 3) }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                marginTop: 4,
+                alignSelf: 'flex-start',
+                color: 'var(--accent, #0E7A69)',
+                fontWeight: 600,
+                fontSize: 14,
+                textDecoration: 'none',
+                minHeight: 44,
+              }}
+            >
+              {t('serviceCta')}
+              <ArrowRight size={14} style={{ transform: rtl ? 'scaleX(-1)' : 'none' }} />
+            </MotionLink>
           )}
         </motion.div>
       </div>

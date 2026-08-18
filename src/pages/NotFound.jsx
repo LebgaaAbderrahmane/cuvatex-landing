@@ -4,17 +4,13 @@ import { Link } from 'react-router';
 
 const MotionLink = motion.create(Link);
 
-// Reached by the `*` route and by a project page whose slug is not in
-// data/projects.js. Before the router, an unknown `#case/x` hash silently read as
-// "closed" and the visitor got the homepage with no explanation.
+// Reached by the `*` route and by a project page whose slug isn't in data/projects.js.
 export default function NotFound() {
   const { t } = useTranslation();
 
   return (
     <section style={{
-      // Fills what is left under the sticky header, so the footer does not ride
-      // up under a short page. This is what --header-h is for.
-      minHeight: 'calc(100dvh - var(--header-h, 73px))',
+      minHeight: 'calc(100dvh - var(--header-h, 73px))', // fills what's left under the header
       display: 'flex',
       alignItems: 'center',
       padding: 'clamp(48px, 10vw, 96px) clamp(20px, 5vw, 48px)',
@@ -37,7 +33,7 @@ export default function NotFound() {
             background: 'var(--accent, #0E7A69)',
             display: 'inline-block',
           }} />
-          {/* Not translated: "404" is the same in every locale. */}
+          {/* not translated — same in every locale */}
           404
         </p>
 
@@ -95,7 +91,6 @@ const buttonBase = {
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  // 48px tall on a phone, where this is the only way out of the page.
   padding: '14px 26px',
   borderRadius: 2,
   textDecoration: 'none',

@@ -8,9 +8,7 @@ import { projects } from '../data/projects';
 import Section from './ui/Section';
 import SectionHeader from './ui/SectionHeader';
 
-// Teaser only. The homepage shows the first three and hands the rest to /work —
-// it is a sales page, not the catalogue. The card itself lives in ProjectCard so
-// this and the index page cannot drift apart.
+// Teaser only — the rest lives on /work.
 const TEASER_COUNT = 3;
 
 const MotionLink = motion.create(Link);
@@ -79,7 +77,6 @@ export default function Work() {
             fontWeight: 600,
             fontSize: 14,
             letterSpacing: '0.04em',
-            // 48px tall: a thumb target, not a mouse target.
             padding: '14px 26px',
             borderRadius: 2,
             transition: 'background 0.2s, color 0.2s',

@@ -4,22 +4,15 @@ import { Link, useLocation } from 'react-router';
 import { EASE } from '../lib/motion';
 import { isCurrentSection } from '../lib/nav';
 
-// Two exports rather than one component, because the trigger and the panel sit
-// in different parents inside the header — the button is in the right-hand
-// control cluster, the panel is a sibling of the whole bar so it can overlay the
-// page. Wrapping both in one component would mean moving the button's DOM
-// position, which changes the layout it was tuned against.
-//
-// The open/closed state stays in Header: it also closes the panel when the
-// viewport grows past the breakpoint, which is a header-level concern.
+// Two exports, not one component: the button sits in the header's control
+// cluster, the panel is a sibling of the whole bar so it can overlay the page.
+// Open/closed state stays in Header, which also closes the panel on resize.
 
 const buttonStyle = {
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  // 44px is the minimum comfortable touch target; the header height is
-  // measured and published as `--header-h`, so growing this is safe.
-  width: 44,
+  width: 44, // minimum comfortable touch target
   height: 44,
   border: '1px solid var(--line, rgba(21,18,15,0.13))',
   background: 'transparent',
@@ -49,15 +42,8 @@ export function MobileMenuButton({ open, onToggle }) {
   );
 }
 
-/**
- * The drop-down panel of nav links.
- *
- * These used to be raw anchors with a hand-written click handler that closed the
- * panel, pushed the hash and scrolled inside a `requestAnimationFrame` — the rAF
- * being what stopped React's commit from eating the scroll. All of that now lives
- * in ScrollManager, one level up, so the desktop nav and the mobile panel cannot
- * disagree about what a nav click does. Closing the panel is all that is left.
- */
+// The drop-down panel of nav links. Scroll/focus handling lives in
+// ScrollManager, so this only needs to close itself on click.
 export function MobileMenuPanel({ open, sections, linkStyle, onClose }) {
   const { t } = useTranslation();
   const { pathname } = useLocation();
@@ -72,10 +58,7 @@ export function MobileMenuPanel({ open, sections, linkStyle, onClose }) {
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.25, ease: EASE }}
           style={{
-            // Overlay, not in-flow: an in-flow panel changes document height,
-            // so closing it after an anchor click shifts the whole page up by
-            // the panel height and the target heading ends up off-screen.
-            position: 'absolute',
+            position: 'absolute', // overlay, not in-flow — in-flow would shift page height on close
             top: '100%',
             insetInline: 0,
             overflow: 'hidden',
@@ -104,15 +87,11 @@ export function MobileMenuPanel({ open, sections, linkStyle, onClose }) {
                     alignItems: 'center',
                     gap: 10,
                     fontSize: 17,
-                    // 48px of tappable row, not a 17px word.
-                    padding: '15px 0',
+                    padding: '15px 0', // grows tap target well past the 17px word
                     borderBottom: '1px solid var(--line, rgba(21,18,15,0.13))',
                     color: current ? 'var(--accent, #0E7A69)' : linkStyle.color,
                   }}
                 >
-                  {/* A square, not an underline: these rows already sit between
-                      border lines, so a second horizontal rule would read as one
-                      of them. Same marker the section eyebrows use. */}
                   {current && (
                     <span
                       aria-hidden="true"

@@ -4,11 +4,8 @@ import ProjectCard from '../components/ProjectCard';
 import CtaBanner from '../components/CtaBanner';
 import { projects } from '../data/projects';
 
-// Writes its own shell instead of using ui/Section, for the same reason Hero
-// does: Section always draws a top border, and this section is the first thing
-// under the header — its own bottom border would sit directly against it and
-// read as one 2px rule. There is also an <h1> here rather than SectionHeader's
-// <h2>, because on this page the list *is* the page.
+// Own shell instead of ui/Section — Section's top border would double against
+// the header's, since this is the first thing under it.
 export default function WorkList() {
   const { t } = useTranslation();
 
@@ -81,8 +78,6 @@ export default function WorkList() {
       </div>
     </section>
 
-    {/* Someone who scrolled every card is the warmest visitor this page gets.
-        Without this they reach the footer with nothing to do. */}
     <CtaBanner />
     </>
   );

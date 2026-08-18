@@ -1,19 +1,9 @@
 import ScrollReveal from '../ScrollReveal';
 
-// The eyebrow-and-heading pair that opens seven sections: a small uppercase
-// label preceded by an accent square, then the section title, each revealing on
-// its own delay.
-//
-// Returns a fragment rather than a wrapper element, so the call site's own
-// layout (About and Contact put this in a grid column, Work in a flex row) is
-// unchanged.
-//
-// The body copy that follows deliberately stays at the call site. It looks
-// shared but is not: the colour is `--fg` in About and Pricing and `--muted` in
-// Team and Contact, the top margin runs 18 / 22 / 24px, the size caps at 19 or
-// 20px, and the measure at 44 / 48 / 58ch. About has two of them, Faq and
-// Testimonials have none. Pulling that in would need six props to express four
-// paragraphs — the duplication is cheaper than the abstraction.
+// Eyebrow + heading pair shared by several sections. Returns a fragment (not
+// a wrapper element) so the call site's own layout stays unchanged. The body
+// paragraph after it stays at the call site — styling varies too much per
+// section to share.
 
 const eyebrowStyle = {
   display: 'flex',
@@ -34,8 +24,7 @@ const dotStyle = {
   display: 'inline-block',
 };
 
-// Hero's version of this pulses its opacity, so Hero keeps its own `motion.span`
-// and does not use this component.
+// Hero has its own pulsing version and doesn't use this component.
 const titleStyle = {
   fontSize: 'clamp(30px, 5vw, 52px)',
   fontWeight: 600,
@@ -47,9 +36,7 @@ const titleStyle = {
 export default function SectionHeader({
   eyebrow,
   title,
-  // The measure the heading wraps at, e.g. '18ch'. Explicitly `null` on Team
-  // and Work, which let the heading run to the container width.
-  titleMaxWidth,
+  titleMaxWidth, // e.g. '18ch'; null lets the heading run to container width
 }) {
   return (
     <>

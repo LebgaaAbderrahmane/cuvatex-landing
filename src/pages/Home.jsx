@@ -10,13 +10,9 @@ import Team from '../components/Team';
 import Faq from '../components/Faq';
 import Pricing from '../components/Pricing';
 
-// The one long sales page. Order is the argument it makes: what we do → who we
-// help → how we work → proof → who we are → price. Contact moved to its own
-// `/contact` route, so the mid-page CtaBanner is now the homepage's "talk to
-// us" moment. The header nav is pages only now (Header.jsx's `sections`
-// array) — none of it links here by hash anymore, so the section `id`s below
-// are no longer nav anchor targets. They stay anyway: harmless, and a future
-// hash link (or a test selector) can still use them.
+// The one long sales page. Order is the argument: what we do → who we help →
+// how we work → proof → who we are → price. Contact lives at /contact now,
+// so the mid-page CtaBanner is the homepage's "talk to us" moment.
 export default function Home() {
   return (
     <>
