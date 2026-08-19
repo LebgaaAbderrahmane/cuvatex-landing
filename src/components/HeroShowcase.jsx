@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, useInView, useReducedMotion } from 'framer-motion';
-import { EASE } from '../lib/motion';
+import { HERO_EASE } from '../lib/motion';
 import useMediaQuery from '../hooks/useMediaQuery';
 
 // Decorative carousel mockups — unrelated to the real case studies in data/projects.js.
@@ -38,34 +38,57 @@ function CrossfadeImages({ urlKey, index }) {
   );
 }
 
-// Shared visual for the credibility chips — floating on desktop (FloatingBadge),
-// a static row on mobile (below). `aria-hidden` on both: they're a flourish,
-// the real claims live in Hero's own copy.
+// Every badge is anchored over a mockup corner — never floating in open space.
 const badgeChipStyle = {
   display: 'flex',
   alignItems: 'center',
-  gap: 6,
-  padding: '8px 12px',
+  gap: 7,
+  padding: '8px 13px',
   borderRadius: 999,
   fontSize: 12,
   fontWeight: 600,
   color: 'var(--fg, #15120f)',
   background: 'var(--surface, #fff)',
   border: '1px solid var(--line, rgba(21,18,15,0.13))',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+  boxShadow: '0 6px 20px rgba(0,0,0,0.10)',
   whiteSpace: 'nowrap',
 };
 
-// No whileInView: children of the mockup's own fade/scale-in, so the float
-// loop just runs from mount and stays invisible until that reveals them.
-function FloatingBadge({ text, style, reduce, delay }) {
+// Icons stay in JSX so the locale files hold plain sentences, not emoji. Matched
+// to `heroBadges` by position, the same way SERVICE_SLUGS maps onto `services`.
+function BadgeIcon({ index }) {
+  if (index === 0) {
+    return (
+      <span aria-hidden="true" style={{
+        width: 8,
+        height: 8,
+        borderRadius: '50%',
+        background: 'var(--accent, #0E7A69)',
+        flex: 'none',
+      }} />
+    );
+  }
+  return (
+    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+      style={{ flex: 'none' }}>
+      <rect x="7" y="2" width="10" height="20" rx="2.5" />
+      <path d="M11 18.5h2" />
+    </svg>
+  );
+}
+
+// Not aria-hidden: unlike the old chips, these two say something the hero copy
+// doesn't. No whileInView either — it's a child of the mockup's own entrance,
+// so the float loop runs from mount and is invisible until that reveals it.
+function Badge({ text, index, float, style }) {
   return (
     <motion.div
-      aria-hidden="true"
-      animate={{ y: reduce ? 0 : [0, -6, 0] }}
-      transition={{ duration: 3.4, repeat: reduce ? 0 : Infinity, ease: 'easeInOut', delay }}
+      animate={float ? { y: [0, -6, 0] } : { y: 0 }}
+      transition={float ? { duration: 4, repeat: Infinity, ease: 'easeInOut' } : { duration: 0 }}
       style={{ position: 'absolute', zIndex: 3, ...badgeChipStyle, ...style }}
     >
+      <BadgeIcon index={index} />
       {text}
     </motion.div>
   );
@@ -95,17 +118,21 @@ export default function HeroShowcase() {
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, scale: 0.88 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: '-10% 0px' }}
-      transition={{ duration: 0.7, ease: EASE }}
+      // Plays on mount, one step behind the hero's buttons — the showcase is
+      // above the fold, so a scroll reveal would only fire on a replayed scroll.
+      initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.16, ease: HERO_EASE }}
       // Mobile shows one device in normal flow; desktop composites two devices
       // over a fixed 3/2 stage, so it needs the aspect-ratio box to place them in.
+      // 560 rather than the column's full width: the stage then centres with slack
+      // on both sides, which is what keeps the badges inside the 1160 container.
       style={isMobile ? {
         width: '100%',
+        position: 'relative',
       } : {
         width: '100%',
-        maxWidth: 700,
+        maxWidth: 560,
         aspectRatio: '3/2',
         position: 'relative',
       }}
@@ -124,6 +151,11 @@ export default function HeroShowcase() {
             borderRadius: 8,
             overflow: 'hidden',
             boxShadow: '0 8px 32px rgba(0,0,0,0.06)',
+            // Flex, not a hardcoded `calc(100% - 36px)` on the picture below:
+            // the toolbar's real height moves with its font, and the mismatch
+            // left a strip of bare surface under the picture.
+            display: 'flex',
+            flexDirection: 'column',
           }}>
             <div style={{
               display: 'flex',
@@ -132,6 +164,7 @@ export default function HeroShowcase() {
               padding: '9px 10px',
               background: 'var(--bg, #f6f5f2)',
               borderBottom: '1px solid var(--line, rgba(21,18,15,0.13))',
+              flex: 'none',
             }}>
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#ff5f57', flex: 'none' }} />
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#febc2e', flex: 'none' }} />
@@ -154,10 +187,19 @@ export default function HeroShowcase() {
                 {p.id}.app
               </span>
             </div>
-            <div style={{ width: '100%', height: 'calc(100% - 36px)' }}>
+            <div style={{ width: '100%', flex: 1, minHeight: 0 }}>
               <CrossfadeImages urlKey="desktop" index={index} />
             </div>
           </div>
+
+          {/* One badge only. `top` clears the 35px title bar so the window dots
+              stay visible — it straddles the left edge of the picture instead.
+              -8 on the left still clears the hero's 20px side padding.
+              No float loop on a phone — the spec keeps that desktop-only. */}
+          {badgeList[0] && (
+            <Badge text={badgeList[0]} index={0} float={false} style={{ top: 24, left: -8 }} />
+          )}
+
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
             <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fg, #15120f)', letterSpacing: '-0.01em' }}>
               {p.title}
@@ -177,43 +219,39 @@ export default function HeroShowcase() {
               ))}
             </div>
           </div>
-
-          {/* Static, not floating — no absolute-positioned stage to float
-              around here, and not enough width for chips beside the mockup. */}
-          {badgeList.length > 0 && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
-              {badgeList.map((text, i) => (
-                <span key={i} aria-hidden="true" style={{ ...badgeChipStyle, fontSize: 11, padding: '6px 10px' }}>
-                  {text}
-                </span>
-              ))}
-            </div>
-          )}
         </>
       ) : (
         <>
+          {/* Physical left/right, not insetInlineStart/End: the two mockups below
+              are placed with left/right too, so a logical property would send the
+              badges to the opposite corners in Arabic and detach them. Both sit
+              wholly inside the stage box, overlapping a corner by ~12px.
+              Badge A's -6 is what keeps it off the window dots: at top: 0 it
+              shaved 3px off all three. */}
           {badgeList[0] && (
-            <FloatingBadge text={badgeList[0]} reduce={reduceMotion} delay={0} style={{ insetInlineStart: '-4%', top: '8%' }} />
+            <Badge text={badgeList[0]} index={0} float={!reduceMotion} style={{ top: -6, left: 0 }} />
           )}
           {badgeList[1] && (
-            <FloatingBadge text={badgeList[1]} reduce={reduceMotion} delay={0.6} style={{ insetInlineEnd: '-2%', top: '2%' }} />
-          )}
-          {badgeList[2] && (
-            <FloatingBadge text={badgeList[2]} reduce={reduceMotion} delay={1.2} style={{ insetInlineStart: '10%', bottom: '-6%' }} />
+            <Badge text={badgeList[1]} index={1} float={!reduceMotion} style={{ bottom: 0, right: 0 }} />
           )}
 
           {/* Laptop mockup */}
           <div style={{
             position: 'absolute',
             top: '4%',
-            left: '6%',
-            width: '84%',
-            height: '78%',
+            left: '5%',
+            width: '78%',
+            height: '76%',
+            display: 'flex',
+            flexDirection: 'column',
           }}>
-            {/* Screen */}
+            {/* Screen. Takes every pixel the label row below doesn't, so the
+                picture always reaches the frame's bottom edge. */}
             <div style={{
-              width: '100%',
-              height: '83%',
+              flex: 1,
+              minHeight: 0,
+              display: 'flex',
+              flexDirection: 'column',
               background: 'var(--surface, #fff)',
               border: '1px solid var(--line, rgba(21,18,15,0.13))',
               borderRadius: 8,
@@ -228,6 +266,7 @@ export default function HeroShowcase() {
                 padding: '9px 10px',
                 background: 'var(--bg, #f6f5f2)',
                 borderBottom: '1px solid var(--line, rgba(21,18,15,0.13))',
+                flex: 'none',
               }}>
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#ff5f57', flex: 'none' }} />
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#febc2e', flex: 'none' }} />
@@ -251,39 +290,24 @@ export default function HeroShowcase() {
                 </span>
               </div>
 
-              <div style={{ width: '100%', height: 'calc(100% - 36px)' }}>
+              <div style={{ width: '100%', flex: 1, minHeight: 0 }}>
                 <CrossfadeImages urlKey="desktop" index={index} />
               </div>
             </div>
 
-            {/* Hinge */}
-            <div style={{
-              width: '104%',
-              height: '10%',
-              marginInlineStart: '-2%',
-              background: 'var(--surface, #fff)',
-              border: '1px solid var(--line, rgba(21,18,15,0.13))',
-              borderTop: 'none',
-              borderRadius: '0 0 5px 5px',
-              position: 'relative',
-            }}>
-              <div style={{
-                width: '28%',
-                height: 3,
-                background: 'var(--line, rgba(21,18,15,0.13))',
-                borderRadius: 2,
-                margin: '0 auto',
-                position: 'relative',
-                top: -1.5,
-              }} />
-            </div>
-
-            {/* Label + dots */}
+            {/* Label + dots, both packed to the left. `space-between` put the
+                dots at this row's right end, which is underneath the phone — it
+                has zIndex 2, so all six were painted over and never seen.
+                Forced LTR for the same reason: the project names are English
+                either way, and in Arabic the flipped row sent the label under
+                the phone instead. */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              gap: 10,
               marginTop: 7,
+              direction: 'ltr',
+              flex: 'none',
             }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fg, #15120f)', letterSpacing: '-0.01em' }}>
                 {p.title}
@@ -305,22 +329,25 @@ export default function HeroShowcase() {
             </div>
           </div>
 
-          {/* Phone mockup */}
+          {/* Phone mockup. Deliberately short enough that the laptop's own right
+              border shows above it — a phone that spans the full height of the
+              screen behind it reads as the laptop being cut off. */}
           <div style={{
             position: 'absolute',
-            bottom: '3%',
+            bottom: '4%',
             right: '3%',
-            width: '30%',
+            width: '25%',
             zIndex: 2,
           }}>
             <div style={{
               width: '100%',
-              aspectRatio: '1/2.1',
+              aspectRatio: '1/2',
               background: 'var(--surface, #fff)',
               border: '2px solid var(--line, rgba(21,18,15,0.13))',
               borderRadius: 14,
               overflow: 'hidden',
-              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
               boxShadow: '0 6px 24px rgba(0,0,0,0.08)',
             }}>
               <div style={{
@@ -330,6 +357,7 @@ export default function HeroShowcase() {
                 padding: '6px 10px',
                 background: 'var(--bg, #f6f5f2)',
                 borderBottom: '1px solid var(--line, rgba(21,18,15,0.13))',
+                flex: 'none',
               }}>
                 <span style={{ fontSize: 7, fontWeight: 600, color: 'var(--fg, #15120f)', opacity: 0.5 }}>9:41</span>
                 <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
@@ -338,19 +366,9 @@ export default function HeroShowcase() {
                 </div>
               </div>
 
-              <div style={{ width: '100%', height: 'calc(100% - 22px)' }}>
+              <div style={{ width: '100%', flex: 1, minHeight: 0 }}>
                 <CrossfadeImages urlKey="mobile" index={index} />
               </div>
-            </div>
-            <div style={{
-              textAlign: 'center',
-              marginTop: 4,
-              fontSize: 8,
-              color: 'var(--muted, #6c665e)',
-              letterSpacing: '0.03em',
-              fontWeight: 500,
-            }}>
-              Mobile
             </div>
           </div>
         </>

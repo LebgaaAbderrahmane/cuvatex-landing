@@ -16,7 +16,8 @@
   "heroTitle": "Nous concevons et développons des produits logiciels complets, de bout en bout.",
   "heroNote": "Une équipe qui construit des logiciels ensemble, de la première idée au lancement.",
   "heroAvailability": "Disponibles pour de nouveaux projets, nous répondons sous deux jours ouvrés.",
-  "heroBadges": ["⭐ Note de 4,9", "🟢 En production", "📱 iOS + Android"],
+  "heroBadges": ["En ligne et actif", "Sur tous les téléphones"],
+  "heroWhatsapp": "Écrire sur WhatsApp",
   "servicesTitle": "Ce que nous faisons",
   "services": [
     { "title": "Sites et applications web", "desc": "Des sites et applications web rapides, faciles à utiliser et conçus pour durer.", "tags": ["React", "Next.js", "TypeScript"], "badge": "50+ livrés", "features": ["Adaptés à tous les écrans", "Optimisés pour le référencement", "Temps de chargement rapides garantis"] },

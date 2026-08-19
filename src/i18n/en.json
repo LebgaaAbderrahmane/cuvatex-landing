@@ -16,7 +16,8 @@
   "heroTitle": "We design and build complete software products end to end.",
   "heroNote": "A team that builds software together, from the first idea to launch.",
   "heroAvailability": "Available for new projects, we reply within 2 business days.",
-  "heroBadges": ["⭐ 4.9 rating", "🟢 Live in production", "📱 iOS + Android"],
+  "heroBadges": ["Live and running", "Works on any phone"],
+  "heroWhatsapp": "WhatsApp us",
   "servicesTitle": "What we do",
   "services": [
     { "title": "Websites & web apps", "desc": "Fast, easy-to-use websites and web applications built to last.", "tags": ["React", "Next.js", "TypeScript"], "badge": "50+ shipped", "features": ["Responsive on every device", "SEO-optimised out of the box", "Fast load times guaranteed"] },

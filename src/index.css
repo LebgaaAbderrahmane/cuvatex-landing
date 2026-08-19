@@ -11,6 +11,11 @@
   --bg-header: rgba(246, 245, 242, 0.82);
   --scrim: rgba(21, 18, 15, 0.55);
   --danger: #b3261e;
+
+  /* Outlined buttons: heavier than --line, which reads as disabled at button
+     size, plus the wash they fill with on hover. */
+  --ghost-line: rgba(21, 18, 15, 0.24);
+  --ghost-tint: rgba(21, 18, 15, 0.05);
 }
 
 :root[data-theme='dark'] {
@@ -25,6 +30,8 @@
   --scrim: rgba(5, 4, 3, 0.72);
   /* Lighter than the light-theme red: #b3261e is unreadable on #131210. */
   --danger: #f2857c;
+  --ghost-line: rgba(243, 239, 232, 0.34);
+  --ghost-tint: rgba(243, 239, 232, 0.07);
 }
 
 *,
@@ -74,6 +81,23 @@ img {
 .focus-ring-inset:focus-visible {
   outline: 2px solid var(--accent, #0E7A69);
   outline-offset: -3px;
+}
+
+/* The outlined button. Its border and fill live here rather than in the call
+   site's `style` object, because an inline value wins over a stylesheet rule —
+   including :hover, which inline styles cannot express at all. The
+   reduced-motion block at the foot of this file zeroes the duration.
+   --ghost-line, not --line: at button size --line reads as disabled, and in
+   dark mode it all but disappears. */
+.ghost-btn {
+  background-color: transparent;
+  border: 1px solid var(--ghost-line, rgba(21, 18, 15, 0.24));
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.ghost-btn:hover {
+  background-color: var(--ghost-tint, rgba(21, 18, 15, 0.05));
+  border-color: var(--accent, #0E7A69);
 }
 
 /* Off-screen until focused — must stay focusable, so no display:none. */

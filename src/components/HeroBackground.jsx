@@ -1,5 +1,9 @@
-import { motion } from 'framer-motion';
-
+// Three soft glows behind the hero. Static by design: the hero's whole motion
+// budget is the entrance, the button hover and the badge float. These used to
+// drift on infinite x/y loops — frozen at their base positions, so the look is
+// unchanged. There is no `motion` import here and there should not be one.
+//
+// The wrapper clips them, so their oversized boxes never reach the page scrollbar.
 export default function HeroBackground() {
   return (
     <div
@@ -11,8 +15,8 @@ export default function HeroBackground() {
         overflow: 'hidden',
       }}
     >
-      {/* Large floating orb — top left area */}
-      <motion.div
+      {/* Large orb — top left area */}
+      <div
         style={{
           position: 'absolute',
           width: 'clamp(300px, 50vw, 600px)',
@@ -23,20 +27,10 @@ export default function HeroBackground() {
           top: '-10%',
           left: '-5%',
         }}
-        animate={{
-          x: [0, 40, -20, 0],
-          y: [0, -30, 20, 0],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: 'easeInOut',
-          times: [0, 0.4, 0.7, 1],
-        }}
       />
 
-      {/* Medium floating orb — bottom right area */}
-      <motion.div
+      {/* Medium orb — bottom right area */}
+      <div
         style={{
           position: 'absolute',
           width: 'clamp(200px, 35vw, 450px)',
@@ -47,20 +41,10 @@ export default function HeroBackground() {
           bottom: '-5%',
           right: '-5%',
         }}
-        animate={{
-          x: [0, -30, 20, 0],
-          y: [0, 20, -30, 0],
-        }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          ease: 'easeInOut',
-          times: [0, 0.3, 0.7, 1],
-        }}
       />
 
-      {/* Small accent dot — wanders around center */}
-      <motion.div
+      {/* Small accent dot — centre */}
+      <div
         style={{
           position: 'absolute',
           width: 'clamp(120px, 18vw, 240px)',
@@ -70,20 +54,10 @@ export default function HeroBackground() {
           filter: 'blur(40px)',
           top: '50%',
           left: '50%',
-          // Negative margins, not translate(-50%,-50%) — Framer's own transform
-          // on the x/y animation below would silently drop that offset.
+          // Negative margins, not translate(-50%,-50%) — a transform on a
+          // blurred box costs a compositor layer for nothing.
           marginTop: 'calc(clamp(120px, 18vw, 240px) / -2)',
           marginLeft: 'calc(clamp(120px, 18vw, 240px) / -2)',
-        }}
-        animate={{
-          x: [0, 50, -30, 20, 0],
-          y: [0, -40, 30, -20, 0],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: 'easeInOut',
-          times: [0, 0.25, 0.5, 0.75, 1],
         }}
       />
     </div>
