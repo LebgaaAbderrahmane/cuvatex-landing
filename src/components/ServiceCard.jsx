@@ -46,6 +46,11 @@ export default function ServiceCard({ service, index = 0, detailed = false }) {
         flexDirection: isEven ? 'row' : 'row-reverse',
         flexWrap: 'wrap',
         textAlign: rtl ? 'right' : 'left',
+        // The slide-in below starts the image ±36px off its row, which
+        // overruns the viewport before it animates to rest — clip is the one
+        // overflow value that lets the y-axis stay visible for the shadow.
+        overflowX: 'clip',
+        overflowY: 'visible',
       }}
     >
       <motion.div

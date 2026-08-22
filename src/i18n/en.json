@@ -11,21 +11,23 @@
     "about": "About"
   },
   "skipToContent": "Skip to content",
-  "cta": "Start a project",
-  "heroKicker": "Idea · Design · Build · Launch",
-  "heroTitle": "We design and build complete software products end to end.",
-  "heroNote": "A team that builds software together, from the first idea to launch.",
-  "heroAvailability": "Available for new projects, we reply within 2 business days.",
-  "heroBadges": ["Live and running", "Works on any phone"],
+  "cta": "Tell us your idea",
+  "heroKicker": "Small businesses and startups",
+  "heroTitle": "Websites and apps\nthat grow your business.",
+  "heroNote": "A fixed price, a real deadline, and you always talk to us directly.",
+  "heroAvailability": "Available now · we reply in 2 business days",
+  "heroBadges": ["Live and working", "Works on any phone"],
+  "heroCarouselPause": "Pause showcase",
+  "heroCarouselPlay": "Play showcase",
   "heroWhatsapp": "WhatsApp us",
   "servicesTitle": "What we do",
   "services": [
-    { "title": "Websites & web apps", "desc": "Fast, easy-to-use websites and web applications built to last.", "tags": ["React", "Next.js", "TypeScript"], "badge": "50+ shipped", "features": ["Responsive on every device", "SEO-optimised out of the box", "Fast load times guaranteed"] },
-    { "title": "First version of your product", "desc": "We turn your idea into a working product in weeks, focused on what actually matters.", "tags": ["Lean", "MVP", "Iterative"], "badge": "4–6 weeks", "features": ["Validate before you invest", "Ship fast, learn faster", "Pivot without painful rewrites"] },
-    { "title": "Mobile apps", "desc": "Apps for iPhone and Android, built once and working on both.", "tags": ["React Native", "Expo", "Cross-platform"], "badge": "One codebase", "features": ["iPhone and Android from a single codebase", "Native feel on both platforms", "Push notifications & offline support"] },
-    { "title": "Product design", "desc": "Screens and flows designed so your users actually understand them.", "tags": ["Figma", "UI/UX", "Prototyping"], "badge": "User-first", "features": ["Wireframes you can react to early", "Interactive prototypes, not static mockups", "Usability-tested before a line of code"] },
-    { "title": "The system behind your product", "desc": "The engine that stores your data, keeps things fast, and keeps them running reliably.", "tags": ["Node.js", "PostgreSQL", "REST", "GraphQL"], "badge": "99.9% uptime", "features": ["Scalable from day one", "Secured against OWASP top threats", "Automated backups & monitoring"] },
-    { "title": "Custom software", "desc": "Software built around how your business actually works, instead of forcing you into a ready-made tool.", "tags": ["Python", "Docker", "AWS"], "badge": "Tailor-made", "features": ["Built around your workflow, not against it", "Integrates with your existing tools", "No vendor lock-in — you own the code"] }
+    { "title": "Websites & web apps", "desc": "Fast, easy-to-use websites and web applications built to last.", "tags": ["Website", "Admin panel", "Hosting set up"], "badge": "Works on any phone", "features": ["Responsive on every device", "Easy to find on Google search", "Fast load times guaranteed"] },
+    { "title": "First version of your product", "desc": "We turn your idea into a working product in weeks, focused on what actually matters.", "tags": ["Working app", "User feedback", "Built to expand"], "badge": "4–6 weeks", "features": ["Validate before you invest", "Get a working version out fast", "Easy to change direction later"] },
+    { "title": "Mobile apps", "desc": "Apps for iPhone and Android, built once and working on both.", "tags": ["iPhone app", "Android app", "App store upload"], "badge": "One app, both phones", "features": ["One update updates both apps at once", "Feels smooth, just like other apps on your phone", "Sends alerts, works without internet too"] },
+    { "title": "Product design", "desc": "Screens and flows designed so your users actually understand them.", "tags": ["Screen designs", "Clickable prototype", "User testing"], "badge": "User-first", "features": ["Early drafts you can react to", "A working demo you can click through", "Tested with real users before we build it"] },
+    { "title": "The system behind your product", "desc": "The engine that stores your data, keeps things fast, and keeps them running reliably.", "tags": ["Database", "Security", "Automatic backups"], "badge": "99.9% uptime", "features": ["Handles more customers as you grow", "Protected against common hacking attempts", "Automated backups & monitoring"] },
+    { "title": "Custom software", "desc": "Software built around how your business actually works, instead of forcing you into a ready-made tool.", "tags": ["Built for you", "Setup & training", "Ongoing support"], "badge": "Tailor-made", "features": ["Built around your workflow, not against it", "Integrates with your existing tools", "You own the code — switch developers anytime"] }
   ],
   "servicesPageTitle": "Everything we build",
   "servicesPageIntro": "A closer look at what we do — the details behind each service, from a single new feature to a product built from scratch.",
@@ -35,24 +37,24 @@
   "clientsTitle": "Who we work with",
   "clientsBody": "We work with small businesses, shops and restaurants, clinics and professionals, and startups building their first product. If you are not sure whether your project fits, ask us.",
   "clientTypes": [
-    { "name": "Small businesses", "desc": "Boutiques, freelancers, and local shops looking for a digital presence.", "stat": "40% of projects" },
-    { "name": "Shops & restaurants", "desc": "E-commerce sites, online ordering, and digital menus.", "stat": "25+ delivered" },
-    { "name": "Clinics & professionals", "desc": "Patient portals, booking systems, and practice management tools.", "stat": "15+ clinics" },
-    { "name": "Startups", "desc": "From idea to MVP — we help founders launch faster and iterate smarter.", "stat": "10+ MVPs" },
-    { "name": "Local services", "desc": "Service providers, craftsmen, and consultants needing a professional site.", "stat": "30+ sites" }
+    { "name": "Small businesses", "desc": "Boutiques, freelancers, and local shops that want to be found online." },
+    { "name": "Shops & restaurants", "desc": "Online stores, online ordering, and digital menus." },
+    { "name": "Clinics & professionals", "desc": "Online booking, patient records, and tools to run the practice smoothly." },
+    { "name": "Startups", "desc": "From idea to a working product — we help founders launch faster and improve as they go." },
+    { "name": "Local services", "desc": "Service providers, craftsmen, and consultants needing a professional site." }
   ],
   "clientStats": [
-    { "number": "40+", "label": "Projects delivered" },
-    { "number": "4", "label": "Years in business" },
-    { "number": "30+", "label": "Happy clients" },
-    { "number": "98%", "label": "Satisfaction rate" }
+    { "number": "15+", "label": "Projects delivered" },
+    { "number": "4+", "label": "Years of experience" },
+    { "number": "3", "label": "Engineers, no middlemen" },
+    { "number": "100%", "label": "Code you own" }
   ],
   "testimonialsEyebrow": "Testimonials",
   "testimonialsTitle": "What our clients say",
+  "testimonialsRating": "Rated {{rating}} out of 5",
   "testimonials": [
-    { "quote": "They delivered exactly what we needed, on time and within budget. The communication throughout the project was excellent.", "name": "Sarah K.", "business": "Cosy Corner Café", "role": "Owner" },
-    { "quote": "We came with a rough idea and they turned it into a polished product our users love. Could not recommend them enough.", "name": "Mehdi L.", "business": "MediCare Clinics", "role": "Founder" },
-    { "quote": "The team understood our needs immediately. No jargon, no over-engineering — just a clean solution that works.", "name": "Amine B.", "business": "Boulevard Shop", "role": "Manager" }
+    { "quote": "“The platform turned our graduation project into a working product my whole class used — we presented our work, got hired off it, and my defense earned nearly a perfect grade.”", "name": "Hadj Messaoud", "role": "Master's Student in Accounting", "business": "My Accountant", "rating": 5 },
+    { "quote": "“A full day of weekly paper counting became a few minutes on a phone.”", "name": "Kara Saddek", "role": "Manager", "business": "", "rating": 0 }
   ],
   "ctaBannerLead": "Have a project in mind?",
   "ctaBannerLink": "Let's talk",

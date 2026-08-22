@@ -24,6 +24,48 @@ const HEADLINE_KEY = 'heroTitle';
 const ENTER_DURATION = 0.4;
 const ENTER_STAGGER = 0.08;
 
+// The two button looks. A button gets one of these wholesale, never a mix —
+// an inline `background`/`border` beats index.css's `.ghost-btn` and silently
+// kills its :hover transition, so "solid" must never carry the ghost class.
+const SOLID_BTN_STYLE = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 10,
+  background: 'var(--accent, #0E7A69)',
+  color: 'var(--accent-fg, #fff)',
+  textDecoration: 'none',
+  fontWeight: 600,
+  fontSize: 16,
+  padding: '15px 28px',
+  borderRadius: 2,
+};
+
+// Ghost's hover wash and border colour live in index.css's .ghost-btn — a
+// transition on :hover cannot be written inline. 14px + the ghost-btn 1px
+// border matches the solid button's 15px of padding, so both stay the same height.
+const GHOST_BTN_STYLE = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 9,
+  padding: '14px 27px',
+  borderRadius: 2,
+  color: 'var(--fg, #15120f)',
+  textDecoration: 'none',
+  fontWeight: 600,
+  fontSize: 16,
+};
+
+// Which button is solid flips by viewport (mobile-first audience → WhatsApp is
+// the one they'll actually tap), so the look is picked here rather than baked
+// into either button's markup.
+function buttonLook(solid) {
+  return solid
+    ? { className: 'focus-ring', style: SOLID_BTN_STYLE }
+    : { className: 'focus-ring ghost-btn', style: GHOST_BTN_STYLE };
+}
+
 /**
  * One step of the on-load entrance. `initial={false}` under reduced motion, not
  * a zero duration: MotionConfig's reducedMotion="user" does not gate opacity, so
@@ -58,22 +100,67 @@ export default function Hero() {
   // Same source as dirArrow below, so the glyph and the slide always agree.
   const isRtl = i18n.resolvedLanguage === 'ar';
 
-  const handleScrollDown = () => {
-    document.getElementById('services')
-      ?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
-  };
+  // Mobile-first audience: WhatsApp is what a local client will actually tap,
+  // so it's the solid button and comes first there. Desktop keeps the form as
+  // the lead. Elements carry a `key` and swap by array order, not CSS — a
+  // visual-only reorder (flexDirection: column-reverse, CSS `order`) would
+  // leave keyboard/screen-reader order pointing at the wrong button first.
+  const quoteButton = (
+    <MotionLink
+      key="quote"
+      to="/contact"
+      {...buttonLook(!isMobile)}
+      // A variant *label*, not an object: only a label propagates the
+      // gesture down to the arrow's own `hover` variant. Same soft
+      // accent-tinted shadow the removed scroll-cue button used to lift
+      // on hover — a real interaction response, not ambient motion, so
+      // it's not gated for reduced motion (matches the opacity dim here,
+      // which already wasn't).
+      whileHover="hover"
+      variants={{ hover: { opacity: 0.92, boxShadow: '0 4px 20px rgba(14,122,105,0.15)' } }}
+      whileTap={{ scale: 0.98 }}
+    >
+      {t('cta')}
+      <motion.span
+        aria-hidden="true"
+        style={{ display: 'inline-block' }}
+        // Gated by hand: Framer skips the *animation* under reduced
+        // motion but still snaps the value, so the arrow would jump.
+        variants={{ hover: { x: reduceMotion ? 0 : (isRtl ? -4 : 4) } }}
+        transition={{ duration: 0.15, ease: HERO_EASE }}
+      >
+        {/* resolvedLanguage, not language: the latter can be 'ar-DZ'. */}
+        {dirArrow(i18n.resolvedLanguage)}
+      </motion.span>
+    </MotionLink>
+  );
+
+  const whatsappButton = (
+    <motion.a
+      key="whatsapp"
+      href={WHATSAPP_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() => track('whatsapp_click')}
+      {...buttonLook(isMobile)}
+      whileTap={{ scale: 0.98 }}
+    >
+      <WhatsAppIcon />
+      {t('heroWhatsapp')}
+    </motion.a>
+  );
 
   return (
     <section
       style={{
-        // 88dvh minus the sticky header, so the fold is a little short of the
-        // screen: the content centres without leaving a dead band above the
-        // scroll cue. Full-screen only above mobile — on a phone, forcing the
-        // stacked text+picture into one screen is what crops the picture.
-        minHeight: isMobile ? undefined : 'calc(88dvh - var(--header-h, 73px))',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '0 clamp(20px, 5vw, 48px)',
+        // No forced viewport height — the hero is exactly as tall as its
+        // content plus this breathing room, on any screen. (It used to force
+        // calc(88dvh - header) on desktop, which on a tall monitor left ~140px
+        // of empty space above AND below the content for no reason.) 6vw
+        // rather than Section's own 10vw: that steeper rate is what made the
+        // widest screens worst before — a flatter rate keeps this from
+        // growing back into the same problem.
+        padding: `${isMobile ? '28px' : 'clamp(48px, 6vw, 72px)'} clamp(20px, 5vw, 48px)`,
         position: 'relative',
         // Safety net only. The mockups and their badges are sized to stay inside
         // the 1160 container — see HeroShowcase — so nothing should reach this.
@@ -81,25 +168,13 @@ export default function Hero() {
       }}
     >
       <HeroBackground />
-      <div style={{
-        flex: 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        maxWidth: 1160,
-        margin: '0 auto',
-        width: '100%',
-        // On mobile the hero no longer fills the screen, so this content isn't
-        // vertically centered anymore — it sits right at the top, flush against
-        // the sticky header. This gap replaces the buffer that centering used
-        // to give it, so scrolling doesn't slide the headline under the header
-        // from the very first pixel.
-        paddingTop: isMobile ? 28 : 0,
-        paddingBottom: isMobile ? 12 : 0,
-      }}>
+      <div style={{ maxWidth: 1160, margin: '0 auto', width: '100%' }}>
         <div style={{
           display: 'flex',
-          gap: 'clamp(40px, 6vw, 80px)',
+          // Tighter on mobile: wrapped to two stacked rows, this is the gap
+          // between the text block and the showcase below it. 40px+ read as
+          // adrift once the showcase made the column much taller.
+          gap: isMobile ? 20 : 'clamp(40px, 6vw, 80px)',
           alignItems: 'center',
           flexWrap: 'wrap',
           width: '100%',
@@ -117,27 +192,40 @@ export default function Hero() {
                 color: 'var(--muted, #6c665e)',
                 fontWeight: 600,
               }}>
-                <motion.span
+                {/* Static — the pulse now lives on the availability pill below,
+                    where "blinking" means something (live/available). Here it
+                    named a process step, not a status. */}
+                <span
                   style={{
                     width: 7,
                     height: 7,
                     background: 'var(--accent, #0E7A69)',
                     display: 'inline-block',
                   }}
-                  animate={reduceMotion ? { opacity: 1 } : { opacity: [1, 0.3, 1] }} // MotionConfig doesn't gate opacity
-                  transition={reduceMotion ? { duration: 0 } : { duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                 />
                 {t('heroKicker')}
               </p>
               <h1 style={{
-                fontSize: 'clamp(28px, 4.5vw, 52px)',
+                fontSize: 'clamp(32px, 5.4vw, 52px)',
                 fontWeight: 600,
                 letterSpacing: '-0.03em',
                 lineHeight: 1.02,
-                margin: '22px 0 0',
+                // Tighter on mobile: with no mockup beside it the eyebrow and
+                // headline are the first thing on the page, and the old 22px
+                // read as loose with nothing to its right balancing it out.
+                margin: isMobile ? '14px 0 0' : '22px 0 0',
                 textWrap: 'balance',
               }}>
-                {t(HEADLINE_KEY)}
+                {/* The English copy carries a manual break ("apps\nthat") so the
+                    line stops landing as "apps that grow" alone mid-sentence on
+                    desktop. Mobile ignores it — its own natural wrap already
+                    works — and fr/ar have no `\n`, so `.split` is a no-op there
+                    and this renders exactly as it always did. */}
+                {isMobile
+                  ? t(HEADLINE_KEY).replace(/\n/g, ' ')
+                  : t(HEADLINE_KEY).split('\n').map((line, i, arr) => (
+                    <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                  ))}
               </h1>
             </Enter>
 
@@ -153,7 +241,10 @@ export default function Hero() {
               </p>
             </Enter>
 
-            <Enter step={2} reduce={reduceMotion} style={{ marginTop: 44 }}>
+            {/* 32 on mobile, not 44: the showcase below made the column much
+                taller, so this gap gives back some of that height. Desktop
+                keeps 44 — its own rhythm was already fine. */}
+            <Enter step={2} reduce={reduceMotion} style={{ marginTop: isMobile ? 32 : 44 }}>
               <div style={{
                 display: 'flex',
                 gap: 12,
@@ -162,122 +253,62 @@ export default function Hero() {
                 alignItems: isMobile ? 'stretch' : 'center',
                 flexWrap: 'wrap',
               }}>
-                <MotionLink
-                  to="/contact"
-                  className="focus-ring"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 10,
-                    background: 'var(--accent, #0E7A69)',
-                    color: 'var(--accent-fg, #fff)',
-                    textDecoration: 'none',
-                    fontWeight: 600,
-                    fontSize: 16,
-                    padding: '15px 28px',
-                    borderRadius: 2,
-                  }}
-                  // A variant *label*, not an object: only a label propagates the
-                  // gesture down to the arrow's own `hover` variant.
-                  whileHover="hover"
-                  variants={{ hover: { opacity: 0.92 } }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {t('cta')}
-                  <motion.span
-                    aria-hidden="true"
-                    style={{ display: 'inline-block' }}
-                    // Gated by hand: Framer skips the *animation* under reduced
-                    // motion but still snaps the value, so the arrow would jump.
-                    variants={{ hover: { x: reduceMotion ? 0 : (isRtl ? -4 : 4) } }}
-                    transition={{ duration: 0.15, ease: HERO_EASE }}
-                  >
-                    {/* resolvedLanguage, not language: the latter can be 'ar-DZ'. */}
-                    {dirArrow(i18n.resolvedLanguage)}
-                  </motion.span>
-                </MotionLink>
-
-                {/* Ghost, not a second solid button. The hover wash and the
-                    border colour live in index.css's .ghost-btn — a transition
-                    on :hover cannot be written inline. */}
-                <motion.a
-                  href={WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => track('whatsapp_click')}
-                  className="focus-ring ghost-btn"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 9,
-                    // 14px + the .ghost-btn 1px border matches the primary's
-                    // 15px of padding, so both buttons are the same height.
-                    padding: '14px 27px',
-                    borderRadius: 2,
-                    color: 'var(--fg, #15120f)',
-                    textDecoration: 'none',
-                    fontWeight: 600,
-                    fontSize: 16,
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <WhatsAppIcon />
-                  {t('heroWhatsapp')}
-                </motion.a>
+                {isMobile ? [whatsappButton, quoteButton] : [quoteButton, whatsappButton]}
               </div>
+
+              {/* A pill, not a bare line — this is the most credible, most
+                  checkable sentence in the hero and it was styled like a
+                  footnote. `inline-flex` on purpose: a full-width pill under
+                  stacked mobile buttons would read as a third button. */}
               <p style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
                 margin: '16px 0 0',
-                fontSize: 14,
-                color: 'var(--muted, #6c665e)',
-                lineHeight: 1.5,
+                padding: '7px 14px',
+                borderRadius: 999,
+                fontSize: 13,
+                fontWeight: 600,
+                color: 'var(--fg, #15120f)',
+                background: 'var(--surface, #fff)',
+                border: '1px solid var(--line, rgba(21,18,15,0.13))',
+                // Nowrap on desktop keeps it a tidy pill; at 320px mobile the pill's own
+                // min-content width overruns the column, so it wraps there instead.
+                whiteSpace: isMobile ? 'normal' : 'nowrap',
               }}>
+                <motion.span
+                  aria-hidden="true"
+                  style={{
+                    width: 7,
+                    height: 7,
+                    borderRadius: '50%',
+                    background: 'var(--accent, #0E7A69)',
+                    flex: 'none',
+                  }}
+                  animate={reduceMotion ? { opacity: 1 } : { opacity: [1, 0.3, 1] }} // MotionConfig doesn't gate opacity
+                  transition={reduceMotion ? { duration: 0 } : { duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                />
                 {t('heroAvailability')}
               </p>
             </Enter>
           </div>
 
-          <div style={{ flex: '1 1 520px', display: 'flex', justifyContent: 'center' }}>
+          {/* HeroShowcase picks its own mobile/desktop shape internally
+              (`isMobile` reads synchronously on first render, so there's no
+              flash of the wrong one). On mobile it runs after the buttons and
+              can end past the fold — the section's own bottom padding is what
+              closes it off, same as everywhere else in this hero.
+              grow:0, not 1 — HeroShowcase caps itself at 560px anyway, so
+              growing past that only added dead centering slack around the
+              mockup instead of real size. Pinning the basis at that same
+              560px removes the slack and lets the text column claim the
+              space instead, with zero change to the mockup's own size.
+              Shrink stays 1: still gives way on narrower desktop widths. */}
+          <div style={{ flex: '0 1 560px', display: 'flex', justifyContent: 'center' }}>
             <HeroShowcase />
           </div>
         </div>
       </div>
-
-      {/* Desktop only — on a phone this lands on top of the mockup's caption,
-          and a phone visitor already knows to swipe. */}
-      {!isMobile && (
-      <motion.button
-        onClick={handleScrollDown}
-        className="focus-ring"
-        aria-label="Scroll to services"
-        style={{
-          alignSelf: 'center',
-          marginBottom: 32,
-          width: 52,
-          height: 52,
-          borderRadius: '50%',
-          border: '1px solid var(--line, rgba(21,18,15,0.13))',
-          background: 'var(--bg-header, rgba(246,245,242,0.82))',
-          backdropFilter: 'saturate(1.1) blur(8px)',
-          cursor: 'pointer',
-          color: 'var(--fg, #15120f)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          lineHeight: 0,
-          boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
-        }}
-        animate={{ y: [0, 10, 0] }} // transform-only, so MotionConfig gates it under reduced motion
-        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        whileHover={{ y: 4, borderColor: 'var(--accent, #0E7A69)', color: 'var(--accent, #0E7A69)', boxShadow: '0 4px 20px rgba(14,122,105,0.15)' }}
-        whileTap={{ scale: 0.92 }}
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M6 9l6 6 6-6" />
-        </svg>
-      </motion.button>
-      )}
     </section>
   );
 }

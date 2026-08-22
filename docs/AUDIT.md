@@ -249,28 +249,33 @@ Fix direction: `flexWrap: 'wrap'` + `justifyContent: 'center'`, or a 2×2 grid b
 
 </details>
 
-### 4. The site advertises fabricated numbers, clients and testimonials (from code; contradictions measured)
+### 4. The site advertises fabricated numbers, clients and testimonials (from code; contradictions measured) — ✅ RESOLVED
 
 This is not placeholder copy — it is specific, checkable claims that are not true, on a
 page meant to sell to real Algerian businesses. It is a launch blocker and a
 false-advertising exposure, not a copy TODO.
 
 Currently live in `src/i18n/{en,fr,ar}.json`:
-- `clientStats` — "40+ Projects delivered", "30+ Happy clients", "98% Satisfaction rate",
-  "4 Years in business"
-- `services[].badge` — "50+ shipped", "99.9% uptime"
-- `clientTypes[].stat` — "40% of projects", "25+ delivered", "15+ clinics", "10+ MVPs",
-  "30+ sites"
-- `testimonials` — three named people at named businesses ("Sarah K., Cosy Corner Café";
-  "Mehdi L., MediCare Clinics"; "Amine B., Boulevard Shop"), each rendered with a hard-coded
-  5-star rating (`src/components/Testimonials.jsx:117`)
+- ~~`clientStats` — "40+ Projects delivered", "30+ Happy clients", "98% Satisfaction rate",
+  "4 Years in business"~~ **Fixed 2026-08-22**: replaced with figures the owner can
+  defend — `15+ Projects delivered`, `4+ Years of experience`, `3 Engineers, no
+  middlemen`, `100% Code you own`. Also fixes the `en` (`"4"`) vs `fr`/`ar` (`"4+"`)
+  years mismatch — all three now agree.
+- ~~`services[].badge` — "50+ shipped"~~ **Fixed 2026-08-22**: replaced with
+  `Works on any phone` (the same claim the Hero already uses as a badge —
+  deliberate repetition, and the one fact that matters most to a mobile-first
+  local audience). `99.9% uptime` was checked separately and confirmed accurate
+  by the owner, not a placeholder — nothing left to fix on that one.
+- ~~`clientTypes[].stat` — "40% of projects", "25+ delivered", "15+ clinics", "10+ MVPs",
+  "30+ sites"~~ **Fixed 2026-08-22**: removed. No true number existed for these,
+  and the `desc` line already covers what each card is for.
+- ~~`testimonials` — three named people at named businesses~~ **Fixed 2026-08-22**:
+  replaced with real testimonials (Hadj Messaoud, Kara Saddek); rating is now an
+  optional per-entry field (`rating` in `src/i18n/{en,fr,ar}.json`), not hard-coded
 
-They also contradict each other in ways a visitor can spot: `clientStats` claims 40+
-projects while the services badge claims "50+ shipped" and the `clientTypes` figures sum
-past 80. `en` says "4" years in business; `fr` and `ar` both say "4+".
-
-Fix direction: replace with real figures or remove the numbers entirely. Testimonials
-should be pulled until there are real ones with permission to publish.
+Fix direction: `clientStats`, `services[].badge`, `clientTypes[].stat` and
+testimonials are all done. No fabricated or contradicting number remains live
+on the site.
 
 ### 5. Hero, Services and Work depend on picsum.photos at runtime (measured) — ⏸ STILL OPEN
 
@@ -931,12 +936,23 @@ Testimonials / CtaBanner / Faq / Pricing / Footer / BackToTop, and it still desc
 `src/theme/ThemeContext.jsx:53` — mixed exports break fast refresh. The only lint output.
 (Still the only one after the P0 pass; the line number moved to 58.)
 
-### 29. Stats-row divider can land at a wrapped row edge (cosmetic, from code)
+### 29. Stats-row divider can land at a wrapped row edge (cosmetic, from code) — ✅ RESOLVED
+
+**Fixed in `src/components/Clients.jsx`**, alongside item 4's 2026-08-22 pass. The
+divider is now gated on `!isMobile` — it renders on the ≥768 px row (which never
+wraps) and is dropped entirely below that breakpoint, where the row wraps and a
+divider can no longer promise to land next to its own stat. Confirmed in the browser
+at 390 px in `en`, `fr` (which wraps its longer labels into an uneven 2+1+1 before
+this fix, stranding two dividers) and `ar` — no dangling hairline in any of them.
+
+<details><summary>original finding</summary>
 
 Introduced by the item 3 fix. The 1 px dividers between stats are separate elements, so when
 the row wraps on a narrow phone one can end up at the end of a row with nothing after it. It
 is a hairline and easy to miss; removing the dividers entirely, or switching the row to a
 `repeat(auto-fit, minmax(...))` grid, would clear it.
+
+</details>
 
 ### 30. Duplicated language/direction logic between `App.jsx` and `LanguageSwitcher.jsx`
 
@@ -1086,7 +1102,8 @@ Re-verified against this commit, not carried over:
 ## Suggested fix order
 
 **P0 and P1 are both closed.** Done: 1 (re-fixed), 2, 3, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16.
-Closed won't-fix: 11. Still open from P0: 4 and 5 — both owner decisions, not code.
+Closed won't-fix: 11. Still open from P0: 5 — an owner decision, not code. Item 4
+is fully resolved as of 2026-08-22.
 
 Item 1's false "RESOLVED" raised the question of whether the other P0 re-measurements hold.
 Three of the four were incidentally re-covered by this pass's sweep, against `vite preview`:
@@ -1104,17 +1121,15 @@ measurement.
 
 What is left, in order:
 
-1. **Item 4** — decide what the real numbers are, or delete them. Blocks launch, not code.
-   The single remaining launch blocker.
-2. **Item 5** — ship local placeholder assets. Reverted once by choice; still the single
+1. **Item 5** — ship local placeholder assets. Reverted once by choice; still the single
    biggest runtime dependency on a third party, and it covers the case-study overlay too.
-3. **Item 38** — the WhatsApp number. A one-liner in `src/lib/contact.js` once the real
+2. **Item 38** — the WhatsApp number. A one-liner in `src/lib/contact.js` once the real
    number exists, and the only thing still shipping a placeholder to visitors.
-4. **Item 21 / 25** — payload and SEO. `whoWeAre.jpg` at 716 kB and the missing
+3. **Item 21 / 25** — payload and SEO. `whoWeAre.jpg` at 716 kB and the missing
    `robots.txt` / `sitemap.xml` / JSON-LD are the cheapest remaining wins.
-5. **Item 22** — decide whether `.env` belongs in `.dockerignore` now that `--build-arg`
+4. **Item 22** — decide whether `.env` belongs in `.dockerignore` now that `--build-arg`
    works.
-6. **Items 18, 19, 24, 26, 27, 28, 29, 30, 39** — P2 cleanup, no user impact.
+5. **Items 18, 19, 24, 26, 27, 28, 30, 39** — P2 cleanup, no user impact.
 
 > **Updated 2026-08-09.** Items 17, 20 and 23 were resolved by the structural refactor and
 > have been removed from this list rather than left prescribing finished work. Item 39 is

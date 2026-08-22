@@ -94,7 +94,9 @@ export default function Clients() {
                 gap: 'clamp(24px, 4vw, 48px)',
               }}>
                 <Stat stat={stat} reduce={reduceMotion} />
-                {i < stats.length - 1 && (
+                {/* Dropped on mobile: the row wraps there, and a wrapped line can end
+                    on any item, leaving a dangling hairline with nothing after it. */}
+                {!isMobile && i < stats.length - 1 && (
                   <span style={{
                     width: 1,
                     height: 48,
@@ -218,19 +220,6 @@ function Marquee({ items, isMobile, rtl, reduce }) {
             }}>
               {item.desc}
             </p>
-            <div style={{
-              marginTop: 'auto',
-              alignSelf: 'flex-start',
-              padding: '4px 12px',
-              borderRadius: 12,
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: '0.03em',
-              color: 'var(--accent, #0E7A69)',
-              background: 'color-mix(in srgb, var(--accent, #0E7A69) 10%, transparent)',
-            }}>
-              {item.stat}
-            </div>
           </div>
         );
       })}

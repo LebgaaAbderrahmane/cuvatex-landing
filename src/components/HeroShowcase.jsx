@@ -14,7 +14,7 @@ const showcaseProjects = [
   { id: 'health', title: 'Vital', cat: 'HealthTech', desktop: 'https://picsum.photos/seed/vital-d/800/500', mobile: 'https://picsum.photos/seed/vital-m/240/480' },
 ];
 
-const SHOW_MS = 3500;
+const SHOW_MS = 6000;
 const FADE_S = 0.6;
 const MOBILE_QUERY = '(max-width: 767px)'; // must match Header's breakpoint exactly
 
@@ -94,30 +94,84 @@ function Badge({ text, index, float, style }) {
   );
 }
 
+// WCAG 2.2.2: the carousel runs on its own past 5s, so it needs an in-content
+// way to stop — an OS-level `prefers-reduced-motion` setting doesn't satisfy
+// that, and `useInView` doesn't help either since this sits above the fold.
+// 28px clears the 24px minimum target size (WCAG 2.5.8); it stays small next
+// to the dots it sits beside, since it's a secondary control, not the CTA.
+function CarouselPauseButton({ paused, onToggle, pauseLabel, playLabel }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="focus-ring"
+      aria-label={paused ? playLabel : pauseLabel}
+      aria-pressed={paused}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 28,
+        height: 28,
+        marginInlineStart: 2,
+        border: 'none',
+        borderRadius: '50%',
+        background: 'transparent',
+        color: 'var(--muted, #6c665e)',
+        cursor: 'pointer',
+        flex: 'none',
+      }}
+    >
+      {paused ? (
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      ) : (
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <rect x="6" y="5" width="4" height="14" />
+          <rect x="14" y="5" width="4" height="14" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
 export default function HeroShowcase() {
   const { t } = useTranslation();
   const [index, setIndex] = useState(0);
+  const [manualPause, setManualPause] = useState(false);
+  const [hoverPause, setHoverPause] = useState(false);
   const ref = useRef(null);
   const inView = useInView(ref, { once: false, margin: '-80px' });
   const reduceMotion = useReducedMotion();
   const isMobile = useMediaQuery(MOBILE_QUERY);
   const badges = t('heroBadges', { returnObjects: true });
   const badgeList = Array.isArray(badges) ? badges : [];
+  // The button is the actual pause mechanism (WCAG 2.2.2). Hover/focus-pause
+  // is a courtesy on top of it, not a substitute — it does nothing on touch.
+  const paused = manualPause || hoverPause;
 
   // Holds on the first project under reduced motion instead of jump-cutting.
   useEffect(() => {
-    if (!inView || reduceMotion) return;
+    if (!inView || reduceMotion || paused) return;
     const timer = setInterval(() => {
       setIndex(i => (i + 1) % showcaseProjects.length);
     }, SHOW_MS);
     return () => clearInterval(timer);
-  }, [inView, reduceMotion]);
+  }, [inView, reduceMotion, paused]);
 
   const p = showcaseProjects[index];
 
   return (
     <motion.div
       ref={ref}
+      // React attaches focus/blur via focusin/focusout, so these fire for any
+      // descendant gaining/losing focus, not just this element — a courtesy
+      // pause for anyone tabbing through, on top of the button below.
+      onMouseEnter={() => setHoverPause(true)}
+      onMouseLeave={() => setHoverPause(false)}
+      onFocus={() => setHoverPause(true)}
+      onBlur={() => setHoverPause(false)}
       // Plays on mount, one step behind the hero's buttons — the showcase is
       // above the fold, so a scroll reveal would only fire on a replayed scroll.
       initial={reduceMotion ? false : { opacity: 0, y: 12 }}
@@ -217,6 +271,12 @@ export default function HeroShowcase() {
                   transition: 'width 0.3s, background 0.3s',
                 }} />
               ))}
+              <CarouselPauseButton
+                paused={manualPause}
+                onToggle={() => setManualPause(v => !v)}
+                pauseLabel={t('heroCarouselPause')}
+                playLabel={t('heroCarouselPlay')}
+              />
             </div>
           </div>
         </>
@@ -311,7 +371,7 @@ export default function HeroShowcase() {
             }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fg, #15120f)', letterSpacing: '-0.01em' }}>
                 {p.title}
-                <span style={{ marginInlineStart: 6, fontSize: 9, color: 'var(--accent, #0E7A69)', fontWeight: 600, letterSpacing: '0.04em' }}>
+                <span style={{ marginInlineStart: 6, fontSize: 11, color: 'var(--accent, #0E7A69)', fontWeight: 600, letterSpacing: '0.04em' }}>
                   {p.cat}
                 </span>
               </span>
@@ -325,6 +385,12 @@ export default function HeroShowcase() {
                     transition: 'width 0.3s, background 0.3s',
                   }} />
                 ))}
+                <CarouselPauseButton
+                  paused={manualPause}
+                  onToggle={() => setManualPause(v => !v)}
+                  pauseLabel={t('heroCarouselPause')}
+                  playLabel={t('heroCarouselPlay')}
+                />
               </div>
             </div>
           </div>
