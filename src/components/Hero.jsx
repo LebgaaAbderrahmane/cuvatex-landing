@@ -153,13 +153,16 @@ export default function Hero() {
   return (
     <section
       style={{
-        // No forced viewport height — the hero is exactly as tall as its
-        // content plus this breathing room, on any screen. (It used to force
-        // calc(88dvh - header) on desktop, which on a tall monitor left ~140px
-        // of empty space above AND below the content for no reason.) 6vw
-        // rather than Section's own 10vw: that steeper rate is what made the
-        // widest screens worst before — a flatter rate keeps this from
-        // growing back into the same problem.
+        // Full first screen: whatever the header doesn't take, this fills —
+        // same fold contract as Clients and NotFound. Content centres in any
+        // slack via flex, instead of the old fixed 88dvh that stranded empty
+        // space above AND below on tall monitors. 6vw rather than Section's
+        // own 10vw: that steeper rate made the widest screens worst before —
+        // a flatter rate keeps the padding from growing back into the problem.
+        minHeight: 'calc(100dvh - var(--header-h, 73px))',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
         padding: `${isMobile ? '28px' : 'clamp(48px, 6vw, 72px)'} clamp(20px, 5vw, 48px)`,
         position: 'relative',
         // Safety net only. The mockups and their badges are sized to stay inside
