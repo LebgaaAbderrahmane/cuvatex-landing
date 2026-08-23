@@ -263,7 +263,7 @@ export default function Hero() {
                   checkable sentence in the hero and it was styled like a
                   footnote. `inline-flex` on purpose: a full-width pill under
                   stacked mobile buttons would read as a third button. */}
-              <p style={{
+              {/* <p style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 8,
@@ -292,7 +292,7 @@ export default function Hero() {
                   transition={reduceMotion ? { duration: 0 } : { duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                 />
                 {t('heroAvailability')}
-              </p>
+              </p>*/}
             </Enter>
           </div>
 
