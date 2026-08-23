@@ -65,9 +65,9 @@
   "processIntro": "A clear path from your idea to a finished product. You always know what we're doing and why.",
   "steps": [
     { "n": "01", "title": "Understand", "desc": "We learn your business, users, and constraints before writing a line of code." },
-    { "n": "02", "title": "Design", "desc": "We turn requirements into flows, then into interfaces you can react to early." },
+    { "n": "02", "title": "Design", "desc": "We turn what you need into screens and designs you can react to early." },
     { "n": "03", "title": "Build", "desc": "We build in small pieces and show you progress regularly, so there are no surprises at the end." },
-    { "n": "04", "title": "Ship", "desc": "We deploy, measure, and hand over a product you fully own." }
+    { "n": "04", "title": "Ship", "desc": "We launch it, track how it performs, and hand over a product you fully own." }
   ],
   "workTitle": "Selected work",
   "workIntro": "Case studies coming soon.",
@@ -200,9 +200,8 @@
   "aboutEyebrow": "About",
   "aboutTitle": "Who we are",
   "aboutBody": "We are a team of engineers and designers who take on one product at a time. You work directly with the people building your product, not a manager or an account handler.",
-  "aboutExtra": "Every project starts with understanding your users and your market, then moves through design and development in tight loops until we ship something you are proud of. No handoffs, no layers, just the people building your product talking directly to you.",
+  "aboutExtra": "Every project starts with understanding your users and your market, then moves through design and development, going back and forth with you, until we ship something you are proud of. No handoffs, no layers, just the people building your product talking directly to you.",
   "aboutCta": "Read more about us",
-  "aboutPageNote": "More about how we work and the people behind CUVATEX is coming soon.",
   "roles": ["Software Engineer", "Frontend Developer", "Product Designer"],
   "bios": [
     "Designs and builds the systems behind our products — from database schema to deployed app, he owns the parts users never see but always feel.",

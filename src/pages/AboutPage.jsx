@@ -127,21 +127,6 @@ export default function AboutPage() {
             {t('aboutExtra')}
           </p>
         </ScrollReveal>
-
-        {/* aboutPageNote is a placeholder, kept visually secondary. */}
-        <ScrollReveal delay={0.16}>
-          <p style={{
-            marginTop: 'clamp(32px, 5vw, 48px)',
-            paddingTop: 'clamp(20px, 3vw, 28px)',
-            borderTop: '1px solid var(--line, rgba(21,18,15,0.13))',
-            maxWidth: '52ch',
-            color: 'var(--muted, #6c665e)',
-            fontSize: 13,
-            lineHeight: 1.6,
-          }}>
-            {t('aboutPageNote')}
-          </p>
-        </ScrollReveal>
       </div>
     </section>
 

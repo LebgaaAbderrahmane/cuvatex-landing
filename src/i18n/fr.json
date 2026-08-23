@@ -65,9 +65,9 @@
   "processIntro": "Un chemin clair de votre idée à un produit terminé. Vous savez toujours ce que nous faisons et pourquoi.",
   "steps": [
     { "n": "01", "title": "Comprendre", "desc": "Nous étudions votre activité, vos utilisateurs et vos contraintes avant d'écrire une ligne de code." },
-    { "n": "02", "title": "Concevoir", "desc": "Nous transformons les besoins en parcours, puis en interfaces que vous validez tôt." },
+    { "n": "02", "title": "Concevoir", "desc": "Nous transformons vos besoins en écrans et designs que vous validez tôt." },
     { "n": "03", "title": "Développer", "desc": "Nous avançons par petites étapes et vous montrons régulièrement les progrès, sans surprise à la fin." },
-    { "n": "04", "title": "Livrer", "desc": "Nous déployons, mesurons et livrons un produit qui vous appartient entièrement." }
+    { "n": "04", "title": "Livrer", "desc": "Nous mettons le produit en ligne, mesurons ses résultats, et vous livrons un produit qui vous appartient entièrement." }
   ],
   "workTitle": "Projets sélectionnés",
   "workIntro": "Études de cas à venir.",
@@ -200,9 +200,8 @@
   "aboutEyebrow": "À propos",
   "aboutTitle": "Qui nous sommes",
   "aboutBody": "Nous sommes une équipe d'ingénieurs et de designers qui prennent un seul produit à la fois. Vous travaillez directement avec les personnes qui construisent votre produit, pas un manager ni un chargé de compte.",
-  "aboutExtra": "Chaque projet commence par la compréhension de vos utilisateurs et de votre marché, puis progresse à travers le design et le développement en cycles serrés jusqu'à ce que nous livrions quelque chose dont vous êtes fier. Sans intermédiaires, sans couches, juste les personnes qui construisent votre produit qui vous parlent directement.",
+  "aboutExtra": "Chaque projet commence par la compréhension de vos utilisateurs et de votre marché, puis progresse à travers le design et le développement, avec des allers-retours réguliers, jusqu'à ce que nous livrions quelque chose dont vous êtes fier. Sans intermédiaires, sans couches, juste les personnes qui construisent votre produit qui vous parlent directement.",
   "aboutCta": "En savoir plus sur nous",
-  "aboutPageNote": "Plus de détails sur notre façon de travailler et les personnes derrière CUVATEX, bientôt disponibles.",
   "roles": ["Ingénieur logiciel", "Développeuse frontend", "Designer produit"],
   "bios": [
     "Conçoit et construit les systèmes derrière nos produits — du schéma de base de données à l'application déployée, il s'occupe de ce que les utilisateurs ne voient jamais mais ressentent toujours.",
