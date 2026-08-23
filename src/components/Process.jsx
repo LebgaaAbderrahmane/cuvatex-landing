@@ -26,6 +26,15 @@ const RUNWAY_BOTTOM = `${CARD_H / 3 + 20}px`;
 
 const MOBILE_QUERY = '(max-width: 767px)'; // must match Header's breakpoint exactly
 
+// Keyed by the step's own number (from i18n), never the array index — a reordered
+// or added step must not silently inherit another step's picture.
+const STEP_IMAGES = {
+  '01': '/process/understand.jpg',
+  '02': '/process/design.jpg',
+  '03': '/process/build.jpg',
+  '04': '/process/ship.jpg',
+};
+
 export default function Process() {
   const { t } = useTranslation();
   const steps = t('steps', { returnObjects: true });
@@ -162,6 +171,23 @@ export default function Process() {
                         borderRadius: 12,
                         padding: 'clamp(20px, 5vw, 28px)',
                       }}>
+                        {STEP_IMAGES[st.n] && (
+                          <img
+                            src={STEP_IMAGES[st.n]}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            draggable={false}
+                            style={{
+                              display: 'block',
+                              width: '100%',
+                              height: 150,
+                              objectFit: 'cover',
+                              borderRadius: 8,
+                              marginBottom: 16,
+                            }}
+                          />
+                        )}
                         <div style={{
                           fontFamily: "'IBM Plex Sans', monospace",
                           fontSize: 40,
@@ -264,35 +290,52 @@ export default function Process() {
                     style={{
                       position: 'absolute',
                       inset: 0,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 12,
                     }}
                   >
+                    {STEP_IMAGES[activeStep.n] && (
+                      <img
+                        src={STEP_IMAGES[activeStep.n]}
+                        alt=""
+                        decoding="async"
+                        draggable={false}
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    )}
+                    {/* Scrim grounds the caption; --bg keeps it theme-aware in dark mode */}
                     <div aria-hidden style={{
                       position: 'absolute',
                       inset: 0,
-                      background: 'radial-gradient(circle at 30% 20%, var(--accent, #0E7A69), transparent 60%)',
-                      opacity: 0.12,
+                      background: 'linear-gradient(to top, var(--bg, #faf8f5) 8%, transparent 60%)',
                     }} />
                     <div style={{
-                      fontFamily: "'IBM Plex Sans', monospace",
-                      fontSize: 'clamp(72px, 8vw, 120px)',
-                      fontWeight: 700,
-                      lineHeight: 1,
-                      color: 'var(--accent, #0E7A69)',
-                      letterSpacing: '-0.02em',
+                      position: 'absolute',
+                      insetInlineStart: 24,
+                      insetInlineEnd: 24,
+                      bottom: 48,
                     }}>
-                      {activeStep.n}
-                    </div>
-                    <div style={{
-                      fontSize: 'clamp(20px, 2.2vw, 26px)',
-                      fontWeight: 600,
-                      letterSpacing: '-0.01em',
-                    }}>
-                      {activeStep.title}
+                      <div style={{
+                        fontFamily: "'IBM Plex Sans', monospace",
+                        fontSize: 16,
+                        fontWeight: 700,
+                        color: 'var(--accent, #0E7A69)',
+                        letterSpacing: '0.05em',
+                      }}>
+                        {activeStep.n}
+                      </div>
+                      <div style={{
+                        marginTop: 6,
+                        fontSize: 'clamp(22px, 2.4vw, 28px)',
+                        fontWeight: 600,
+                        letterSpacing: '-0.01em',
+                      }}>
+                        {activeStep.title}
+                      </div>
                     </div>
                   </motion.div>
                 </AnimatePresence>
