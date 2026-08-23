@@ -249,28 +249,33 @@ Fix direction: `flexWrap: 'wrap'` + `justifyContent: 'center'`, or a 2×2 grid b
 
 </details>
 
-### 4. The site advertises fabricated numbers, clients and testimonials (from code; contradictions measured)
+### 4. The site advertises fabricated numbers, clients and testimonials (from code; contradictions measured) — ✅ RESOLVED
 
 This is not placeholder copy — it is specific, checkable claims that are not true, on a
 page meant to sell to real Algerian businesses. It is a launch blocker and a
 false-advertising exposure, not a copy TODO.
 
 Currently live in `src/i18n/{en,fr,ar}.json`:
-- `clientStats` — "40+ Projects delivered", "30+ Happy clients", "98% Satisfaction rate",
-  "4 Years in business"
-- `services[].badge` — "50+ shipped", "99.9% uptime"
-- `clientTypes[].stat` — "40% of projects", "25+ delivered", "15+ clinics", "10+ MVPs",
-  "30+ sites"
-- `testimonials` — three named people at named businesses ("Sarah K., Cosy Corner Café";
-  "Mehdi L., MediCare Clinics"; "Amine B., Boulevard Shop"), each rendered with a hard-coded
-  5-star rating (`src/components/Testimonials.jsx:117`)
+- ~~`clientStats` — "40+ Projects delivered", "30+ Happy clients", "98% Satisfaction rate",
+  "4 Years in business"~~ **Fixed 2026-08-22**: replaced with figures the owner can
+  defend — `15+ Projects delivered`, `4+ Years of experience`, `3 Engineers, no
+  middlemen`, `100% Code you own`. Also fixes the `en` (`"4"`) vs `fr`/`ar` (`"4+"`)
+  years mismatch — all three now agree.
+- ~~`services[].badge` — "50+ shipped"~~ **Fixed 2026-08-22**: replaced with
+  `Works on any phone` (the same claim the Hero already uses as a badge —
+  deliberate repetition, and the one fact that matters most to a mobile-first
+  local audience). `99.9% uptime` was checked separately and confirmed accurate
+  by the owner, not a placeholder — nothing left to fix on that one.
+- ~~`clientTypes[].stat` — "40% of projects", "25+ delivered", "15+ clinics", "10+ MVPs",
+  "30+ sites"~~ **Fixed 2026-08-22**: removed. No true number existed for these,
+  and the `desc` line already covers what each card is for.
+- ~~`testimonials` — three named people at named businesses~~ **Fixed 2026-08-22**:
+  replaced with real testimonials (Hadj Messaoud, Kara Saddek); rating is now an
+  optional per-entry field (`rating` in `src/i18n/{en,fr,ar}.json`), not hard-coded
 
-They also contradict each other in ways a visitor can spot: `clientStats` claims 40+
-projects while the services badge claims "50+ shipped" and the `clientTypes` figures sum
-past 80. `en` says "4" years in business; `fr` and `ar` both say "4+".
-
-Fix direction: replace with real figures or remove the numbers entirely. Testimonials
-should be pulled until there are real ones with permission to publish.
+Fix direction: `clientStats`, `services[].badge`, `clientTypes[].stat` and
+testimonials are all done. No fabricated or contradicting number remains live
+on the site.
 
 ### 5. Hero, Services and Work depend on picsum.photos at runtime (measured) — ⏸ STILL OPEN
 
@@ -885,7 +890,15 @@ This is the one refactor change with a deliberate visual diff: at exactly 768 px
 grows (en: 15589 → 16624 px tall) because Work now shows 6 cards instead of 3. 390 px and
 1440 px are pixel-identical to before.
 
-### 24. Services measures its title height once and never re-measures on content change (from code)
+### 24. Services measures its title height once and never re-measures on content change (from code) — ✅ RESOLVED
+
+**Fixed by removing the mechanism, not the bug.** `Services.jsx` is a homepage teaser now
+(3 cards, `Section` + `SectionHeader`, no sticky stack) — the full 6-service detail moved to
+`/services` (`src/pages/ServicesList.jsx`), which is natural-height, not sticky. There is no
+`titleRef`, no measured height, and no card `top`/`height` derived from one anymore, so this
+class of bug has nothing left to happen to.
+
+<details><summary>original finding</summary>
 
 `Services.jsx:25-32` reads `titleRef.getBoundingClientRect().height` on mount and on
 `window.resize`. Neither the web-font swap (IBM Plex arrives async from Google Fonts) nor a
@@ -893,6 +906,8 @@ runtime language change re-triggers it, and every card `top` / `height` in the s
 is derived from that one number. Did not reproduce at 900 px — the en and ar titles are both
 147 px there — but any width where the translated heading wraps differently will offset the
 whole stack. A `ResizeObserver` on the title removes the whole class of problem.
+
+</details>
 
 ### 25. SEO / metadata gaps (measured)
 
@@ -921,12 +936,23 @@ Testimonials / CtaBanner / Faq / Pricing / Footer / BackToTop, and it still desc
 `src/theme/ThemeContext.jsx:53` — mixed exports break fast refresh. The only lint output.
 (Still the only one after the P0 pass; the line number moved to 58.)
 
-### 29. Stats-row divider can land at a wrapped row edge (cosmetic, from code)
+### 29. Stats-row divider can land at a wrapped row edge (cosmetic, from code) — ✅ RESOLVED
+
+**Fixed in `src/components/Clients.jsx`**, alongside item 4's 2026-08-22 pass. The
+divider is now gated on `!isMobile` — it renders on the ≥768 px row (which never
+wraps) and is dropped entirely below that breakpoint, where the row wraps and a
+divider can no longer promise to land next to its own stat. Confirmed in the browser
+at 390 px in `en`, `fr` (which wraps its longer labels into an uneven 2+1+1 before
+this fix, stranding two dividers) and `ar` — no dangling hairline in any of them.
+
+<details><summary>original finding</summary>
 
 Introduced by the item 3 fix. The 1 px dividers between stats are separate elements, so when
 the row wraps on a narrow phone one can end up at the end of a row with nothing after it. It
 is a hairline and easy to miss; removing the dividers entirely, or switching the row to a
 `repeat(auto-fit, minmax(...))` grid, would clear it.
+
+</details>
 
 ### 30. Duplicated language/direction logic between `App.jsx` and `LanguageSwitcher.jsx`
 
@@ -1076,7 +1102,8 @@ Re-verified against this commit, not carried over:
 ## Suggested fix order
 
 **P0 and P1 are both closed.** Done: 1 (re-fixed), 2, 3, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16.
-Closed won't-fix: 11. Still open from P0: 4 and 5 — both owner decisions, not code.
+Closed won't-fix: 11. Still open from P0: 5 — an owner decision, not code. Item 4
+is fully resolved as of 2026-08-22.
 
 Item 1's false "RESOLVED" raised the question of whether the other P0 re-measurements hold.
 Three of the four were incidentally re-covered by this pass's sweep, against `vite preview`:
@@ -1094,17 +1121,15 @@ measurement.
 
 What is left, in order:
 
-1. **Item 4** — decide what the real numbers are, or delete them. Blocks launch, not code.
-   The single remaining launch blocker.
-2. **Item 5** — ship local placeholder assets. Reverted once by choice; still the single
+1. **Item 5** — ship local placeholder assets. Reverted once by choice; still the single
    biggest runtime dependency on a third party, and it covers the case-study overlay too.
-3. **Item 38** — the WhatsApp number. A one-liner in `src/lib/contact.js` once the real
+2. **Item 38** — the WhatsApp number. A one-liner in `src/lib/contact.js` once the real
    number exists, and the only thing still shipping a placeholder to visitors.
-4. **Item 21 / 25** — payload and SEO. `whoWeAre.jpg` at 716 kB and the missing
+3. **Item 21 / 25** — payload and SEO. `whoWeAre.jpg` at 716 kB and the missing
    `robots.txt` / `sitemap.xml` / JSON-LD are the cheapest remaining wins.
-5. **Item 22** — decide whether `.env` belongs in `.dockerignore` now that `--build-arg`
+4. **Item 22** — decide whether `.env` belongs in `.dockerignore` now that `--build-arg`
    works.
-6. **Items 18, 19, 24, 26, 27, 28, 29, 30, 39** — P2 cleanup, no user impact.
+5. **Items 18, 19, 24, 26, 27, 28, 30, 39** — P2 cleanup, no user impact.
 
 > **Updated 2026-08-09.** Items 17, 20 and 23 were resolved by the structural refactor and
 > have been removed from this list rather than left prescribing finished work. Item 39 is
@@ -1169,30 +1194,41 @@ in sequence implied a relationship that does not exist. Renamed to `showcaseProj
 
 ### 38. WhatsApp link still ships an unresolved placeholder — ⏸ OPEN, needs the real number
 
-`https://wa.me/PHONE_NUMBER_PLACEHOLDER` is live in two places on the production site —
-`Contact.jsx` (the direct link) and `ContactForm.jsx` (the error fallback, which is exactly
-where a visitor lands when the form has already failed them). Both are marked with a
-`TODO(docs/AUDIT.md item 38)`.
+`https://wa.me/PHONE_NUMBER_PLACEHOLDER` is live in three places now — `ContactPage.jsx`
+(`/contact`, the direct link — moved here from the now-deleted `Contact.jsx`),
+`ContactForm.jsx` (the error fallback, which is exactly where a visitor lands when the form
+has already failed them), and `Footer.jsx` (the new footer's WhatsApp link, item 42). All are
+marked with a `TODO(docs/AUDIT.md item 38)`.
 
 Not fixable without the number. **This is a live defect on a shipped page, not code
 tidiness** — it is listed under P2 only because it was found here.
 
-### 39. Services re-measures a header height that Header already publishes — ⏸ OPEN (overlaps item 24)
+### 39. Services re-measures a header height that Header already publishes — ✅ RESOLVED (overlapped item 24, same fix)
+
+**Fixed the same way as item 24**: `Services.jsx` no longer has a sticky stack, so it no
+longer needs the header's height for anything — no second `ResizeObserver`, no `useState(73)`
+fourth copy of the fallback. It reads `var(--header-h, 73px)` nowhere at all now, same as
+`Work.jsx`, the teaser it's modeled on.
+
+<details><summary>original finding</summary>
 
 `Services.jsx:88-101` runs its own `ResizeObserver` on `document.querySelector('header')` to
 get a height that `Header.jsx` already measures and publishes as `--header-h`. Two observers,
 one number, and Services keeps it in `useState(73)` — a fourth copy of the `73` fallback that
 appears as `var(--header-h, 73px)` in Hero, Clients and Process.
 
-**Deliberately not fixed.** Services' sticky card stack is driven by JS arithmetic over that
-measurement, and the screenshot suite used for this refactor captures at scroll 0, where the
-sticky behaviour does not appear. Changing it without scroll-scripted coverage would be a
-change nothing could verify. Same reason `Services`, `Process`, `Work` and `CaseStudy` were
-not split internally.
+**Deliberately not fixed** at the time this was written. Services' sticky card stack was
+driven by JS arithmetic over that measurement, and the screenshot suite used for that
+refactor captured at scroll 0, where the sticky behaviour does not appear. Changing it
+without scroll-scripted coverage would have been a change nothing could verify. Same reason
+`Services`, `Process`, `Work` and `CaseStudy` were not split internally at the time.
+
+</details>
 
 ### 40. `console.error` in the production bundle — ⛔ CLOSED, WON'T FIX
 
-Three calls in `Contact.jsx` (now `:26`, `:50`, `:55`). Originally listed as cleanup for this
+Three calls, originally in `Contact.jsx`, now in `ContactPage.jsx` (`/contact`) since that
+component moved there whole. Originally listed as cleanup for this
 pass; **withdrawn after reading them.** The first reports a build with no
 `VITE_WEB3FORMS_KEY`, which is otherwise an invisible misconfiguration that silently breaks
 every form submission — the code comment above it says so explicitly. The other two report
@@ -1213,7 +1249,18 @@ deliberately left alone — see item 39.
 **Closed by the router change.** `CaseStudy.jsx` is gone: case studies are pages at
 `/work/<slug>` now, and the call site was the "Start a project like this" button, which had
 to `onClose()` and then wait out a 400 ms `setTimeout` before it could scroll the page
-underneath. It is a plain `<Link to="/#contact">` today. Every navigation scroll in the app
-goes through `ScrollManager.jsx`, which gates on `useReducedMotion()` in one place —
+underneath. Contact is a page now too (`/contact`), so that button is a plain
+`<Link to="/contact">` today — not even a hash link anymore. Every navigation scroll in the
+app goes through `ScrollManager.jsx`, which gates on `useReducedMotion()` in one place —
 `MobileMenu.jsx:74` is gone for the same reason. Two of the three call sites this item
-compared therefore no longer exist; `Hero.jsx:14` is the only hand-gated one left.
+compared therefore no longer exist; the "scroll to services" button in `Hero.jsx` is the
+only hand-gated `scrollIntoView` left.
+
+### 42. Footer phone number is an unresolved placeholder — ⏸ OPEN, needs the real number
+
+The new footer (`src/components/Footer.jsx`, added alongside `/services`, `/about`,
+`/contact`, `/terms` and `/privacy`) lists a phone number for the first time on this site.
+`PHONE_DISPLAY`/`PHONE_URL` in `src/lib/contact.js` are placeholders (`+1 000 000 0000` /
+`tel:+10000000000`), marked with a `TODO(docs/AUDIT.md item 42)` next to the existing
+`WHATSAPP_URL` placeholder (item 38). Same fix, same file, same moment when the real number
+exists — update both together.

@@ -1,50 +1,60 @@
 {
   "nav": {
+    "home": "Home",
     "services": "Services",
     "process": "Process",
     "work": "Work",
     "pricing": "Pricing",
     "team": "Team",
     "faq": "FAQ",
-    "contact": "Contact"
+    "contact": "Contact",
+    "about": "About"
   },
   "skipToContent": "Skip to content",
-  "cta": "Start a project",
-  "heroKicker": "Idea · Design · Build · Launch",
-  "heroTitle": "We design and build complete software products end to end.",
-  "heroNote": "A team that builds software together, from the first idea to launch.",
-  "heroAvailability": "Available for new projects, we reply within 2 business days.",
+  "cta": "Tell us your idea",
+  "heroKicker": "Small businesses and startups",
+  "heroTitle": "Websites and apps\nthat grow your business.",
+  "heroNote": "A fixed price, a real deadline, and you always talk to us directly.",
+  "heroAvailability": "Available now · we reply in 2 business days",
+  "heroBadges": ["Live and working", "Works on any phone"],
+  "heroCarouselPause": "Pause showcase",
+  "heroCarouselPlay": "Play showcase",
+  "heroWhatsapp": "WhatsApp us",
   "servicesTitle": "What we do",
   "services": [
-    { "title": "Websites & web apps", "desc": "Fast, easy-to-use websites and web applications built to last.", "tags": ["React", "Next.js", "TypeScript"], "badge": "50+ shipped", "features": ["Responsive on every device", "SEO-optimised out of the box", "Fast load times guaranteed"] },
-    { "title": "First version of your product", "desc": "We turn your idea into a working product in weeks, focused on what actually matters.", "tags": ["Lean", "MVP", "Iterative"], "badge": "4–6 weeks", "features": ["Validate before you invest", "Ship fast, learn faster", "Pivot without painful rewrites"] },
-    { "title": "Mobile apps", "desc": "Apps for iPhone and Android, built once and working on both.", "tags": ["React Native", "Expo", "Cross-platform"], "badge": "One codebase", "features": ["iPhone and Android from a single codebase", "Native feel on both platforms", "Push notifications & offline support"] },
-    { "title": "Product design", "desc": "Screens and flows designed so your users actually understand them.", "tags": ["Figma", "UI/UX", "Prototyping"], "badge": "User-first", "features": ["Wireframes you can react to early", "Interactive prototypes, not static mockups", "Usability-tested before a line of code"] },
-    { "title": "The system behind your product", "desc": "The engine that stores your data, keeps things fast, and keeps them running reliably.", "tags": ["Node.js", "PostgreSQL", "REST", "GraphQL"], "badge": "99.9% uptime", "features": ["Scalable from day one", "Secured against OWASP top threats", "Automated backups & monitoring"] },
-    { "title": "Custom software", "desc": "Software built around how your business actually works, instead of forcing you into a ready-made tool.", "tags": ["Python", "Docker", "AWS"], "badge": "Tailor-made", "features": ["Built around your workflow, not against it", "Integrates with your existing tools", "No vendor lock-in — you own the code"] }
+    { "title": "Websites & web apps", "desc": "Fast, easy-to-use websites and web applications built to last.", "tags": ["Website", "Admin panel", "Hosting set up"], "badge": "Works on any phone", "features": ["Responsive on every device", "Easy to find on Google search", "Fast load times guaranteed"] },
+    { "title": "First version of your product", "desc": "We turn your idea into a working product in weeks, focused on what actually matters.", "tags": ["Working app", "User feedback", "Built to expand"], "badge": "4–6 weeks", "features": ["Validate before you invest", "Get a working version out fast", "Easy to change direction later"] },
+    { "title": "Mobile apps", "desc": "Apps for iPhone and Android, built once and working on both.", "tags": ["iPhone app", "Android app", "App store upload"], "badge": "One app, both phones", "features": ["One update updates both apps at once", "Feels smooth, just like other apps on your phone", "Sends alerts, works without internet too"] },
+    { "title": "Product design", "desc": "Screens and flows designed so your users actually understand them.", "tags": ["Screen designs", "Clickable prototype", "User testing"], "badge": "User-first", "features": ["Early drafts you can react to", "A working demo you can click through", "Tested with real users before we build it"] },
+    { "title": "The system behind your product", "desc": "The engine that stores your data, keeps things fast, and keeps them running reliably.", "tags": ["Database", "Security", "Automatic backups"], "badge": "99.9% uptime", "features": ["Handles more customers as you grow", "Protected against common hacking attempts", "Automated backups & monitoring"] },
+    { "title": "Custom software", "desc": "Software built around how your business actually works, instead of forcing you into a ready-made tool.", "tags": ["Built for you", "Setup & training", "Ongoing support"], "badge": "Tailor-made", "features": ["Built around your workflow, not against it", "Integrates with your existing tools", "You own the code — switch developers anytime"] }
   ],
+  "servicesPageTitle": "Everything we build",
+  "servicesPageIntro": "A closer look at what we do — the details behind each service, from a single new feature to a product built from scratch.",
+  "servicesCta": "See all services",
+  "serviceCta": "Get a quote",
   "clientsEyebrow": "Clients",
   "clientsTitle": "Who we work with",
   "clientsBody": "We work with small businesses, shops and restaurants, clinics and professionals, and startups building their first product. If you are not sure whether your project fits, ask us.",
   "clientTypes": [
-    { "name": "Small businesses", "desc": "Boutiques, freelancers, and local shops looking for a digital presence.", "stat": "40% of projects" },
-    { "name": "Shops & restaurants", "desc": "E-commerce sites, online ordering, and digital menus.", "stat": "25+ delivered" },
-    { "name": "Clinics & professionals", "desc": "Patient portals, booking systems, and practice management tools.", "stat": "15+ clinics" },
-    { "name": "Startups", "desc": "From idea to MVP — we help founders launch faster and iterate smarter.", "stat": "10+ MVPs" },
-    { "name": "Local services", "desc": "Service providers, craftsmen, and consultants needing a professional site.", "stat": "30+ sites" }
+    { "name": "Small businesses", "desc": "Boutiques, freelancers, and local shops that want to be found online." },
+    { "name": "Shops & restaurants", "desc": "Online stores, online ordering, and digital menus." },
+    { "name": "Clinics & professionals", "desc": "Online booking, patient records, and tools to run the practice smoothly." },
+    { "name": "Startups", "desc": "From idea to a working product — we help founders launch faster and improve as they go." },
+    { "name": "Local services", "desc": "Service providers, craftsmen, and consultants needing a professional site." }
   ],
   "clientStats": [
-    { "number": "40+", "label": "Projects delivered" },
-    { "number": "4", "label": "Years in business" },
-    { "number": "30+", "label": "Happy clients" },
-    { "number": "98%", "label": "Satisfaction rate" }
+    { "number": "15+", "label": "Projects delivered" },
+    { "number": "4+", "label": "Years of experience" },
+    { "number": "3", "label": "Engineers, no middlemen" },
+    { "number": "100%", "label": "Code you own" }
   ],
   "testimonialsEyebrow": "Testimonials",
   "testimonialsTitle": "What our clients say",
+  "testimonialsRating": "Rated {{rating}} out of 5",
   "testimonials": [
-    { "quote": "They delivered exactly what we needed, on time and within budget. The communication throughout the project was excellent.", "name": "Sarah K.", "business": "Cosy Corner Café", "role": "Owner" },
-    { "quote": "We came with a rough idea and they turned it into a polished product our users love. Could not recommend them enough.", "name": "Mehdi L.", "business": "MediCare Clinics", "role": "Founder" },
-    { "quote": "The team understood our needs immediately. No jargon, no over-engineering — just a clean solution that works.", "name": "Amine B.", "business": "Boulevard Shop", "role": "Manager" }
+    { "quote": "“The platform turned our graduation project into a working product my whole class used — we presented our work, got hired off it, and my defense earned nearly a perfect grade.”", "name": "Hadj Messaoud", "role": "Master's Student in Accounting", "business": "My Accountant", "rating": 5 },
+    { "quote": "“A full day of weekly paper counting became a few minutes on a phone.”", "name": "Kara Saddek", "role": "Manager", "business": "", "rating": 0 }
   ],
   "ctaBannerLead": "Have a project in mind?",
   "ctaBannerLink": "Let's talk",
@@ -191,9 +201,11 @@
   "aboutTitle": "Who we are",
   "aboutBody": "We are a team of engineers and designers who take on one product at a time. You work directly with the people building your product, not a manager or an account handler.",
   "aboutExtra": "Every project starts with understanding your users and your market, then moves through design and development in tight loops until we ship something you are proud of. No handoffs, no layers, just the people building your product talking directly to you.",
+  "aboutCta": "Read more about us",
+  "aboutPageNote": "More about how we work and the people behind CUVATEX is coming soon.",
   "roles": ["Software Engineer", "Frontend Developer", "Product Designer"],
   "bios": [
-    "Designs the systems and APIs that keep products fast and reliable as they grow.",
+    "Designs and builds the systems behind our products — from database schema to deployed app, he owns the parts users never see but always feel.",
     "Turns designs into accessible, responsive interfaces that feel effortless.",
     "Shapes how the product looks, feels, and flows, from first idea to final pixel."
   ],
@@ -213,10 +225,58 @@
   "email": "hello@cuvatex.com",
   "nameLabel": "Name",
   "emailLabel": "Email",
+  "serviceLabel": "What service do you need?",
+  "serviceOptionOther": "Other / not sure yet",
   "msgLabel": "What do you want to build?",
   "send": "Send message",
   "sending": "Sending…",
   "sent": "Thanks, we will be in touch soon.",
   "error": "Something went wrong. Please try again or email us directly.",
+  "footerNav": { "home": "Home" },
+  "footerPagesHeading": "Pages",
+  "footerLegalHeading": "Legal",
+  "footerContactHeading": "Contact",
+  "footerFollowHeading": "Follow us",
+  "footerSocial": {
+    "instagram": "Instagram",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "x": "X (Twitter)"
+  },
+  "legal": {
+    "termsNav": "Terms of Service",
+    "privacyNav": "Privacy Policy",
+    "lastUpdated": "Last updated: August 2026",
+    "placeholderNotice": "This page is a placeholder. It has not been reviewed by a lawyer yet, and should not be treated as final legal advice.",
+    "terms": {
+      "title": "Terms of Service",
+      "sections": [
+        { "heading": "Agreement to Terms", "body": "By using this website or working with CUVATEX, you agree to these terms. If you do not agree, please do not use our services." },
+        { "heading": "Services", "body": "CUVATEX designs and builds software products — websites, web apps, mobile apps, product design, and custom backend systems. The exact scope of each project is agreed with the client before work starts." },
+        { "heading": "Client Responsibilities", "body": "Clients agree to give timely feedback, and to provide the content, access, and information needed to complete the work. Delays on the client's side can delay delivery." },
+        { "heading": "Payment Terms", "body": "Projects are priced with a fixed quote agreed before work starts. Invoices are due on the schedule agreed in the project proposal. Late payment may pause work until it is resolved." },
+        { "heading": "Intellectual Property", "body": "Once a project is paid in full, the client owns the final deliverables. CUVATEX may show completed work in its own portfolio unless the client asks otherwise in writing." },
+        { "heading": "Limitation of Liability", "body": "CUVATEX works carefully, but is not liable for indirect or incidental damages arising from the use of a delivered product, to the extent allowed by law." },
+        { "heading": "Termination", "body": "Either party can end an engagement with written notice. Work completed up to that point is billed at the agreed rate." },
+        { "heading": "Governing Law", "body": "The jurisdiction that governs these terms is still to be decided, and will be confirmed here once set." },
+        { "heading": "Changes to These Terms", "body": "These terms may be updated from time to time. Continuing to use our services after a change means you accept the updated terms." },
+        { "heading": "Contact", "body": "Questions about these terms? Reach out through our contact page or by email." }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "sections": [
+        { "heading": "Overview", "body": "This page explains what information CUVATEX collects through this website, and how it is used." },
+        { "heading": "Information We Collect", "body": "When you use the contact form, we collect the name, email, and message you provide. We also collect basic, anonymous analytics about how visitors use the site." },
+        { "heading": "How We Use Your Information", "body": "We use contact form details only to reply to your message. Analytics data is used in aggregate, to understand how the site is used and where it can be improved." },
+        { "heading": "Data Sharing", "body": "Contact form submissions are processed by Web3Forms, a third-party form-delivery service, in order to deliver your message to us. We do not sell your information to anyone." },
+        { "heading": "Cookies", "body": "This site uses Umami, a privacy-friendly analytics tool that does not use cookies and does not track visitors individually." },
+        { "heading": "Data Retention", "body": "Contact form messages are kept only as long as needed to respond to your inquiry, unless we are required to keep them longer by law." },
+        { "heading": "Your Rights", "body": "You can ask us to access or delete any information we hold about you by contacting us through the email on our contact page." },
+        { "heading": "Changes to This Policy", "body": "This policy may be updated from time to time. Check back here for the latest version." },
+        { "heading": "Contact", "body": "Questions about this policy? Reach out through our contact page or by email." }
+      ]
+    }
+  },
   "footer": "© 2026 CUVATEX. Available for new projects."
 }

@@ -7,10 +7,7 @@ import { dirArrow } from '../lib/text';
 // Module scope: `motion.create` inside the component remounts the link every render.
 const MotionLink = motion.create(Link);
 
-// Used twice — mid-homepage, and at the foot of /work, where a visitor who has
-// just read the whole project list otherwise runs into the footer with nothing
-// to do. That is why the link is `/#contact` and not `#contact`: a bare hash
-// only resolves on the homepage.
+// Reused mid-homepage and at the foot of /work, /services, /about.
 export default function CtaBanner() {
   const { t, i18n } = useTranslation();
 
@@ -32,15 +29,13 @@ export default function CtaBanner() {
           }}>
             {t('ctaBannerLead')}{' '}
             <MotionLink
-              to="/#contact"
+              to="/contact"
               className="focus-ring"
               style={{
                 color: 'var(--accent, #0E7A69)',
                 textDecoration: 'none',
                 whiteSpace: 'nowrap',
-                // Vertical padding on an inline element grows the tap target to
-                // 44px+ without shifting the sentence it sits in.
-                padding: '9px 0',
+                padding: '9px 0', // grows tap target without shifting the sentence
               }}
               whileHover={{ opacity: 0.85 }}
             >

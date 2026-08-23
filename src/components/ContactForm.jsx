@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { track } from '../analytics';
 import { WHATSAPP_URL } from '../lib/contact';
+import { SERVICE_SLUGS } from '../lib/services';
 
 const labelStyle = {
   display: 'flex',
@@ -14,8 +15,7 @@ const labelStyle = {
   color: 'var(--muted, #6c665e)',
 };
 
-// `textTransform` and `letterSpacing` are reset here because the control is a
-// child of the uppercase label and would otherwise inherit both.
+// textTransform/letterSpacing reset — otherwise inherited from the uppercase label.
 const controlStyle = {
   width: '100%',
   background: 'transparent',
@@ -32,15 +32,11 @@ const controlStyle = {
 
 const textareaStyle = { ...controlStyle, lineHeight: 1.5 };
 
-// Inline handlers rather than a CSS rule: the border colour is the only styling
-// in this file that reacts to state, and `index.css` is a reset plus the two
-// focus-ring rules by design. `focus-ring` still supplies the visible ring —
-// this is the border underneath it.
+// Inline handlers, not CSS — index.css is a reset + focus-ring rules only.
 const onFocus = e => (e.target.style.borderColor = 'var(--accent, #0E7A69)');
 const onBlur = e => (e.target.style.borderColor = 'var(--line, rgba(21,18,15,0.13))');
 
-// One labelled control. `as` is passed explicitly at every call site rather
-// than defaulting to 'input', so adding a field is a decision, not an omission.
+// One labelled control. `as` has no default — adding a field is a decision.
 function Field({ label, as, ...controlProps }) {
   const Control = as;
   return (
@@ -58,17 +54,14 @@ function Field({ label, as, ...controlProps }) {
   );
 }
 
-/**
- * The form half of the Contact section: the three fields and the submit button,
- * swapped for a confirmation panel once a message is through.
- *
- * Submission itself stays in Contact.jsx — this component only reports events
- * upward and renders whatever `status` it is handed.
- */
-export default function ContactForm({ status, onSubmit }) {
+// The fields + submit button, swapped for a confirmation panel once sent.
+// Submission itself lives in ContactPage.jsx — this only renders `status`.
+export default function ContactForm({ status, onSubmit, defaultService }) {
   const { t } = useTranslation();
   const sent = status === 'sent';
   const sending = status === 'sending';
+  const servicesList = t('services', { returnObjects: true });
+  const services = Array.isArray(servicesList) ? servicesList : [];
 
   return (
     <AnimatePresence mode="wait">
@@ -93,6 +86,18 @@ export default function ContactForm({ status, onSubmit }) {
 
           <Field as="input" type="text" name="name" label={t('nameLabel')} />
           <Field as="input" type="email" name="email" label={t('emailLabel')} />
+          <Field
+            as="select"
+            name="service"
+            label={t('serviceLabel')}
+            required={false}
+            defaultValue={defaultService || ''}
+          >
+            <option value="">{t('serviceOptionOther')}</option>
+            {SERVICE_SLUGS.map((slug, i) => (
+              <option key={slug} value={slug}>{services[i]?.title}</option>
+            ))}
+          </Field>
           <Field as="textarea" name="message" rows={4} label={t('msgLabel')} />
 
           <motion.button
@@ -118,11 +123,6 @@ export default function ContactForm({ status, onSubmit }) {
             {sending ? t('sending') : t('send')}
           </motion.button>
 
-          {/* One error block for all three causes — missing key, a
-              {success:false} response, and a network failure. Without the
-              two links a failed submit is a dead end and the lead is lost.
-              The colour is the danger token, not --accent: a failure
-              printed in the brand green reads as a success. */}
           {status === 'error' && (
             <div
               role="alert"
@@ -134,12 +134,7 @@ export default function ContactForm({ status, onSubmit }) {
               }}
             >
               {t('error')}
-              {/* Stacked, not separated by a middot: side by side, the two
-                  44px hit boxes have to grow into each other across a ~10px
-                  separator and end up overlapping by 5px, so a tap near the
-                  boundary hits the wrong link. One per row also reads better
-                  at 320px. `inline-flex` + `minHeight` is enough here because
-                  each sits on its own line and cannot shift any text. */}
+              {/* Stacked, not side by side — the two 44px tap targets would overlap. */}
               <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: 4 }}>
                 <a
                   href={`mailto:${t('email')}`}

@@ -1,10 +1,7 @@
 import { motion } from 'framer-motion';
 import { useTheme } from '../theme/ThemeContext';
 
-// Sun and moon are drawn inline rather than pulled from lucide-react, which the
-// rest of the app uses for icons: the moon is a crescent made by punching a
-// second circle filled with the header background out of the first, and that
-// trick needs the icon to know the surrounding colour token.
+// Drawn inline, not lucide-react — the moon crescent needs the header bg token.
 
 export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
@@ -21,9 +18,7 @@ export default function ThemeToggle() {
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        // 44px is the minimum comfortable touch target; the header height is
-        // measured and published as `--header-h`, so growing this is safe.
-        width: 44,
+        width: 44, // minimum comfortable touch target
         height: 44,
         border: '1px solid var(--line, rgba(21,18,15,0.13))',
         background: 'transparent',

@@ -56,7 +56,8 @@ pnpm preview
 
 ```
 src/
-├── pages/        — One file per route (Home, WorkList, Project, NotFound)
+├── pages/        — One file per route (Home, ServicesList, WorkList, Project,
+│                   AboutPage, ContactPage, Terms, Privacy, NotFound)
 ├── components/   — Reusable pieces (Header, Hero, Services, ProjectCard, etc.)
 ├── data/         — Project list and image helpers
 ├── hooks/        — Shared React hooks
@@ -72,9 +73,14 @@ src/
 
 | Route | What it shows |
 |-------|---------------|
-| `/` | The main page — everything about the studio |
+| `/` | The main page — services, work, about and contact all appear as short teasers |
+| `/services` | All services, in full detail |
 | `/work` | Every project |
 | `/work/:slug` | One case study, e.g. `/work/atlas-retail` |
+| `/about` | The full About story |
+| `/contact` | The contact form and direct links |
+| `/terms` | Terms of Service (placeholder text — not reviewed by a lawyer yet) |
+| `/privacy` | Privacy Policy (same placeholder caveat) |
 
 `nginx.conf` gives the production image an SPA fallback. Without it, opening
 `/work/atlas-retail` directly or reloading it returns 404.

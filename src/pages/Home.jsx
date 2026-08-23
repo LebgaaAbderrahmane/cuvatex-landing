@@ -9,12 +9,10 @@ import About from '../components/About';
 import Team from '../components/Team';
 import Faq from '../components/Faq';
 import Pricing from '../components/Pricing';
-import Contact from '../components/Contact';
 
-// The one long sales page. Order is the argument it makes: what we do → who we
-// help → how we work → proof → who we are → price → talk to us. Every `id` here
-// is an anchor target for the header nav, so renaming one means renaming it in
-// Header.jsx's `sections` array too.
+// The one long sales page. Order is the argument: what we do → who we help →
+// how we work → proof → who we are → price. Contact lives at /contact now,
+// so the mid-page CtaBanner is the homepage's "talk to us" moment.
 export default function Home() {
   return (
     <>
@@ -29,7 +27,6 @@ export default function Home() {
       <Team />
       <Faq />
       <Pricing />
-      <Contact />
     </>
   );
 }

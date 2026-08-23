@@ -1,7 +1,5 @@
-/* Theme tokens. These live here rather than in JS so the inline script in
-   index.html can pick a theme before the first paint by setting one attribute —
-   no colour value is duplicated anywhere. ThemeContext.jsx owns the switching;
-   it only writes `data-theme` on <html>. */
+/* Theme tokens live here, not JS, so index.html's inline script can pick a
+   theme before first paint. ThemeContext.jsx owns switching only. */
 :root {
   --bg: #f6f5f2;
   --surface: #ffffff;
@@ -13,6 +11,11 @@
   --bg-header: rgba(246, 245, 242, 0.82);
   --scrim: rgba(21, 18, 15, 0.55);
   --danger: #b3261e;
+
+  /* Outlined buttons: heavier than --line, which reads as disabled at button
+     size, plus the wash they fill with on hover. */
+  --ghost-line: rgba(21, 18, 15, 0.24);
+  --ghost-tint: rgba(21, 18, 15, 0.05);
 }
 
 :root[data-theme='dark'] {
@@ -27,6 +30,8 @@
   --scrim: rgba(5, 4, 3, 0.72);
   /* Lighter than the light-theme red: #b3261e is unreadable on #131210. */
   --danger: #f2857c;
+  --ghost-line: rgba(243, 239, 232, 0.34);
+  --ghost-tint: rgba(243, 239, 232, 0.07);
 }
 
 *,
@@ -65,23 +70,37 @@ img {
   display: block;
 }
 
-/* Inline styles cannot express a pseudo-class, so every keyboard focus ring on
-   the site lives here. The UA default ring is near-invisible on the dark theme. */
+/* Inline styles can't express :focus-visible, so every focus ring lives here. */
 .focus-ring:focus-visible {
   outline: 2px solid var(--accent, #0E7A69);
   outline-offset: 4px;
   border-radius: 2px;
 }
 
-/* Same ring, drawn inside the element — for controls sitting in an
-   `overflow: hidden` container, where an offset ring would be clipped. */
+/* Same ring, drawn inside — for controls in an overflow:hidden container. */
 .focus-ring-inset:focus-visible {
   outline: 2px solid var(--accent, #0E7A69);
   outline-offset: -3px;
 }
 
-/* Keyboard-only shortcut past the header nav. Off-screen until focused; it must
-   stay focusable, so `display: none` / `visibility: hidden` are not options. */
+/* The outlined button. Its border and fill live here rather than in the call
+   site's `style` object, because an inline value wins over a stylesheet rule —
+   including :hover, which inline styles cannot express at all. The
+   reduced-motion block at the foot of this file zeroes the duration.
+   --ghost-line, not --line: at button size --line reads as disabled, and in
+   dark mode it all but disappears. */
+.ghost-btn {
+  background-color: transparent;
+  border: 1px solid var(--ghost-line, rgba(21, 18, 15, 0.24));
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.ghost-btn:hover {
+  background-color: var(--ghost-tint, rgba(21, 18, 15, 0.05));
+  border-color: var(--accent, #0E7A69);
+}
+
+/* Off-screen until focused — must stay focusable, so no display:none. */
 .skip-link {
   position: absolute;
   inset-inline-start: -9999px;
@@ -97,44 +116,17 @@ img {
 
 .skip-link:focus {
   inset-inline-start: 0;
-  /* The accent ring would vanish against the link's own accent background. */
-  outline: 2px solid var(--fg, #15120f);
+  outline: 2px solid var(--fg, #15120f); /* accent ring would vanish on the accent background */
   outline-offset: -4px;
 }
 
-/* `tabIndex={-1}` on <main> makes the skip link land there, but browsers then
-   draw a focus ring around the whole page. */
 main:focus {
-  outline: none;
+  outline: none; /* tabIndex={-1} would otherwise ring the whole page */
 }
 
-/* The strip holds the card list twice, so travelling exactly half its width lands
-   on an identical frame and the loop is seamless. Direction has to follow the
-   writing direction: in RTL the flex row is laid out from the right edge
-   leftwards, so translating negatively walks it off the left and leaves a growing
-   hole on the right (measured: 199px of empty row in Arabic). */
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes marquee-rtl {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(50%); }
-}
-
-/* Declared here, not inline, so the RTL override can win — an inline
-   `animation` shorthand would beat any stylesheet rule without `!important`. */
-.marquee {
-  animation: marquee 40s linear infinite;
-}
-
-[dir='rtl'] .marquee {
-  animation-name: marquee-rtl;
-}
-
-/* Framer's MotionConfig cannot reach CSS animations or the browser's own smooth
-   scrolling, so the non-Framer half of "reduce motion" is handled here. */
+/* Framer's MotionConfig can't reach CSS animations or smooth scrolling.
+   The Clients marquee is JS-driven (Clients.jsx), not a CSS animation, so it
+   isn't covered here — it checks useReducedMotion() itself. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -146,13 +138,5 @@ main:focus {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-
-  /* The blanket reset above parks an animation on its last keyframe. For the
-     clients marquee that is `translateX(-50%)`, which clips the first and last
-     card. This one needs the animation removed outright so the strip rests at
-     its natural start. `!important` because the animation is an inline style. */
-  .marquee {
-    animation: none !important;
   }
 }

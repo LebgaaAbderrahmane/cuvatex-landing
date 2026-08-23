@@ -1,13 +1,11 @@
-import { useRef, useEffect, useState, useMemo } from 'react';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, Link } from 'react-router';
 import {
   motion,
   useScroll,
   useTransform,
-  useInView,
   useReducedMotion,
-  animate,
 } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
@@ -15,27 +13,22 @@ import NotFound from './NotFound';
 import { findProject, nextProject, heroImage, shotImage } from '../data/projects';
 import { EASE } from '../lib/motion';
 import useMediaQuery from '../hooks/useMediaQuery';
+import useCountUp from '../hooks/useCountUp';
 
-// Below this the sub-bar keeps only the back link. Two competing labels in a
-// 375px-wide bar leaves neither of them readable.
+// Below this, the sub-bar keeps only the back link — two labels don't fit.
 const NARROW = '(max-width: 560px)';
 
-// Module scope: `motion.create` inside the component hands React a new component
-// type on every render, which remounts the link.
+// Module scope, or motion.create would remount the link every render.
 const MotionLink = motion.create(Link);
 
-// Was an overlay (role="dialog", scroll lock, focus trap, shared-element hero).
-// It is a page now, so all of that is gone: the browser's own back button and
-// ScrollManager do the jobs the modal had to do by hand.
 export default function Project() {
   const { slug } = useParams();
   const project = findProject(slug);
 
   if (!project) return <NotFound />;
 
-  // Keyed so moving to the next project remounts the body. Without it React
-  // reuses this instance across the param change and the metric counters keep
-  // the previous project's finished state instead of counting up again.
+  // Keyed so switching projects remounts the body — otherwise the metric
+  // counters keep the previous project's finished state.
   return <ProjectBody key={slug} slug={slug} project={project} />;
 }
 
@@ -59,12 +52,8 @@ function ProjectBody({ slug, project }) {
   return (
     <motion.article initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={fade}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        {/* Deliberately NOT sticky. It was, together with the already-sticky
-            header — two frozen bars cost ~140px of a ~840px phone screen, one
-            pixel in six, for the whole length of a long read. On a phone people
-            leave a page by swiping back, not by hunting a control, so that was a
-            bad trade. The exit is repeated at the foot of the article instead,
-            which is where a reader who finished actually is. */}
+        {/* Not sticky — with the header already sticky, two frozen bars ate too
+            much of a phone screen. Repeated at the foot of the article instead. */}
         <div style={{ padding: `clamp(14px, 2vw, 22px) ${pad} 0` }}>
           <BackLink t={t} rtl={rtl} reduce={reduce} />
         </div>
@@ -72,9 +61,8 @@ function ProjectBody({ slug, project }) {
         <div style={{ padding: `clamp(24px, 4vw, 48px) ${pad} 0` }}>
           <div style={{
             position: 'relative',
-            // Shorter on a phone. At 62vh the hero plus the header fill the whole
-            // screen, so the summary — the line that says what the project
-            // actually was — starts below the fold.
+            // Shorter on a phone, or the hero + header fill the screen and the
+            // summary starts below the fold.
             height: narrow ? 'min(46vh, 380px)' : 'min(62vh, 560px)',
             borderRadius: 4,
             overflow: 'hidden',
@@ -89,12 +77,9 @@ function ProjectBody({ slug, project }) {
               transition={{ duration: reduce ? 0 : 0.9, ease: EASE }}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
-            {/* Two stacked passes of the same token rather than one. A single
-                --scrim tops out at 0.55, which is not enough to hold white text
-                over a pale sky — several of the project images are exactly that.
-                The short second pass darkens only the strip the title sits in and
-                leaves the rest of the photo alone. Still the token, so both themes
-                follow it. */}
+            {/* Two passes of --scrim: one alone isn't dark enough to hold white
+                text over a pale photo, so a second, shorter pass darkens just
+                the title strip. */}
             <div style={{
               position: 'absolute',
               inset: 0,
@@ -134,9 +119,7 @@ function ProjectBody({ slug, project }) {
                 fontWeight: 600,
                 letterSpacing: '-0.03em',
                 lineHeight: 1.02,
-                // Sits on a photo behind a dark scrim, not on a themed surface,
-                // so it stays white in both themes rather than following --fg.
-                color: '#fff',
+                color: '#fff', // sits on the photo scrim, not a themed surface
               }}>
                 {d.title}
               </h1>
@@ -173,9 +156,8 @@ function ProjectBody({ slug, project }) {
           </ScrollReveal>
         </div>
 
-        {/* Every block below renders only when its data exists. Five of eight
-            projects are still one-liners, and a page of empty headings reads
-            worse than a short page. */}
+        {/* Every block below renders only when its data exists — a stub project
+            should be a short page, not one full of empty headings. */}
         {metrics.length > 0 && (
           <div style={{ padding: `clamp(36px, 5vw, 60px) ${pad} 0` }}>
             <div style={{
@@ -273,11 +255,8 @@ function ProjectBody({ slug, project }) {
             paddingTop: 'clamp(28px, 4vw, 40px)',
             borderTop: '1px solid var(--line, rgba(21,18,15,0.13))',
           }}>
-            {/* Was a close() plus a 400ms setTimeout waiting for the overlay to
-                unmount before scrolling. ScrollManager handles the hash now, and
-                it respects prefers-reduced-motion — AUDIT.md item 41. */}
             <Link
-              to="/#contact"
+              to="/contact"
               className="focus-ring"
               style={{
                 display: 'inline-flex',
@@ -341,14 +320,8 @@ function ProjectBody({ slug, project }) {
             )}
           </div>
 
-          {/* The second exit, and the one that matters: a reader who reached here
-              has finished. The first copy is at the top, where they have not.
-
-              `quiet` because of what it sits next to. This corner already has a
-              filled CTA and an accent disc for the next case study; a third
-              accent shape gave all three the same weight and the eye had nowhere
-              to land first. Order of loudness here is deliberate: start a project,
-              then read the next one, then leave. */}
+          {/* Second exit for a reader who's finished. `quiet` so it doesn't
+              compete with the CTA and next-project disc above it. */}
           <div style={{
             marginTop: 'clamp(28px, 4vw, 40px)',
             paddingTop: 'clamp(24px, 3vw, 32px)',
@@ -362,23 +335,8 @@ function ProjectBody({ slug, project }) {
   );
 }
 
-/**
- * "All projects", at the head and the foot of every case study.
- *
- * Two weights, because the two positions are not the same job.
- *
- * Default (top of the page): an accent disc, which deliberately rhymes with the
- * "next case study" disc — the article opens with ← and closes with →. Nothing
- * competes with it up there.
- *
- * `quiet` (foot of the page): no disc, muted text. Down there it shares a corner
- * with a filled CTA and the next-case-study disc, and a third accent shape flattened
- * the hierarchy — three controls shouting equally, so the eye picked none.
- *
- * Either way the arrow slides toward the start of the line on hover and focus, so
- * in Arabic it slides right. On touch, where neither event fires, the resting
- * shape has to carry it alone.
- */
+// "All projects" link, head and foot of every case study. `quiet` (foot) drops
+// the accent disc so it doesn't compete with the CTA next to it there.
 function BackLink({ t, rtl, reduce, quiet = false }) {
   const nudge = {
     rest: { x: 0 },
@@ -388,9 +346,9 @@ function BackLink({ t, rtl, reduce, quiet = false }) {
   const restColor = quiet ? 'var(--muted, #6c665e)' : 'var(--fg, #15120f)';
 
   return (
-    // The colour lives on the link, not on the label: the arrow is the label's
-    // sibling, so it would not inherit it, and `a { color: var(--accent) }` in
-    // index.css would then paint the "quiet" arrow full accent green.
+    // Colour lives on the link, not the label — the arrow is a sibling and
+    // won't inherit it, so index.css's `a { color: var(--accent) }` would
+    // otherwise paint the "quiet" arrow full accent green.
     <MotionLink
       to="/work"
       className="focus-ring"
@@ -408,12 +366,9 @@ function BackLink({ t, rtl, reduce, quiet = false }) {
         display: 'inline-flex',
         alignItems: 'center',
         gap: quiet ? 8 : 12,
-        // Without the disc there is only a 14px label, so the tap target has to
-        // be held open by hand.
-        minHeight: 44,
+        minHeight: 44, // without the disc, only a 14px label would set the tap target
         textDecoration: 'none',
-        // Base value for the first frame, before the variant lands.
-        color: restColor,
+        color: restColor, // first-frame value, before the variant lands
         whiteSpace: 'nowrap',
       }}
     >
@@ -443,7 +398,6 @@ function BackLink({ t, rtl, reduce, quiet = false }) {
         </motion.span>
       )}
 
-      {/* Inherits the link's colour — see the note above. */}
       <span style={{ fontSize: 14, fontWeight: 600, letterSpacing: '-0.01em' }}>
         {t('caseStudy.back')}
       </span>
@@ -500,45 +454,8 @@ function Block({ title, body, children }) {
   );
 }
 
-// Splits values like "-64%", "2,4x" or "4 yrs" into prefix / number / suffix so the
-// number can count up while the surrounding characters and the locale's decimal
-// separator stay intact. Returns null when there is no number to animate.
-function parseMetric(value) {
-  const m = String(value).match(/^(\D*)(\d+(?:[.,]\d+)?)(.*)$/);
-  if (!m) return null;
-  const digits = m[2];
-  const separator = digits.includes(',') ? ',' : '.';
-  const split = digits.split(/[.,]/);
-  return {
-    prefix: m[1],
-    suffix: m[3],
-    target: Number(digits.replace(',', '.')),
-    separator,
-    decimals: split.length > 1 ? split[1].length : 0,
-  };
-}
-
 function Metric({ value, label, reduce }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-10% 0px' });
-  // Parsed once per value — a fresh object every render would restart the animation
-  // on each setN, which never settles.
-  const parsed = useMemo(() => parseMetric(value), [value]);
-  const [n, setN] = useState(() => (parsed && !reduce ? 0 : parsed ? parsed.target : 0));
-
-  useEffect(() => {
-    if (!parsed || reduce || !inView) return undefined;
-    const controls = animate(0, parsed.target, {
-      duration: 1.1,
-      ease: EASE,
-      onUpdate: setN,
-    });
-    return () => controls.stop();
-  }, [inView, reduce, parsed]);
-
-  const shown = parsed
-    ? `${parsed.prefix}${n.toFixed(parsed.decimals).replace('.', parsed.separator)}${parsed.suffix}`
-    : value;
+  const [ref, shown] = useCountUp(value, reduce);
 
   return (
     <div
@@ -550,8 +467,7 @@ function Metric({ value, label, reduce }) {
         background: 'var(--surface, #fff)',
       }}
     >
-      {/* Values like "-64%" have no strong directional character, so in Arabic they
-          would render as "64%-". Ones that carry Arabic words keep automatic direction. */}
+      {/* Force ltr for "-64%"-style values — in Arabic they'd render as "64%-". */}
       <p dir={/[֐-ࣿ]/.test(String(value)) ? 'auto' : 'ltr'} style={{
         margin: 0,
         unicodeBidi: 'isolate',
@@ -573,7 +489,6 @@ function Metric({ value, label, reduce }) {
 
 function Shot({ src, alt, reduce }) {
   const ref = useRef(null);
-  // No `container` — the window is the scroller now.
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start end', 'end start'],

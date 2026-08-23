@@ -1,18 +1,21 @@
 import { useTranslation } from 'react-i18next';
 import ScrollReveal from '../components/ScrollReveal';
-import ProjectCard from '../components/ProjectCard';
+import ServiceCard from '../components/ServiceCard';
+import ServiceDivider from '../components/ServiceDivider';
 import CtaBanner from '../components/CtaBanner';
-import { projects } from '../data/projects';
 
-// Own shell instead of ui/Section — Section's top border would double against
-// the header's, since this is the first thing under it.
-export default function WorkList() {
+// Own shell, not ui/Section — same reason as WorkList: Section's top border
+// would double against the sticky header's. Full-width rows, not a grid: the
+// `features` list needs more room than a narrow grid column gives.
+export default function ServicesList() {
   const { t } = useTranslation();
+  const services = t('services', { returnObjects: true });
+  const list = Array.isArray(services) ? services : [];
 
   return (
     <>
     <section
-      id="work"
+      id="services"
       style={{ padding: 'clamp(40px, 7vw, 88px) clamp(20px, 5vw, 48px) clamp(64px, 10vw, 120px)' }}
     >
       <div style={{ maxWidth: 1160, margin: '0 auto' }}>
@@ -34,7 +37,7 @@ export default function WorkList() {
               background: 'var(--accent, #0E7A69)',
               display: 'inline-block',
             }} />
-            {t('nav.work')}
+            {t('nav.services')}
           </p>
         </ScrollReveal>
 
@@ -47,7 +50,7 @@ export default function WorkList() {
             margin: '16px 0 0',
             maxWidth: '16ch',
           }}>
-            {t('workPageTitle')}
+            {t('servicesPageTitle')}
           </h1>
         </ScrollReveal>
 
@@ -59,7 +62,7 @@ export default function WorkList() {
             fontSize: 'clamp(16px, 2vw, 19px)',
             lineHeight: 1.6,
           }}>
-            {t('workPageIntro')}
+            {t('servicesPageIntro')}
           </p>
         </ScrollReveal>
 
@@ -67,12 +70,16 @@ export default function WorkList() {
           marginTop: 'clamp(40px, 6vw, 68px)',
           paddingTop: 'clamp(32px, 4vw, 48px)',
           borderTop: '1px solid var(--line, rgba(21,18,15,0.13))',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: 'clamp(28px, 3.5vw, 44px)',
         }}>
-          {projects.map((p, i) => (
-            <ProjectCard key={p.slug} slug={p.slug} tagKey={p.tagKey} index={i} />
+          {list.map((s, i) => (
+            <div key={s.title}>
+              {i > 0 && (
+                <div style={{ margin: 'clamp(40px, 6vw, 64px) 0' }}>
+                  <ServiceDivider index={i} />
+                </div>
+              )}
+              <ServiceCard service={s} index={i} detailed />
+            </div>
           ))}
         </div>
       </div>

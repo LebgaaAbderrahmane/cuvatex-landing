@@ -5,16 +5,24 @@ import Section from './ui/Section';
 import SectionHeader from './ui/SectionHeader';
 import { getInitials } from '../lib/text';
 
-const names = ['Alex Morgan', 'Sam Rivera', 'Jordan Lee'];
+// Structural data only — roles and bios live in src/i18n/{en,fr,ar}.json as
+// parallel arrays indexed by position here. A member without an img falls back
+// to their initials.
+const members = [
+  { name: 'Lebgaa Abderrahmane', img: '/team/LebgaaAbderrahmane.png' },
+  { name: 'Alex Morgan' },
+  { name: 'Jordan Lee' },
+];
 
 export default function Team() {
   const { t } = useTranslation();
   const roles = t('roles', { returnObjects: true });
   const bios = t('bios', { returnObjects: true });
 
-  const members = names.map((name, i) => ({
-    name,
-    initials: getInitials(name),
+  const team = members.map((m, i) => ({
+    name: m.name,
+    img: m.img,
+    initials: getInitials(m.name),
     role: Array.isArray(roles) ? roles[i] : '',
     bio: Array.isArray(bios) ? bios[i] : '',
   }));
@@ -45,7 +53,7 @@ export default function Team() {
         gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
         gap: 'clamp(28px, 4vw, 48px)',
       }}>
-        {members.map((m, i) => (
+        {team.map((m, i) => (
           <ScrollReveal key={m.name} delay={i * 0.1}>
             <motion.div
               style={{ display: 'flex', flexDirection: 'column' }}
@@ -62,14 +70,26 @@ export default function Team() {
                 justifyContent: 'center',
                 border: '1px solid var(--line, rgba(21,18,15,0.13))',
               }}>
-                <span style={{
-                  fontSize: 'clamp(48px, 6vw, 64px)',
-                  fontWeight: 600,
-                  color: 'var(--accent, #0E7A69)',
-                  opacity: 0.25,
-                }}>
-                  {m.initials}
-                </span>
+                {m.img ? (
+                  // Decorative: the name is announced by the h3 right below.
+                  <img
+                    src={m.img}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    draggable={false}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                ) : (
+                  <span style={{
+                    fontSize: 'clamp(48px, 6vw, 64px)',
+                    fontWeight: 600,
+                    color: 'var(--accent, #0E7A69)',
+                    opacity: 0.25,
+                  }}>
+                    {m.initials}
+                  </span>
+                )}
               </div>
               <h3 style={{
                 margin: '20px 0 0',

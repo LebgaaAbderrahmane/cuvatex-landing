@@ -11,18 +11,14 @@ import { isCurrentSection } from '../lib/nav';
 // Drives both the desktop nav and the mobile panel. Each entry needs a
 // `nav.<key>` label in all three locale files.
 //
-// `to` is absolute on purpose. A bare `#services` only resolves on the homepage,
-// so from /work/atlas-retail it would scroll nowhere; `/#services` navigates home
-// first and ScrollManager finishes the scroll. Every anchor here needs a matching
-// section `id` in pages/Home.jsx — except `work`, which is a page of its own.
+// Pages only — Process, Pricing, Team and FAQ stay on the homepage as
+// sections but aren't linked here; a visitor finds them by scrolling.
 const sections = [
-  { key: 'services', to: '/#services' },
-  { key: 'process', to: '/#process' },
+  { key: 'home', to: '/' },
+  { key: 'services', to: '/services' },
   { key: 'work', to: '/work' },
-  { key: 'pricing', to: '/#pricing' },
-  { key: 'team', to: '/#team' },
-  { key: 'faq', to: '/#faq' },
-  { key: 'contact', to: '/#contact' },
+  { key: 'about', to: '/about' },
+  { key: 'contact', to: '/contact' },
 ];
 
 // Below this width the six nav links wrap onto extra rows and push the sticky
@@ -44,10 +40,8 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef(null);
 
-  // The header is the only element that knows its own height, and four other
-  // components need it (hero/clients fold height, sticky offsets in Services and
-  // Process). Publishing it as `--header-h` keeps one source of truth instead of
-  // the magic `56` / `67` constants that used to drift from reality.
+  // Publishes real height as --header-h — other components (fold heights,
+  // sticky offsets) read it instead of hardcoding a value that can drift.
   useLayoutEffect(() => {
     const el = headerRef.current;
     if (!el) return;
@@ -99,8 +93,6 @@ export default function Header() {
         gap: 20,
         flexWrap: 'wrap',
       }}>
-        {/* Home, not "scroll to the top of whatever page this is" — on a project
-            page those are two different things, and a logo means home. */}
         <Link
           to="/"
           className="focus-ring"
@@ -124,11 +116,8 @@ export default function Header() {
           CUVATEX
         </Link>
 
-        {/* Nav gap and font-size taper below ~1300px. Seven links at a flat
-            `gap: 22` / `fontSize: 15` overflow the bar at 768px and wrap the
-            header onto a second row (measured 121px), which would push every
-            anchor target under the header. Both clamps sit at their maximum from
-            ~1300px up, so the desktop appearance is unchanged. */}
+        {/* Gap/font-size taper below ~1300px so links don't wrap the header
+            onto a second row. Both clamps max out above ~1300px. */}
         {!isMobile && (
           <nav style={{
             display: 'flex',
@@ -144,19 +133,13 @@ export default function Header() {
                   key={section.key}
                   to={section.to}
                   className="focus-ring"
-                  // The colour alone is not enough: it is invisible to a screen
-                  // reader and to anyone who cannot separate the two greens.
-                  aria-current={current ? 'page' : undefined}
+                  aria-current={current ? 'page' : undefined} // colour alone isn't accessible
                   style={{ ...linkStyle, color: restColor, position: 'relative' }}
-                  // currentTarget, not target: the underline below is a child, and
-                  // hovering it would otherwise recolour the bar instead of the word.
                   onMouseEnter={e => { e.currentTarget.style.color = current ? 'var(--accent, #0E7A69)' : 'var(--fg, #15120f)'; }}
                   onMouseLeave={e => { e.currentTarget.style.color = restColor; }}
                 >
                   {t(`nav.${section.key}`)}
                   {current && (
-                    // Sits outside the text box rather than adding padding, so
-                    // marking a link does not reflow the row or the header height.
                     <span
                       aria-hidden="true"
                       style={{

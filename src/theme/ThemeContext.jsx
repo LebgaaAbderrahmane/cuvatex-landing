@@ -1,10 +1,8 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
-// The colour values themselves live in `src/index.css` under `:root` and
-// `:root[data-theme='dark']`. Keeping them in CSS is what lets the inline script
-// in index.html pick the right theme before the first paint — it only has to set
-// one attribute, with no colours duplicated into the HTML. This module owns the
-// *choice*: which theme is active, and persisting it.
+// Colour values live in index.css (:root / :root[data-theme='dark']), so
+// index.html's inline script can set the theme before first paint. This
+// module owns the choice — which theme is active — and persists it.
 const THEMES = ['light', 'dark'];
 const STORAGE_KEY = 'studio-theme';
 

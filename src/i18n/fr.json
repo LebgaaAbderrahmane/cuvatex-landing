@@ -1,50 +1,60 @@
 {
   "nav": {
+    "home": "Accueil",
     "services": "Services",
     "process": "Méthode",
     "work": "Projets",
     "pricing": "Tarifs",
     "team": "Équipe",
     "faq": "FAQ",
-    "contact": "Contact"
+    "contact": "Contact",
+    "about": "À propos"
   },
   "skipToContent": "Aller au contenu",
-  "cta": "Démarrer un projet",
-  "heroKicker": "Idée · Design · Réalisation · Lancement",
-  "heroTitle": "Nous concevons et développons des produits logiciels complets, de bout en bout.",
-  "heroNote": "Une équipe qui construit des logiciels ensemble, de la première idée au lancement.",
-  "heroAvailability": "Disponibles pour de nouveaux projets, nous répondons sous deux jours ouvrés.",
+  "cta": "Parlez-nous de votre idée",
+  "heroKicker": "Petites entreprises et startups",
+  "heroTitle": "Des sites et des applications qui font grandir votre entreprise.",
+  "heroNote": "Un prix fixe, un délai tenu, et vous nous parlez toujours directement.",
+  "heroAvailability": "Disponibles · réponse sous 2 jours ouvrés",
+  "heroBadges": ["En ligne et fonctionnel", "Sur tous les téléphones"],
+  "heroCarouselPause": "Mettre le diaporama en pause",
+  "heroCarouselPlay": "Relancer le diaporama",
+  "heroWhatsapp": "Écrire sur WhatsApp",
   "servicesTitle": "Ce que nous faisons",
   "services": [
-    { "title": "Sites et applications web", "desc": "Des sites et applications web rapides, faciles à utiliser et conçus pour durer.", "tags": ["React", "Next.js", "TypeScript"], "badge": "50+ livrés", "features": ["Adaptés à tous les écrans", "Optimisés pour le référencement", "Temps de chargement rapides garantis"] },
-    { "title": "La première version de votre produit", "desc": "Nous transformons votre idée en produit fonctionnel en quelques semaines, centré sur ce qui compte vraiment.", "tags": ["Lean", "MVP", "Itératif"], "badge": "4–6 semaines", "features": ["Validez avant d'investir", "Lancez vite, apprenez plus vite", "Pivotez sans réécriture douloureuse"] },
-    { "title": "Applications mobiles", "desc": "Des applications pour iPhone et Android, développées une seule fois et fonctionnant sur les deux.", "tags": ["React Native", "Expo", "Multi-plateforme"], "badge": "Une seule base", "features": ["iPhone et Android depuis un seul code", "Expérience native sur les deux plateformes", "Notifications push et mode hors-ligne"] },
-    { "title": "Design produit", "desc": "Des écrans et des parcours conçus pour que vos utilisateurs les comprennent vraiment.", "tags": ["Figma", "UI/UX", "Prototypage"], "badge": "Centré utilisateur", "features": ["Maquettes que vous pouvez réagir tôt", "Prototypes interactifs, pas d'images statiques", "Testés avant la première ligne de code"] },
-    { "title": "Le système derrière votre produit", "desc": "Le moteur qui stocke vos données, garde tout rapide et fonctionne de façon fiable.", "tags": ["Node.js", "PostgreSQL", "REST", "GraphQL"], "badge": "99,9% de disponibilité", "features": ["Passage à l'échelle dès le premier jour", "Sécurisé contre les menaces OWASP", "Sauvegardes automatisées et surveillance"] },
-    { "title": "Logiciels sur mesure", "desc": "Un logiciel conçu autour du fonctionnement réel de votre entreprise, au lieu de vous imposer un outil tout fait.", "tags": ["Python", "Docker", "AWS"], "badge": "Sur mesure", "features": ["Conçu autour de votre flux de travail", "Intègre vos outils existants", "Pas de verrouillage — vous possédez le code"] }
+    { "title": "Sites et applications web", "desc": "Des sites et applications web rapides, faciles à utiliser et conçus pour durer.", "tags": ["Site web", "Panneau d'administration", "Hébergement configuré"], "badge": "Fonctionne sur tous les téléphones", "features": ["Adaptés à tous les écrans", "Facile à trouver sur Google", "Temps de chargement rapides garantis"] },
+    { "title": "La première version de votre produit", "desc": "Nous transformons votre idée en produit fonctionnel en quelques semaines, centré sur ce qui compte vraiment.", "tags": ["Application fonctionnelle", "Retours d'utilisateurs réels", "Conçu pour évoluer"], "badge": "4–6 semaines", "features": ["Testez l'idée avant d'investir davantage", "Une version fonctionnelle rapidement", "Facile de changer de direction plus tard"] },
+    { "title": "Applications mobiles", "desc": "Des applications pour iPhone et Android, développées une seule fois et fonctionnant sur les deux.", "tags": ["Application iPhone", "Application Android", "Publication sur les stores"], "badge": "Une seule appli, les deux téléphones", "features": ["Une mise à jour met à jour les deux applications", "Une expérience fluide et naturelle", "Envoie des alertes, fonctionne aussi hors connexion"] },
+    { "title": "Design produit", "desc": "Des écrans et des parcours conçus pour que vos utilisateurs les comprennent vraiment.", "tags": ["Écrans de l'application", "Prototype cliquable", "Tests utilisateurs"], "badge": "Centré utilisateur", "features": ["Des premières versions auxquelles vous pouvez réagir tôt", "Une démonstration que vous pouvez essayer", "Testé avec de vrais utilisateurs avant de coder"] },
+    { "title": "Le système derrière votre produit", "desc": "Le moteur qui stocke vos données, garde tout rapide et fonctionne de façon fiable.", "tags": ["Base de données", "Sécurité", "Sauvegardes automatiques"], "badge": "99,9% de disponibilité", "features": ["Suit la croissance de vos clients", "Protégé contre les tentatives de piratage courantes", "Sauvegardes automatisées et surveillance"] },
+    { "title": "Logiciels sur mesure", "desc": "Un logiciel conçu autour du fonctionnement réel de votre entreprise, au lieu de vous imposer un outil tout fait.", "tags": ["Conçu pour vous", "Mise en place et formation", "Support continu"], "badge": "Sur mesure", "features": ["Conçu autour de votre flux de travail", "Intègre vos outils existants", "Vous possédez le code — changez de développeur quand vous voulez"] }
   ],
+  "servicesPageTitle": "Tout ce que nous construisons",
+  "servicesPageIntro": "Un regard plus détaillé sur ce que nous faisons — les détails derrière chaque service, d'une simple nouvelle fonctionnalité à un produit construit de zéro.",
+  "servicesCta": "Voir tous les services",
+  "serviceCta": "Demander un devis",
   "clientsEyebrow": "Clients",
   "clientsTitle": "Avec qui nous travaillons",
   "clientsBody": "Nous travaillons avec des petites entreprises, des commerces et des restaurants, des cliniques et des professionnels, et des startups qui lancent leur premier produit. Si vous n'êtes pas sûr que votre projet nous convienne, demandez-nous.",
   "clientTypes": [
-    { "name": "Petites entreprises", "desc": "Boutiques, indépendants et commerces locaux cherchant une présence numérique.", "stat": "40% des projets" },
-    { "name": "Commerces et restaurants", "desc": "Sites e-commerce, commandes en ligne et menus numériques.", "stat": "25+ livrés" },
-    { "name": "Cliniques et professionnels", "desc": "Portails patients, systèmes de rendez-vous et outils de gestion.", "stat": "15+ cliniques" },
-    { "name": "Startups", "desc": "De l'idée au MVP — nous aidons les fondateurs à lancer plus vite.", "stat": "10+ MVP" },
-    { "name": "Services de proximité", "desc": "Prestataires, artisans et consultants ayant besoin d'un site professionnel.", "stat": "30+ sites" }
+    { "name": "Petites entreprises", "desc": "Boutiques, indépendants et commerces locaux qui veulent être visibles en ligne." },
+    { "name": "Commerces et restaurants", "desc": "Boutiques en ligne, commandes en ligne et menus numériques." },
+    { "name": "Cliniques et professionnels", "desc": "Prise de rendez-vous en ligne, dossiers patients et outils pour gérer le cabinet." },
+    { "name": "Startups", "desc": "De l'idée à un produit qui fonctionne — nous aidons les fondateurs à lancer plus vite et à s'améliorer en continu." },
+    { "name": "Services de proximité", "desc": "Prestataires, artisans et consultants ayant besoin d'un site professionnel." }
   ],
   "clientStats": [
-    { "number": "40+", "label": "Projets livrés" },
+    { "number": "15+", "label": "Projets livrés" },
     { "number": "4+", "label": "Années d'expérience" },
-    { "number": "30+", "label": "Clients satisfaits" },
-    { "number": "98%", "label": "Taux de satisfaction" }
+    { "number": "3", "label": "Que des ingénieurs" },
+    { "number": "100%", "label": "Code qui vous appartient" }
   ],
   "testimonialsEyebrow": "Témoignages",
   "testimonialsTitle": "Ce que disent nos clients",
+  "testimonialsRating": "Noté {{rating}} sur 5",
   "testimonials": [
-    { "quote": "Ils ont livré exactement ce dont nous avions besoin, à temps et dans le budget. La communication tout au long du projet était excellente.", "name": "Sarah K.", "business": "Cosy Corner Café", "role": "Propriétaire" },
-    { "quote": "Nous sommes venus avec une idée vague et ils l'ont transformée en un produit soigné que nos utilisateurs adorent. Je les recommande vivement.", "name": "Mehdi L.", "business": "MediCare Clinics", "role": "Fondateur" },
-    { "quote": "L'équipe a compris nos besoins immédiatement. Pas de jargon, pas de sur-ingénierie — juste une solution propre qui fonctionne.", "name": "Amine B.", "business": "Boulevard Shop", "role": "Gérant" }
+    { "quote": "« La plateforme a transformé notre projet de fin d'études en un produit fonctionnel que toute ma classe a utilisé — nous avons présenté notre travail, avons été recrutés grâce à lui, et ma soutenance a obtenu une note presque parfaite. »", "name": "Hadj Messaoud", "role": "Étudiant en master de comptabilité", "business": "My Accountant", "rating": 5 },
+    { "quote": "« Une journée entière de comptage hebdomadaire de papiers est devenue quelques minutes sur un téléphone. »", "name": "Kara Saddek", "role": "Gérant", "business": "", "rating": 0 }
   ],
   "ctaBannerLead": "Un projet en tête ?",
   "ctaBannerLink": "Parlons-en",
@@ -191,9 +201,11 @@
   "aboutTitle": "Qui nous sommes",
   "aboutBody": "Nous sommes une équipe d'ingénieurs et de designers qui prennent un seul produit à la fois. Vous travaillez directement avec les personnes qui construisent votre produit, pas un manager ni un chargé de compte.",
   "aboutExtra": "Chaque projet commence par la compréhension de vos utilisateurs et de votre marché, puis progresse à travers le design et le développement en cycles serrés jusqu'à ce que nous livrions quelque chose dont vous êtes fier. Sans intermédiaires, sans couches, juste les personnes qui construisent votre produit qui vous parlent directement.",
+  "aboutCta": "En savoir plus sur nous",
+  "aboutPageNote": "Plus de détails sur notre façon de travailler et les personnes derrière CUVATEX, bientôt disponibles.",
   "roles": ["Ingénieur logiciel", "Développeuse frontend", "Designer produit"],
   "bios": [
-    "Conçoit les systèmes et les API qui gardent les produits rapides et fiables à mesure qu'ils grandissent.",
+    "Conçoit et construit les systèmes derrière nos produits — du schéma de base de données à l'application déployée, il s'occupe de ce que les utilisateurs ne voient jamais mais ressentent toujours.",
     "Transforme les maquettes en interfaces accessibles et responsives, d'une fluidité naturelle.",
     "Façonne l'apparence, le ressenti et les parcours du produit, de la première idée au pixel final."
   ],
@@ -213,10 +225,58 @@
   "email": "hello@cuvatex.com",
   "nameLabel": "Nom",
   "emailLabel": "E-mail",
+  "serviceLabel": "De quel service avez-vous besoin ?",
+  "serviceOptionOther": "Autre / pas encore sûr",
   "msgLabel": "Que voulez-vous construire ?",
   "send": "Envoyer",
   "sending": "Envoi…",
   "sent": "Merci, nous vous répondrons bientôt.",
   "error": "Une erreur est survenue. Réessayez ou écrivez-nous directement.",
+  "footerNav": { "home": "Accueil" },
+  "footerPagesHeading": "Pages",
+  "footerLegalHeading": "Mentions légales",
+  "footerContactHeading": "Contact",
+  "footerFollowHeading": "Nous suivre",
+  "footerSocial": {
+    "instagram": "Instagram",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "x": "X (Twitter)"
+  },
+  "legal": {
+    "termsNav": "Conditions d'utilisation",
+    "privacyNav": "Politique de confidentialité",
+    "lastUpdated": "Dernière mise à jour : août 2026",
+    "placeholderNotice": "Cette page est un texte provisoire. Elle n'a pas encore été relue par un juriste et ne doit pas être considérée comme un avis juridique définitif.",
+    "terms": {
+      "title": "Conditions d'utilisation",
+      "sections": [
+        { "heading": "Acceptation des conditions", "body": "En utilisant ce site ou en travaillant avec CUVATEX, vous acceptez ces conditions. Si vous n'êtes pas d'accord, merci de ne pas utiliser nos services." },
+        { "heading": "Services", "body": "CUVATEX conçoit et développe des produits logiciels — sites web, applications web, applications mobiles, design produit et systèmes backend sur mesure. Le périmètre exact de chaque projet est convenu avec le client avant le début des travaux." },
+        { "heading": "Responsabilités du client", "body": "Le client s'engage à fournir des retours dans des délais raisonnables, ainsi que le contenu, les accès et les informations nécessaires à la réalisation du projet. Un retard côté client peut retarder la livraison." },
+        { "heading": "Conditions de paiement", "body": "Les projets sont facturés selon un devis fixe convenu avant le début des travaux. Les factures sont dues selon le calendrier fixé dans la proposition de projet. Un retard de paiement peut suspendre les travaux jusqu'à régularisation." },
+        { "heading": "Propriété intellectuelle", "body": "Une fois le projet payé intégralement, le client devient propriétaire des livrables finaux. CUVATEX peut présenter le travail réalisé dans son propre portfolio, sauf demande contraire écrite du client." },
+        { "heading": "Limitation de responsabilité", "body": "CUVATEX travaille avec soin, mais ne peut être tenu responsable des dommages indirects ou accessoires liés à l'utilisation d'un produit livré, dans la limite permise par la loi." },
+        { "heading": "Résiliation", "body": "Chaque partie peut mettre fin à une collaboration avec un préavis écrit. Le travail déjà réalisé est facturé au tarif convenu." },
+        { "heading": "Droit applicable", "body": "La juridiction qui régit ces conditions reste à définir et sera précisée ici une fois fixée." },
+        { "heading": "Modifications de ces conditions", "body": "Ces conditions peuvent être mises à jour de temps à autre. Continuer à utiliser nos services après une modification signifie que vous acceptez les nouvelles conditions." },
+        { "heading": "Contact", "body": "Des questions sur ces conditions ? Contactez-nous via notre page de contact ou par e-mail." }
+      ]
+    },
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "sections": [
+        { "heading": "Aperçu", "body": "Cette page explique quelles informations CUVATEX collecte via ce site, et comment elles sont utilisées." },
+        { "heading": "Informations que nous collectons", "body": "Lorsque vous utilisez le formulaire de contact, nous collectons le nom, l'e-mail et le message que vous fournissez. Nous collectons aussi des statistiques anonymes de base sur l'utilisation du site." },
+        { "heading": "Comment nous utilisons vos informations", "body": "Les informations du formulaire de contact ne servent qu'à répondre à votre message. Les données statistiques sont utilisées de façon globale, pour comprendre comment le site est utilisé et où il peut être amélioré." },
+        { "heading": "Partage des données", "body": "Les messages du formulaire de contact sont traités par Web3Forms, un service tiers de transmission de formulaires, afin de nous faire parvenir votre message. Nous ne vendons vos informations à personne." },
+        { "heading": "Cookies", "body": "Ce site utilise Umami, un outil d'analyse respectueux de la vie privée qui n'utilise pas de cookies et ne suit pas les visiteurs individuellement." },
+        { "heading": "Conservation des données", "body": "Les messages du formulaire de contact ne sont conservés que le temps nécessaire pour répondre à votre demande, sauf obligation légale de conservation plus longue." },
+        { "heading": "Vos droits", "body": "Vous pouvez nous demander d'accéder aux informations que nous détenons sur vous ou de les supprimer, en nous contactant via l'e-mail indiqué sur notre page de contact." },
+        { "heading": "Modifications de cette politique", "body": "Cette politique peut être mise à jour de temps à autre. Revenez consulter cette page pour la dernière version." },
+        { "heading": "Contact", "body": "Des questions sur cette politique ? Contactez-nous via notre page de contact ou par e-mail." }
+      ]
+    }
+  },
   "footer": "© 2026 CUVATEX. Disponible pour de nouveaux projets."
 }

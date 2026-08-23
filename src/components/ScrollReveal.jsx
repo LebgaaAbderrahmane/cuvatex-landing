@@ -6,9 +6,8 @@ const variants = {
   visible: { opacity: 1, y: 0 },
 };
 
-// `root` scopes the IntersectionObserver to a scrolling element instead of the
-// viewport — needed inside the case-study overlay, which scrolls itself.
-// Every other call site omits it and keeps the default viewport behaviour.
+// `root` scopes the IntersectionObserver to a scrolling element instead of
+// the viewport, if a call site ever needs it. Unused today.
 export default function ScrollReveal({ children, delay = 0, className, style, root }) {
   return (
     <motion.div

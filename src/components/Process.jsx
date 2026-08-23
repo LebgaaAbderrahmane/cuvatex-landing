@@ -4,39 +4,40 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent, useReducedMoti
 import ScrollReveal from './ScrollReveal';
 import useMediaQuery from '../hooks/useMediaQuery';
 
-// The card's height drives where it parks and how much runway the steps need, so
-// everything below is derived from it — resize the card and the scroll geometry
-// follows instead of silently desyncing.
+// Everything below is derived from CARD_H, so resizing the card keeps the
+// scroll geometry in sync instead of drifting.
 const CARD_H = 340;
 const CARD_HALF = CARD_H / 2;
-// `--header-h` is measured and published by Header on mount and on every resize,
-// so this no longer hardcodes a header height that can drift from reality.
-// The fallback covers the very first frame only.
-const NAV_H = 'var(--header-h, 73px)';
-const TITLE_BAR_CLEAR = 206;         // bottom of the sticky title bar (185) + a gap
+const NAV_H = 'var(--header-h, 73px)'; // measured by Header; fallback covers first frame only
+const TITLE_BAR_CLEAR = 206; // bottom of the sticky title bar (185) + a gap
 const STEP_GAP = 'clamp(120px, 18vh, 200px)';
 
-// The line the active step reads on. A step's turn runs from its top crossing
-// viewport centre until it has risen one pitch, so the middle of its turn puts
-// its centre at `50vh + gap/2` — regardless of how tall the step itself is.
-// The card parks centred on that line so the two line up when it matters,
-// instead of the card sitting a half-step high the whole way through.
+// A step's centre-of-turn sits at 50vh + gap/2, regardless of step height.
+// The card parks centred on that same line.
 const FOCUS = `calc(50vh + ${STEP_GAP} / 2)`;
-
-// ...but never so high that the sticky title bar covers it on a short viewport.
+// ...but never so high the sticky title bar covers it on a short viewport.
 const CARD_TOP = `max(calc(${FOCUS} - ${CARD_HALF}px), ${TITLE_BAR_CLEAR}px)`;
 
-// Blank scroll above and below the steps. The card is pinned exactly while the
-// grid spans its parked box, so the runways have to match that box — not the
-// viewport centre — or the first and last step burn part of their turn before
-// the card has arrived / after it has left. Their sum is always CARD_H.
+// Scroll runway above/below the steps, matching the card's parked box (not
+// the viewport centre) so the first/last step don't burn part of their turn
+// before the card has arrived or after it's left. Sum is always CARD_H.
 const RUNWAY_TOP = `100px`;
 const RUNWAY_BOTTOM = `${CARD_H / 3 + 20}px`;
 
-// Matches Header's breakpoint exactly. These were 768px and 767px respectively,
-// so at a window of exactly 768px the desktop nav rendered above the mobile
-// layout — docs/AUDIT.md item 23.
-const MOBILE_QUERY = '(max-width: 767px)';
+const MOBILE_QUERY = '(max-width: 767px)'; // must match Header's breakpoint exactly
+
+// Keyed by the step's own number (from i18n), never the array index — a reordered
+// or added step must not silently inherit another step's picture.
+const STEP_IMAGES = {
+  '01': '/process/understand.jpg',
+  '02': '/process/design.jpg',
+  '03': '/process/build.jpg',
+  '04': '/process/ship.jpg',
+};
+
+// Step numbers are localized copy: ar.json writes them with Arabic-Indic
+// digits (٠١…), which would miss the map above. Normalize before lookup.
+const stepImage = (n) => STEP_IMAGES[String(n).replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))];
 
 export default function Process() {
   const { t } = useTranslation();
@@ -53,9 +54,8 @@ export default function Process() {
     offset: ['start center', 'end center'],
   });
 
-  // floor(v * n), not round(v * (n - 1)): the latter gives the first and last
-  // step half the active window of the middle ones. floor splits the range into
-  // n equal slices, so every step stays active for the same scroll distance.
+  // floor(v * n), not round(v * (n - 1)) — round gives the first/last step
+  // half the active window of the middle ones.
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     if (stepList.length < 2) return;
     const n = stepList.length;
@@ -81,9 +81,8 @@ export default function Process() {
     >
       <div style={{ maxWidth: 1160, margin: '0 auto' }}>
         <div style={{ position: 'relative' }}>
-        {/* The bar must be a direct child of this tall container: a sticky element
-            only travels inside its own parent's box, and a ScrollReveal wrapper is
-            exactly content-height, so it would never move. ScrollReveal goes inside. */}
+        {/* Direct child of this tall container — a sticky element only travels
+            inside its parent's box, so ScrollReveal has to go inside it instead. */}
         <motion.div style={{
           position: isMobile ? 'static' : 'sticky',
           top: NAV_H,
@@ -143,10 +142,8 @@ export default function Process() {
             alignItems: 'start',
           }}
         >
-          {/* Steps column. The padding is scroll runway, not spacing: it extends the
-              grid past the steps so the sticky card stays pinned while step 01 is
-              approaching centre and after step 04 has reached it. It sits outside
-              trackRef so the measured range covers the steps only. */}
+          {/* Padding is scroll runway, not spacing — sits outside trackRef so the
+              measured range covers only the steps. */}
           <div style={{
             paddingBlockStart: isMobile ? 0 : RUNWAY_TOP,
             paddingBlockEnd: isMobile ? 0 : RUNWAY_BOTTOM,
@@ -156,51 +153,117 @@ export default function Process() {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: isMobile ? 'clamp(34px, 6vw, 52px)' : STEP_GAP,
+                gap: isMobile ? 'clamp(16px, 4vw, 24px)' : STEP_GAP,
               }}
             >
-              {/* Zero-height leading child omitted: RUNWAY_TOP positions step 1 at card center instead. */}
+              {stepList.map((st, i) => {
+                // Mobile: no sticky side card to give the number a moment, so
+                // each step is its own card with a big number instead — filled
+                // background + an edge stripe, not a full hairline border like
+                // Clients' cards, so the two sections don't read as the same
+                // thing back to back.
+                if (isMobile) {
+                  return (
+                    <ScrollReveal key={st.n}>
+                      <div style={{
+                        // Not --surface: this section's own background already
+                        // is --surface, so a card using it too would be
+                        // invisible. --bg is what the desktop card below uses
+                        // for the same reason.
+                        background: 'var(--bg, #faf8f5)',
+                        borderInlineStart: '3px solid var(--accent, #0E7A69)',
+                        borderRadius: 12,
+                        padding: 'clamp(20px, 5vw, 28px)',
+                      }}>
+                        {stepImage(st.n) && (
+                          <img
+                            src={stepImage(st.n)}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            draggable={false}
+                            style={{
+                              display: 'block',
+                              width: '100%',
+                              height: 150,
+                              objectFit: 'cover',
+                              borderRadius: 8,
+                              marginBottom: 16,
+                            }}
+                          />
+                        )}
+                        <div style={{
+                          fontFamily: "'IBM Plex Sans', monospace",
+                          fontSize: 40,
+                          fontWeight: 700,
+                          color: 'var(--accent, #0E7A69)',
+                          letterSpacing: '-0.02em',
+                          lineHeight: 1,
+                        }}>
+                          {st.n}
+                        </div>
+                        <h3 style={{
+                          margin: '12px 0 0',
+                          fontSize: 'clamp(21px, 2.6vw, 28px)',
+                          fontWeight: 600,
+                          letterSpacing: '-0.01em',
+                        }}>
+                          {st.title}
+                        </h3>
+                        <p style={{
+                          margin: '10px 0 0',
+                          color: 'var(--muted, #6c665e)',
+                          fontSize: 15.5,
+                          lineHeight: 1.6,
+                        }}>
+                          {st.desc}
+                        </p>
+                      </div>
+                    </ScrollReveal>
+                  );
+                }
 
-              {stepList.map((st, i) => (
-                <motion.div
-                  key={st.n}
-                  animate={{ opacity: isMobile || i === active ? 1 : 0.35 }}
-                  transition={{ duration: reduceMotion ? 0 : 0.35, ease: 'easeOut' }}
-                  style={{
-                    position: 'relative',
-                    paddingInlineStart: 'clamp(24px, 3vw, 40px)',
-                    borderInlineStart: `2px solid ${i === active || isMobile ? 'var(--accent, #0E7A69)' : 'var(--line, rgba(21,18,15,0.13))'}`,
-                    transition: 'border-color 0.35s ease',
-                  }}
-                >
-                  <div style={{
-                    fontFamily: "'IBM Plex Sans', monospace",
-                    fontSize: 14,
-                    color: 'var(--accent, #0E7A69)',
-                    fontWeight: 700,
-                    letterSpacing: '0.05em',
-                  }}>
-                    {st.n}
-                  </div>
-                  <h3 style={{
-                    margin: '8px 0 0',
-                    fontSize: 'clamp(21px, 2.6vw, 28px)',
-                    fontWeight: 600,
-                    letterSpacing: '-0.01em',
-                  }}>
-                    {st.title}
-                  </h3>
-                  <p style={{
-                    margin: '10px 0 0',
-                    color: 'var(--muted, #6c665e)',
-                    fontSize: 15.5,
-                    lineHeight: 1.6,
-                    maxWidth: '52ch',
-                  }}>
-                    {st.desc}
-                  </p>
-                </motion.div>
-              ))}
+                return (
+                  <motion.div
+                    key={st.n}
+                    animate={{ opacity: i === active ? 1 : 0.35 }}
+                    transition={{ duration: reduceMotion ? 0 : 0.35, ease: 'easeOut' }}
+                    style={{
+                      position: 'relative',
+                      paddingInlineStart: 'clamp(24px, 3vw, 40px)',
+                      borderInlineStart: `2px solid ${i === active ? 'var(--accent, #0E7A69)' : 'var(--line, rgba(21,18,15,0.13))'}`,
+                      transition: 'border-color 0.35s ease',
+                    }}
+                  >
+                    <div style={{
+                      fontFamily: "'IBM Plex Sans', monospace",
+                      fontSize: 14,
+                      color: 'var(--accent, #0E7A69)',
+                      fontWeight: 700,
+                      letterSpacing: '0.05em',
+                    }}>
+                      {st.n}
+                    </div>
+                    <h3 style={{
+                      margin: '8px 0 0',
+                      fontSize: 'clamp(21px, 2.6vw, 28px)',
+                      fontWeight: 600,
+                      letterSpacing: '-0.01em',
+                    }}>
+                      {st.title}
+                    </h3>
+                    <p style={{
+                      margin: '10px 0 0',
+                      color: 'var(--muted, #6c665e)',
+                      fontSize: 15.5,
+                      lineHeight: 1.6,
+                      maxWidth: '52ch',
+                    }}>
+                      {st.desc}
+                    </p>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
 
@@ -231,35 +294,52 @@ export default function Process() {
                     style={{
                       position: 'absolute',
                       inset: 0,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 12,
                     }}
                   >
+                    {stepImage(activeStep.n) && (
+                      <img
+                        src={stepImage(activeStep.n)}
+                        alt=""
+                        decoding="async"
+                        draggable={false}
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    )}
+                    {/* Scrim grounds the caption; --bg keeps it theme-aware in dark mode */}
                     <div aria-hidden style={{
                       position: 'absolute',
                       inset: 0,
-                      background: 'radial-gradient(circle at 30% 20%, var(--accent, #0E7A69), transparent 60%)',
-                      opacity: 0.12,
+                      background: 'linear-gradient(to top, var(--bg, #faf8f5) 8%, transparent 60%)',
                     }} />
                     <div style={{
-                      fontFamily: "'IBM Plex Sans', monospace",
-                      fontSize: 'clamp(72px, 8vw, 120px)',
-                      fontWeight: 700,
-                      lineHeight: 1,
-                      color: 'var(--accent, #0E7A69)',
-                      letterSpacing: '-0.02em',
+                      position: 'absolute',
+                      insetInlineStart: 24,
+                      insetInlineEnd: 24,
+                      bottom: 48,
                     }}>
-                      {activeStep.n}
-                    </div>
-                    <div style={{
-                      fontSize: 'clamp(20px, 2.2vw, 26px)',
-                      fontWeight: 600,
-                      letterSpacing: '-0.01em',
-                    }}>
-                      {activeStep.title}
+                      <div style={{
+                        fontFamily: "'IBM Plex Sans', monospace",
+                        fontSize: 16,
+                        fontWeight: 700,
+                        color: 'var(--accent, #0E7A69)',
+                        letterSpacing: '0.05em',
+                      }}>
+                        {activeStep.n}
+                      </div>
+                      <div style={{
+                        marginTop: 6,
+                        fontSize: 'clamp(22px, 2.4vw, 28px)',
+                        fontWeight: 600,
+                        letterSpacing: '-0.01em',
+                      }}>
+                        {activeStep.title}
+                      </div>
                     </div>
                   </motion.div>
                 </AnimatePresence>

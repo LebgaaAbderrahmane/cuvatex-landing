@@ -1,15 +1,6 @@
 // Small pure text helpers shared across components.
 
-/**
- * Two-letter initials for an avatar placeholder.
- *
- * Team and Testimonials each had their own copy of this. Team's was the looser
- * one — no `filter`, no `toUpperCase`, no length cap — so a lowercase name, a
- * double space, or a three-word name would have rendered differently in the two
- * sections. Both produce the same output for the names currently in the app, so
- * standardising on the stricter version changes nothing visible today and stops
- * the two drifting apart when a name is added.
- */
+// Two-letter initials for an avatar placeholder. Shared by Team and Testimonials.
 export function getInitials(name) {
   return name
     .split(' ')
