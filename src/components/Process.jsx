@@ -35,6 +35,10 @@ const STEP_IMAGES = {
   '04': '/process/ship.jpg',
 };
 
+// Step numbers are localized copy: ar.json writes them with Arabic-Indic
+// digits (٠١…), which would miss the map above. Normalize before lookup.
+const stepImage = (n) => STEP_IMAGES[String(n).replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))];
+
 export default function Process() {
   const { t } = useTranslation();
   const steps = t('steps', { returnObjects: true });
@@ -171,9 +175,9 @@ export default function Process() {
                         borderRadius: 12,
                         padding: 'clamp(20px, 5vw, 28px)',
                       }}>
-                        {STEP_IMAGES[st.n] && (
+                        {stepImage(st.n) && (
                           <img
-                            src={STEP_IMAGES[st.n]}
+                            src={stepImage(st.n)}
                             alt=""
                             loading="lazy"
                             decoding="async"
@@ -292,9 +296,9 @@ export default function Process() {
                       inset: 0,
                     }}
                   >
-                    {STEP_IMAGES[activeStep.n] && (
+                    {stepImage(activeStep.n) && (
                       <img
-                        src={STEP_IMAGES[activeStep.n]}
+                        src={stepImage(activeStep.n)}
                         alt=""
                         decoding="async"
                         draggable={false}
