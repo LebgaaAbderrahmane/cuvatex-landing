@@ -205,7 +205,7 @@
   "aboutPageNote": "More about how we work and the people behind CUVATEX is coming soon.",
   "roles": ["Software Engineer", "Frontend Developer", "Product Designer"],
   "bios": [
-    "Designs the systems and APIs that keep products fast and reliable as they grow.",
+    "Designs and builds the systems behind our products — from database schema to deployed app, he owns the parts users never see but always feel.",
     "Turns designs into accessible, responsive interfaces that feel effortless.",
     "Shapes how the product looks, feels, and flows, from first idea to final pixel."
   ],
