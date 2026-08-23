@@ -10,23 +10,24 @@ import Team from '../components/Team';
 import Faq from '../components/Faq';
 import Pricing from '../components/Pricing';
 
-// The one long sales page. Order is the argument: what we do → who we help →
-// how we work → proof → who we are → price. Contact lives at /contact now,
-// so the mid-page CtaBanner is the homepage's "talk to us" moment.
+// The one long sales page. Order is the argument: who we are (proof, right
+// after the hero) → what we do → how we work → proof of work → who we are →
+// price → objections → the ask. Contact lives at /contact now, so this
+// closing CtaBanner is the homepage's only "talk to us" moment.
 export default function Home() {
   return (
     <>
       <Hero />
-      <Services />
       <Clients />
+      <Services />
       <Process />
       <Work />
       <Testimonials />
-      <CtaBanner />
       <About />
       <Team />
-      <Faq />
       <Pricing />
+      <Faq />
+      <CtaBanner />
     </>
   );
 }

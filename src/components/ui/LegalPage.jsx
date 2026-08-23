@@ -3,7 +3,7 @@ import ScrollReveal from '../ScrollReveal';
 // Shared shell for /terms and /privacy. Own <section>, not ui/Section — same
 // reason as NotFound/WorkList: Section's top border would double against the
 // sticky header's.
-export default function LegalPage({ eyebrow, title, updated, notice, sections }) {
+export default function LegalPage({ eyebrow, title, updated, sections }) {
   const list = Array.isArray(sections) ? sections : [];
 
   return (
@@ -54,23 +54,6 @@ export default function LegalPage({ eyebrow, title, updated, notice, sections })
           </p>
         </ScrollReveal>
 
-        {/* Same treatment as Project.jsx's caseStudy.soon callout. */}
-        <ScrollReveal delay={0.22}>
-          <p style={{
-            margin: 'clamp(24px, 3.5vw, 36px) 0 0',
-            maxWidth: 720,
-            padding: 'clamp(20px, 3vw, 28px)',
-            border: '1px solid var(--line, rgba(21,18,15,0.13))',
-            borderRadius: 3,
-            background: 'var(--surface, #fff)',
-            color: 'var(--muted, #6c665e)',
-            fontSize: 16,
-            lineHeight: 1.6,
-          }}>
-            {notice}
-          </p>
-        </ScrollReveal>
-
         <div style={{ marginTop: 'clamp(40px, 6vw, 68px)' }}>
           {list.map((s, i) => (
             <LegalSection key={s.heading || i} heading={s.heading} body={s.body} first={i === 0} />
@@ -82,7 +65,7 @@ export default function LegalPage({ eyebrow, title, updated, notice, sections })
 }
 
 // One {heading, body} row — same layout as Project.jsx's Block.
-// `first` skips the top divider so it doesn't double against the notice callout above it.
+// `first` skips the top divider — nothing else sits above it now but the "Last updated" line.
 function LegalSection({ heading, body, first }) {
   return (
     <ScrollReveal>

@@ -11,12 +11,14 @@
     "about": "About"
   },
   "skipToContent": "Skip to content",
+  "backToTop": "Back to top",
+  "switchLanguage": "Switch language",
   "cta": "Tell us your idea",
   "heroKicker": "Small businesses and startups",
   "heroTitle": "Websites and apps\nthat grow your business.",
   "heroNote": "A fixed price, a real deadline, and you always talk to us directly.",
   "heroAvailability": "Available now · we reply in 2 business days",
-  "heroBadges": ["Live and working", "Works on any phone"],
+  "heroBadges": ["Live and working", "Fits any screen"],
   "heroCarouselPause": "Pause showcase",
   "heroCarouselPlay": "Play showcase",
   "heroWhatsapp": "WhatsApp us",
@@ -35,7 +37,7 @@
   "serviceCta": "Get a quote",
   "clientsEyebrow": "Clients",
   "clientsTitle": "Who we work with",
-  "clientsBody": "We work with small businesses, shops and restaurants, clinics and professionals, and startups building their first product. If you are not sure whether your project fits, ask us.",
+  "clientsBody": "You focus on your business. We handle everything technical. If you are not sure whether your project fits, ask us.",
   "clientTypes": [
     { "name": "Small businesses", "desc": "Boutiques, freelancers, and local shops that want to be found online." },
     { "name": "Shops & restaurants", "desc": "Online stores, online ordering, and digital menus." },
@@ -61,6 +63,13 @@
   "pricingEyebrow": "Pricing",
   "pricingTitle": "How pricing works",
   "pricingBody": "Every project is different, so we do not use fixed packages. Tell us what you need, and we give you a clear, fixed price before any work starts. No hidden costs, and no surprise invoices later.",
+  "pricingPaymentTitle": "How payment works",
+  "pricingPayment": [
+    { "amount": "50%", "when": "To start the project" },
+    { "amount": "50%", "when": "When we hand it over" }
+  ],
+  "pricingPaymentNote": "Revisions and our bug-fix warranty are covered in the FAQ below.",
+  "pricingTermsLink": "Read the full terms",
   "processTitle": "How we work",
   "processIntro": "A clear path from your idea to a finished product. You always know what we're doing and why.",
   "steps": [
@@ -200,7 +209,7 @@
   "aboutEyebrow": "About",
   "aboutTitle": "Who we are",
   "aboutBody": "We are a team of engineers and designers who take on one product at a time. You work directly with the people building your product, not a manager or an account handler.",
-  "aboutExtra": "Every project starts with understanding your users and your market, then moves through design and development, going back and forth with you, until we ship something you are proud of. No handoffs, no layers, just the people building your product talking directly to you.",
+  "aboutExtra": "Every project starts with understanding your users and your market, then moves through design and development, going back and forth with you, until we ship something you are proud of. You see real progress every week, so you always know where your project stands.",
   "aboutCta": "Read more about us",
   "roles": ["Software Engineer", "Frontend Developer", "Product Designer"],
   "bios": [
@@ -210,11 +219,12 @@
   ],
   "faqTitle": "Common questions",
   "faq": [
-    { "q": "How much does a project cost?", "a": "It depends on what you need. Tell us about your project and we give you a clear, fixed price before any work starts. No hidden costs." },
+    { "q": "How much does a project cost?", "a": "It depends on the size of the job — how many screens, how many features, and whether you need it on phones too. A small website costs far less than a full product. Tell us what you have in mind and we price it for you." },
     { "q": "How long does it take?", "a": "A first version usually takes a few weeks. A complete product takes longer. We give you a realistic timeline before we begin, and we keep you updated as we go." },
-    { "q": "Do I own the final product?", "a": "Yes. The code, the design, and all the accounts belong to you. Nothing is locked to us." },
+    { "q": "How many changes can I ask for?", "a": "Two rounds at each stage — once for the design, once for the build. You look at the work, send all your notes together, and we apply them. If you need more than that, or you want to add something new, we tell you the cost before we start." },
+    { "q": "Do I own the final product?", "a": "Yes. Once the project is paid, the code, the design, and all the accounts belong to you. Nothing is locked to us." },
     { "q": "What if I don't know exactly what I want yet?", "a": "That is normal, and it is where we start. We help you turn a rough idea into a clear plan before anything gets built." },
-    { "q": "What happens after launch?", "a": "We do not disappear. We stay available to fix issues, make improvements, and help your product grow." }
+    { "q": "What happens after launch?", "a": "We do not disappear. Any bug you find in the first 30 days, we fix for free. After that we stay available to fix issues, make improvements, and help your product grow." }
   ],
   "contactTitle": "Let's build something",
   "contactIntro": "Tell us about the product you want to build. We reply within two business days.",
@@ -231,6 +241,8 @@
   "sending": "Sending…",
   "sent": "Thanks, we will be in touch soon.",
   "error": "Something went wrong. Please try again or email us directly.",
+  "formPrivacyNote": "We only use your details to reply to you.",
+  "formPrivacyLink": "How we handle your data",
   "footerNav": { "home": "Home" },
   "footerPagesHeading": "Pages",
   "footerLegalHeading": "Legal",
@@ -246,18 +258,19 @@
     "termsNav": "Terms of Service",
     "privacyNav": "Privacy Policy",
     "lastUpdated": "Last updated: August 2026",
-    "placeholderNotice": "This page is a placeholder. It has not been reviewed by a lawyer yet, and should not be treated as final legal advice.",
     "terms": {
       "title": "Terms of Service",
       "sections": [
         { "heading": "Agreement to Terms", "body": "By using this website or working with CUVATEX, you agree to these terms. If you do not agree, please do not use our services." },
         { "heading": "Services", "body": "CUVATEX designs and builds software products — websites, web apps, mobile apps, product design, and custom backend systems. The exact scope of each project is agreed with the client before work starts." },
         { "heading": "Client Responsibilities", "body": "Clients agree to give timely feedback, and to provide the content, access, and information needed to complete the work. Delays on the client's side can delay delivery." },
-        { "heading": "Payment Terms", "body": "Projects are priced with a fixed quote agreed before work starts. Invoices are due on the schedule agreed in the project proposal. Late payment may pause work until it is resolved." },
+        { "heading": "Payment Terms", "body": "Projects are priced with a fixed quote agreed before work starts. Payment is split in two: 50% to begin (the deposit), and 50% when the finished work is handed over. Late payment may pause work until it is resolved." },
+        { "heading": "Revisions", "body": "Each stage of the project includes two rounds of changes. A round means you review the work and send us your notes once. Extra rounds, or changes that add new features beyond the agreed scope, are quoted separately before we do them." },
+        { "heading": "Bug Fixes After Delivery", "body": "For 30 days after delivery, we fix any bug in the delivered work at no extra cost. A bug means something we built does not work the way it was agreed. New features, new requests, or problems caused by changes made by someone else are not covered." },
         { "heading": "Intellectual Property", "body": "Once a project is paid in full, the client owns the final deliverables. CUVATEX may show completed work in its own portfolio unless the client asks otherwise in writing." },
         { "heading": "Limitation of Liability", "body": "CUVATEX works carefully, but is not liable for indirect or incidental damages arising from the use of a delivered product, to the extent allowed by law." },
-        { "heading": "Termination", "body": "Either party can end an engagement with written notice. Work completed up to that point is billed at the agreed rate." },
-        { "heading": "Governing Law", "body": "The jurisdiction that governs these terms is still to be decided, and will be confirmed here once set." },
+        { "heading": "Termination", "body": "Either party can end an engagement with written notice. The deposit is not refunded, as it reserves the time we set aside for your project. Any work completed beyond the deposit is billed at the agreed rate, and we hand over what is finished." },
+        { "heading": "Governing Law", "body": "These terms are governed by the laws of Algeria." },
         { "heading": "Changes to These Terms", "body": "These terms may be updated from time to time. Continuing to use our services after a change means you accept the updated terms." },
         { "heading": "Contact", "body": "Questions about these terms? Reach out through our contact page or by email." }
       ]

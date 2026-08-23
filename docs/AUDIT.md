@@ -1264,3 +1264,32 @@ The new footer (`src/components/Footer.jsx`, added alongside `/services`, `/abou
 `tel:+10000000000`), marked with a `TODO(docs/AUDIT.md item 42)` next to the existing
 `WHATSAPP_URL` placeholder (item 38). Same fix, same file, same moment when the real number
 exists — update both together.
+
+### 43. Footer social links go nowhere — ⏸ OPEN, needs real accounts or removal
+
+`Footer.jsx:22-27` — Instagram, LinkedIn, GitHub and X all point at the bare platform
+homepage (`https://instagram.com/`, etc.), not a CUVATEX account. Four dead links, live on
+every page. Found during the 2026-08-23 whole-project content review; owner confirmed none
+of the accounts exist yet, so **not fixed** — same category as items 38/42. If the accounts
+never get created, the honest fix is deleting the "Follow us" footer column rather than
+shipping four links to nowhere.
+
+### 44. The real domain is hardcoded as `cuvatex.com` in five places — ⏸ OPEN, needs the real domain
+
+`index.html` (`<link rel="canonical">`, `og:url`, `og:image`, `twitter:image`, the JSON-LD
+`url`/`logo`), `public/sitemap.xml` (every `<loc>`), and `public/robots.txt` (`Sitemap:`) all
+hardcode `https://cuvatex.com/`. `index.html` already has two `<!-- NOTE: update to the real
+deployed domain -->` comments flagging this, but the sitemap and robots files carry the same
+value with no such note. If the real domain differs, WhatsApp/LinkedIn/Facebook link previews
+(`og:image`) and the sitemap Google actually crawls both point at the wrong site. Found during
+the 2026-08-23 whole-project content review; **not fixed** — no domain confirmed yet.
+
+### 2026-08-23 — Legal placeholder notice removed from `/terms` and `/privacy`
+
+The bordered "This page is a placeholder. It has not been reviewed by a lawyer yet" callout
+(`legal.placeholderNotice`, rendered by `LegalPage.jsx`) was removed at the owner's request —
+the pages read as finished now. This was a deliberate content decision, not a bug fix: the
+Terms and Privacy text itself was already accurate (Privacy correctly names Web3Forms and
+Umami; Terms' one previously-vague clause, Governing Law, was fixed in the same pass to name
+Algeria explicitly instead of "still to be decided"). No open item tracks this — it is not a
+defect, just a record of the change for anyone who finds the old screenshots.

@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, useReducedMotion, useTransform } from 'framer-motion';
 import ScrollReveal from './ScrollReveal';
+import ProcessArt from './ProcessArt';
 import useMediaQuery from '../hooks/useMediaQuery';
 
 // Everything below is derived from CARD_H, so resizing the card keeps the
@@ -261,43 +262,14 @@ export default function Process() {
                     // mode="wait" runs exit then enter, so this duration costs double
                     // per switch — keep it short or the card trails a fast scroll.
                     transition={{ duration: reduceMotion ? 0 : 0.22, ease: 'easeOut' }}
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 12,
-                    }}
+                    style={{ position: 'absolute', inset: 0 }}
                   >
-                    <div aria-hidden style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: 'radial-gradient(circle at 30% 20%, var(--accent, #0E7A69), transparent 60%)',
-                      opacity: 0.12,
-                    }} />
-                    <div style={{
-                      fontFamily: "'IBM Plex Sans', monospace",
-                      fontSize: 'clamp(72px, 8vw, 120px)',
-                      fontWeight: 700,
-                      lineHeight: 1,
-                      color: 'var(--accent, #0E7A69)',
-                      letterSpacing: '-0.02em',
-                    }}>
-                      {activeStep.n}
-                    </div>
-                    <div style={{
-                      fontSize: 'clamp(20px, 2.2vw, 26px)',
-                      fontWeight: 600,
-                      letterSpacing: '-0.01em',
-                    }}>
-                      {activeStep.title}
-                    </div>
+                    {/* Decorative only — the left column already carries every word. */}
+                    <ProcessArt index={active} />
                   </motion.div>
                 </AnimatePresence>
 
-                <div style={{
+                <div aria-hidden="true" style={{
                   position: 'absolute',
                   bottom: 24,
                   insetInline: 0,

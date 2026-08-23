@@ -9,7 +9,6 @@ export default function Terms() {
       eyebrow={t('legal.termsNav')}
       title={t('legal.terms.title')}
       updated={t('legal.lastUpdated')}
-      notice={t('legal.placeholderNotice')}
       sections={t('legal.terms.sections', { returnObjects: true })}
     />
   );

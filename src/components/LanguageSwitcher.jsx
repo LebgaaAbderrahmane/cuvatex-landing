@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const langs = ['en', 'fr', 'ar'];
 
 export default function LanguageSwitcher() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -43,7 +43,7 @@ export default function LanguageSwitcher() {
         onClick={() => setOpen(o => !o)}
         whileTap={{ scale: 0.9 }}
         className="focus-ring"
-        aria-label="Switch language"
+        aria-label={t('switchLanguage')}
         aria-expanded={open}
         style={{
           display: 'inline-flex',
