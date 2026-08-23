@@ -31,19 +31,19 @@ Marketing/portfolio site. React 19 + Vite 8 + `react-router` (v8, `BrowserRouter
 
 | Route | Page | What it is |
 |-------|------|-----------|
-| `/` | `Home.jsx` | The long sales page: `Hero`, `Services`, `Clients`, `Process`, `Work`, `Testimonials`, `CtaBanner`, `About`, `Team`, `Faq`, `Pricing` |
+| `/` | `Home.jsx` | The long sales page: `Hero`, `Clients`, `Services`, `Process`, `Work`, `Testimonials`, `About`, `Team`, `Pricing`, `Faq`, `CtaBanner` |
 | `/services` | `ServicesList.jsx` | All 6 services, full detail |
 | `/work` | `WorkList.jsx` | Every project, one `ProjectCard` each |
 | `/work/:slug` | `Project.jsx` | One case study |
 | `/about` | `AboutPage.jsx` | The full About story |
 | `/contact` | `ContactPage.jsx` | The contact form and direct links |
-| `/terms` | `Terms.jsx` | Terms of Service (placeholder text — see `src/i18n/en.json`'s `legal` key) |
-| `/privacy` | `Privacy.jsx` | Privacy Policy (same placeholder caveat) |
+| `/terms` | `Terms.jsx` | Terms of Service (unreviewed by a lawyer — see `src/i18n/en.json`'s `legal.terms` key) |
+| `/privacy` | `Privacy.jsx` | Privacy Policy (same caveat, `legal.privacy` key) |
 | `*` | `NotFound.jsx` | 404 |
 
 The homepage `Work`, `Services` and `About` sections are **teasers** — a short version
 plus a link to the full page (`/work`, `/services`, `/about`). Contact has no homepage
-teaser at all: the mid-page `CtaBanner` already covers that job, so a second "talk to us"
+teaser at all: the closing `CtaBanner` already covers that job, so a second "talk to us"
 moment would just repeat it. Case studies used to be a `#case/<slug>` overlay driven by a
 hand-written `useCaseRoute` hook; both are gone.
 
@@ -95,10 +95,10 @@ These exist so the same thing is not written twice. Reach for them before writin
 | `src/components/ProjectCard.jsx` | One project card, used by the homepage teaser (`Work.jsx`) and by `/work` (`WorkList.jsx`). Any change to a card goes here, or the two pages drift. |
 | `src/components/ServiceCard.jsx` | One alternating photo/text row, used by the homepage teaser (`Services.jsx`, 3 of them) and by `/services` (`ServicesList.jsx`, all 6, `detailed` adds the badge/tags/feature list). Deliberately *not* a card grid like `ProjectCard` — that shape sits one section above it on the homepage, and copying it read as the same section twice. |
 | `src/components/ServiceDivider.jsx` | The hairline between two `ServiceCard` rows. Draws in from the side the next row's photo lands on, accent-coloured at that end — echoes the row alternation instead of being a static rule. |
-| `src/components/ui/LegalPage.jsx` | Shared shell for `/terms` and `/privacy` — eyebrow, `<h1>`, a visible placeholder-notice callout, then `{heading, body}` sections laid out like `Project.jsx`'s `Block`. Both pages are ~15-line wrappers passing `legal.*` i18n data in. |
+| `src/components/ui/LegalPage.jsx` | Shared shell for `/terms` and `/privacy` — eyebrow, `<h1>`, "last updated" line, then `{heading, body}` sections laid out like `Project.jsx`'s `Block`. Both pages are ~15-line wrappers passing `legal.*` i18n data in. |
 | `src/components/ScrollManager.jsx` | Scroll and focus on navigation — see 2c-bis. |
 | `src/hooks/useMediaQuery.js` | All media queries. The query string is passed in, because the breakpoints are different rules, not copies: `767px` collapses the nav and switches the Work and Process layouts, `560px` shortens the case-study hero, and `(hover: none)` — a capability, not a width — decides whether a card's label rests visible. |
-| `src/components/CtaBanner.jsx` | The "Have a project in mind? / Let's talk" strip, targeting `/contact`. Mid-homepage, at the foot of `/work`, and at the foot of `/services`/`/about` — reused wherever a page ends and the next natural action is "get in touch." |
+| `src/components/CtaBanner.jsx` | The "Have a project in mind? / Let's talk" strip, targeting `/contact`. Closes the homepage, and reused at the foot of `/work`, `/services`, and `/about` — wherever a page ends and the next natural action is "get in touch." |
 | `src/lib/` | Pure helpers with no React in them: `motion.js` (the `EASE` curve, plus `HERO_EASE` for the hero's own entrance), `text.js` (`getInitials`, `dirArrow`), `contact.js` (`WHATSAPP_URL`, `PHONE_URL`/`PHONE_DISPLAY` — all three still placeholders, see `docs/AUDIT.md` items 38 and 42), `nav.js` (`isCurrentSection`, shared by the desktop nav and the mobile panel so the two cannot disagree), `services.js` (`SERVICE_SLUGS` — positional slugs for i18n's `services[]` array, shared by `ServiceCard.jsx` (building the `/contact?service=` link) and `ContactForm.jsx`/`ContactPage.jsx` (matching it back to a dropdown option)). |
 
 `Section` and `SectionHeader` take **no default prop values**. Every difference between sections — padding max, background, title measure — is passed explicitly, so a forgotten prop breaks loudly instead of silently snapping one section onto another's spacing.

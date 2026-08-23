@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function BackToTop() {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function BackToTop() {
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.9 }}
           className="focus-ring"
-          aria-label="Back to top"
+          aria-label={t('backToTop')}
           style={{
             position: 'fixed',
             bottom: 24,

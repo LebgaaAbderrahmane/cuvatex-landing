@@ -11,12 +11,14 @@
     "about": "À propos"
   },
   "skipToContent": "Aller au contenu",
+  "backToTop": "Retour en haut",
+  "switchLanguage": "Changer de langue",
   "cta": "Parlez-nous de votre idée",
   "heroKicker": "Petites entreprises et startups",
-  "heroTitle": "Des sites et des applications qui font grandir votre entreprise.",
+  "heroTitle": "Des sites et des applications\nqui font grandir votre entreprise.",
   "heroNote": "Un prix fixe, un délai tenu, et vous nous parlez toujours directement.",
   "heroAvailability": "Disponibles · réponse sous 2 jours ouvrés",
-  "heroBadges": ["En ligne et fonctionnel", "Sur tous les téléphones"],
+  "heroBadges": ["En ligne et fonctionnel", "S'adapte à tous les écrans"],
   "heroCarouselPause": "Mettre le diaporama en pause",
   "heroCarouselPlay": "Relancer le diaporama",
   "heroWhatsapp": "Écrire sur WhatsApp",
@@ -24,10 +26,10 @@
   "services": [
     { "title": "Sites et applications web", "desc": "Des sites et applications web rapides, faciles à utiliser et conçus pour durer.", "tags": ["Site web", "Panneau d'administration", "Hébergement configuré"], "badge": "Fonctionne sur tous les téléphones", "features": ["Adaptés à tous les écrans", "Facile à trouver sur Google", "Temps de chargement rapides garantis"] },
     { "title": "La première version de votre produit", "desc": "Nous transformons votre idée en produit fonctionnel en quelques semaines, centré sur ce qui compte vraiment.", "tags": ["Application fonctionnelle", "Retours d'utilisateurs réels", "Conçu pour évoluer"], "badge": "4–6 semaines", "features": ["Testez l'idée avant d'investir davantage", "Une version fonctionnelle rapidement", "Facile de changer de direction plus tard"] },
-    { "title": "Applications mobiles", "desc": "Des applications pour iPhone et Android, développées une seule fois et fonctionnant sur les deux.", "tags": ["Application iPhone", "Application Android", "Publication sur les stores"], "badge": "Une seule appli, les deux téléphones", "features": ["Une mise à jour met à jour les deux applications", "Une expérience fluide et naturelle", "Envoie des alertes, fonctionne aussi hors connexion"] },
+    { "title": "Applications mobiles", "desc": "Des applications pour iPhone et Android, développées une seule fois et fonctionnant sur les deux.", "tags": ["Application iPhone", "Application Android", "Publication sur les stores"], "badge": "Une seule appli, les deux téléphones", "features": ["Une mise à jour met à jour les deux applications", "Une expérience fluide, comme les autres applis de votre téléphone", "Envoie des alertes, fonctionne aussi hors connexion"] },
     { "title": "Design produit", "desc": "Des écrans et des parcours conçus pour que vos utilisateurs les comprennent vraiment.", "tags": ["Écrans de l'application", "Prototype cliquable", "Tests utilisateurs"], "badge": "Centré utilisateur", "features": ["Des premières versions auxquelles vous pouvez réagir tôt", "Une démonstration que vous pouvez essayer", "Testé avec de vrais utilisateurs avant de coder"] },
-    { "title": "Le système derrière votre produit", "desc": "Le moteur qui stocke vos données, garde tout rapide et fonctionne de façon fiable.", "tags": ["Base de données", "Sécurité", "Sauvegardes automatiques"], "badge": "99,9% de disponibilité", "features": ["Suit la croissance de vos clients", "Protégé contre les tentatives de piratage courantes", "Sauvegardes automatisées et surveillance"] },
-    { "title": "Logiciels sur mesure", "desc": "Un logiciel conçu autour du fonctionnement réel de votre entreprise, au lieu de vous imposer un outil tout fait.", "tags": ["Conçu pour vous", "Mise en place et formation", "Support continu"], "badge": "Sur mesure", "features": ["Conçu autour de votre flux de travail", "Intègre vos outils existants", "Vous possédez le code — changez de développeur quand vous voulez"] }
+    { "title": "Le système derrière votre produit", "desc": "Le moteur qui stocke vos données, garde tout rapide et fonctionne de façon fiable.", "tags": ["Base de données", "Sécurité", "Sauvegardes automatiques"], "badge": "99,9% de disponibilité", "features": ["Supporte plus de clients à mesure que vous grandissez", "Protégé contre les tentatives de piratage courantes", "Sauvegardes automatisées et surveillance"] },
+    { "title": "Logiciels sur mesure", "desc": "Un logiciel conçu autour du fonctionnement réel de votre entreprise, au lieu de vous imposer un outil tout fait.", "tags": ["Conçu pour vous", "Mise en place et formation", "Support continu"], "badge": "Sur mesure", "features": ["Conçu autour de votre façon de travailler, pas contre elle", "S'intègre à vos outils existants", "Vous possédez le code — changez de développeur quand vous voulez"] }
   ],
   "servicesPageTitle": "Tout ce que nous construisons",
   "servicesPageIntro": "Un regard plus détaillé sur ce que nous faisons — les détails derrière chaque service, d'une simple nouvelle fonctionnalité à un produit construit de zéro.",
@@ -35,7 +37,7 @@
   "serviceCta": "Demander un devis",
   "clientsEyebrow": "Clients",
   "clientsTitle": "Avec qui nous travaillons",
-  "clientsBody": "Nous travaillons avec des petites entreprises, des commerces et des restaurants, des cliniques et des professionnels, et des startups qui lancent leur premier produit. Si vous n'êtes pas sûr que votre projet nous convienne, demandez-nous.",
+  "clientsBody": "Vous vous concentrez sur votre activité. Nous nous occupons de tout ce qui est technique. Si vous n'êtes pas sûr que votre projet nous convienne, demandez-nous.",
   "clientTypes": [
     { "name": "Petites entreprises", "desc": "Boutiques, indépendants et commerces locaux qui veulent être visibles en ligne." },
     { "name": "Commerces et restaurants", "desc": "Boutiques en ligne, commandes en ligne et menus numériques." },
@@ -61,6 +63,13 @@
   "pricingEyebrow": "Tarifs",
   "pricingTitle": "Comment fonctionnent nos tarifs",
   "pricingBody": "Chaque projet est différent, nous n'utilisons donc pas de forfaits fixes. Dites-nous ce dont vous avez besoin, et nous vous donnons un prix clair et fixe avant le début des travaux. Aucun coût caché, et aucune facture surprise ensuite.",
+  "pricingPaymentTitle": "Comment se passe le paiement",
+  "pricingPayment": [
+    { "amount": "50%", "when": "Pour démarrer le projet" },
+    { "amount": "50%", "when": "À la livraison" }
+  ],
+  "pricingPaymentNote": "Les modifications et notre garantie de correction de bugs sont expliquées dans la FAQ ci-dessous.",
+  "pricingTermsLink": "Lire les conditions complètes",
   "processTitle": "Notre méthode",
   "processIntro": "Un chemin clair de votre idée à un produit terminé. Vous savez toujours ce que nous faisons et pourquoi.",
   "steps": [
@@ -200,7 +209,7 @@
   "aboutEyebrow": "À propos",
   "aboutTitle": "Qui nous sommes",
   "aboutBody": "Nous sommes une équipe d'ingénieurs et de designers qui prennent un seul produit à la fois. Vous travaillez directement avec les personnes qui construisent votre produit, pas un manager ni un chargé de compte.",
-  "aboutExtra": "Chaque projet commence par la compréhension de vos utilisateurs et de votre marché, puis progresse à travers le design et le développement, avec des allers-retours réguliers, jusqu'à ce que nous livrions quelque chose dont vous êtes fier. Sans intermédiaires, sans couches, juste les personnes qui construisent votre produit qui vous parlent directement.",
+  "aboutExtra": "Chaque projet commence par la compréhension de vos utilisateurs et de votre marché, puis progresse à travers le design et le développement, avec des allers-retours réguliers, jusqu'à ce que nous livrions quelque chose dont vous êtes fier. Vous voyez de vrais progrès chaque semaine, vous savez donc toujours où en est votre projet.",
   "aboutCta": "En savoir plus sur nous",
   "roles": ["Ingénieur logiciel", "Développeuse frontend", "Designer produit"],
   "bios": [
@@ -210,11 +219,12 @@
   ],
   "faqTitle": "Questions fréquentes",
   "faq": [
-    { "q": "Combien coûte un projet ?", "a": "Cela dépend de vos besoins. Parlez-nous de votre projet et nous vous donnons un prix clair et fixe avant le début des travaux. Aucun coût caché." },
+    { "q": "Combien coûte un projet ?", "a": "Cela dépend de la taille du projet — le nombre d'écrans, le nombre de fonctionnalités, et s'il vous le faut aussi sur téléphone. Un petit site coûte bien moins cher qu'un produit complet. Dites-nous ce que vous avez en tête et nous le chiffrons." },
     { "q": "Combien de temps cela prend-il ?", "a": "Une première version prend généralement quelques semaines. Un produit complet prend plus de temps. Nous vous donnons un délai réaliste avant de commencer, et nous vous tenons informé au fur et à mesure." },
-    { "q": "Suis-je propriétaire du produit final ?", "a": "Oui. Le code, le design et tous les comptes vous appartiennent. Rien n'est verrouillé chez nous." },
+    { "q": "Combien de modifications puis-je demander ?", "a": "Deux séries à chaque étape — une pour le design, une pour le développement. Vous examinez le travail, vous envoyez toutes vos remarques ensemble, et nous les appliquons. Si vous en voulez plus, ou si vous voulez ajouter quelque chose de nouveau, nous vous donnons le prix avant de commencer." },
+    { "q": "Suis-je propriétaire du produit final ?", "a": "Oui. Une fois le projet payé, le code, le design et tous les comptes vous appartiennent. Rien n'est verrouillé chez nous." },
     { "q": "Et si je ne sais pas encore exactement ce que je veux ?", "a": "C'est normal, et c'est là que nous commençons. Nous vous aidons à transformer une idée floue en un plan clair avant que quoi que ce soit ne soit construit." },
-    { "q": "Que se passe-t-il après le lancement ?", "a": "Nous ne disparaissons pas. Nous restons disponibles pour corriger les problèmes, apporter des améliorations et aider votre produit à grandir." }
+    { "q": "Que se passe-t-il après le lancement ?", "a": "Nous ne disparaissons pas. Tout bug trouvé dans les 30 premiers jours, nous le corrigeons gratuitement. Ensuite, nous restons disponibles pour corriger les problèmes, apporter des améliorations et aider votre produit à grandir." }
   ],
   "contactTitle": "Construisons ensemble",
   "contactIntro": "Parlez-nous du produit que vous voulez construire. Nous répondons sous deux jours ouvrés.",
@@ -231,6 +241,8 @@
   "sending": "Envoi…",
   "sent": "Merci, nous vous répondrons bientôt.",
   "error": "Une erreur est survenue. Réessayez ou écrivez-nous directement.",
+  "formPrivacyNote": "Nous utilisons vos informations uniquement pour vous répondre.",
+  "formPrivacyLink": "Comment nous traitons vos données",
   "footerNav": { "home": "Accueil" },
   "footerPagesHeading": "Pages",
   "footerLegalHeading": "Mentions légales",
@@ -246,18 +258,19 @@
     "termsNav": "Conditions d'utilisation",
     "privacyNav": "Politique de confidentialité",
     "lastUpdated": "Dernière mise à jour : août 2026",
-    "placeholderNotice": "Cette page est un texte provisoire. Elle n'a pas encore été relue par un juriste et ne doit pas être considérée comme un avis juridique définitif.",
     "terms": {
       "title": "Conditions d'utilisation",
       "sections": [
         { "heading": "Acceptation des conditions", "body": "En utilisant ce site ou en travaillant avec CUVATEX, vous acceptez ces conditions. Si vous n'êtes pas d'accord, merci de ne pas utiliser nos services." },
         { "heading": "Services", "body": "CUVATEX conçoit et développe des produits logiciels — sites web, applications web, applications mobiles, design produit et systèmes backend sur mesure. Le périmètre exact de chaque projet est convenu avec le client avant le début des travaux." },
         { "heading": "Responsabilités du client", "body": "Le client s'engage à fournir des retours dans des délais raisonnables, ainsi que le contenu, les accès et les informations nécessaires à la réalisation du projet. Un retard côté client peut retarder la livraison." },
-        { "heading": "Conditions de paiement", "body": "Les projets sont facturés selon un devis fixe convenu avant le début des travaux. Les factures sont dues selon le calendrier fixé dans la proposition de projet. Un retard de paiement peut suspendre les travaux jusqu'à régularisation." },
+        { "heading": "Conditions de paiement", "body": "Les projets sont facturés selon un devis fixe convenu avant le début des travaux. Le paiement se fait en deux fois : 50% pour démarrer (l'acompte), et 50% à la remise du travail terminé. Un retard de paiement peut suspendre les travaux jusqu'à régularisation." },
+        { "heading": "Modifications", "body": "Chaque étape du projet comprend deux séries de modifications. Une série signifie que vous examinez le travail et nous envoyez vos remarques une fois. Les séries supplémentaires, ou les modifications qui ajoutent de nouvelles fonctionnalités au-delà du périmètre convenu, sont chiffrées séparément avant d'être réalisées." },
+        { "heading": "Corrections après livraison", "body": "Pendant 30 jours après la livraison, nous corrigeons sans frais tout bug dans le travail livré. Un bug signifie qu'une chose que nous avons construite ne fonctionne pas comme convenu. Les nouvelles fonctionnalités, les nouvelles demandes, ou les problèmes causés par des modifications faites par quelqu'un d'autre ne sont pas couverts." },
         { "heading": "Propriété intellectuelle", "body": "Une fois le projet payé intégralement, le client devient propriétaire des livrables finaux. CUVATEX peut présenter le travail réalisé dans son propre portfolio, sauf demande contraire écrite du client." },
         { "heading": "Limitation de responsabilité", "body": "CUVATEX travaille avec soin, mais ne peut être tenu responsable des dommages indirects ou accessoires liés à l'utilisation d'un produit livré, dans la limite permise par la loi." },
-        { "heading": "Résiliation", "body": "Chaque partie peut mettre fin à une collaboration avec un préavis écrit. Le travail déjà réalisé est facturé au tarif convenu." },
-        { "heading": "Droit applicable", "body": "La juridiction qui régit ces conditions reste à définir et sera précisée ici une fois fixée." },
+        { "heading": "Résiliation", "body": "Chaque partie peut mettre fin à une collaboration avec un préavis écrit. L'acompte n'est pas remboursé, car il réserve le temps que nous avons bloqué pour votre projet. Tout travail réalisé au-delà de l'acompte est facturé au tarif convenu, et nous vous remettons ce qui est terminé." },
+        { "heading": "Droit applicable", "body": "Ces conditions sont régies par le droit algérien." },
         { "heading": "Modifications de ces conditions", "body": "Ces conditions peuvent être mises à jour de temps à autre. Continuer à utiliser nos services après une modification signifie que vous acceptez les nouvelles conditions." },
         { "heading": "Contact", "body": "Des questions sur ces conditions ? Contactez-nous via notre page de contact ou par e-mail." }
       ]

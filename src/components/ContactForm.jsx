@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { track } from '../analytics';
 import { WHATSAPP_URL } from '../lib/contact';
@@ -122,6 +123,17 @@ export default function ContactForm({ status, onSubmit, defaultService }) {
           >
             {sending ? t('sending') : t('send')}
           </motion.button>
+
+          <p style={{ margin: 0, fontSize: 13, lineHeight: 1.5, color: 'var(--muted, #6c665e)' }}>
+            {t('formPrivacyNote')}{' '}
+            <Link
+              to="/privacy"
+              className="focus-ring"
+              style={{ color: 'var(--accent, #0E7A69)', fontWeight: 600, textDecoration: 'none', padding: '12px 6px', marginInline: -6 }}
+            >
+              {t('formPrivacyLink')}
+            </Link>
+          </p>
 
           {status === 'error' && (
             <div

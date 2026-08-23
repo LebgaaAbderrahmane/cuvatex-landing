@@ -344,7 +344,7 @@ export default function Process() {
                   </motion.div>
                 </AnimatePresence>
 
-                <div style={{
+                <div aria-hidden="true" style={{
                   position: 'absolute',
                   bottom: 24,
                   insetInline: 0,
