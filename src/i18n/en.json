@@ -113,95 +113,105 @@
     "duration": "Duration"
   },
   "projects": {
-    "atlas-retail": {
-      "title": "Atlas Retail",
-      "summary": "A stock and sales dashboard that replaced eleven spreadsheets for a chain of nine stores.",
-      "year": "2024",
+    "ecomassistant": {
+      "title": "EcomAssistant",
+      "summary": "An AI WhatsApp agent that automatically confirms COD orders, follows up on unanswered ones, and answers customer questions in Derja, French, and Arabic — including voice notes and product photos.",
+      "year": "2026",
+      "role": "Full-stack, AI",
+      "duration": "In development",
+      "overview": "Algerian e-commerce runs almost entirely on Cash on Delivery, and failed deliveries are the industry's biggest cost driver — most of them caused by orders that were never confirmed or forgotten by dispatch day. EcomAssistant automates the whole confirmation conversation on the merchant's own WhatsApp number.",
+      "challenge": "Merchants confirm orders manually over WhatsApp or phone, so anything ordered after hours goes unanswered. Customers who send Derja voice notes or ask product questions before committing often get no reply. The mix of languages makes automated replies hard to get right.",
+      "solution": "A SaaS that plugs into a store's Shopify via OAuth, then uses Google Gemini to interpret replies in Derda, French, and Arabic — text, voice notes, and product photos — and acts through a fixed tool registry for order lookup, shipment creation, and product search. BullMQ queues handle retries and background jobs so no order is ever lost.",
+      "results": [
+        "Order confirmation went from manual to fully automatic across three languages",
+        "Failed deliveries dropped as unanswered orders are followed up before dispatch",
+        "Merchants manage everything from one dashboard instead of juggling separate tools"
+      ],
+      "metrics": [
+        { "value": "3", "label": "Agent languages" },
+        { "value": "24/7", "label": "Order confirmation" },
+        { "value": "Shopify", "label": "Store integration" }
+      ]
+    },
+    "nktex": {
+      "title": "NKTex",
+      "summary": "A React Native stock-counting app for a textile company where workers submit weekly counts per location and the admin tracks totals and generates a print-ready PDF production report.",
+      "year": "2026",
+      "role": "Mobile, backend",
+      "duration": "1 month",
+      "overview": "NKTex's weekly stock counts were collected on paper and aggregated by hand. Summing counts from multiple locations took hours, there was no quick view of totals versus maximum quantities, and production planning was guesswork.",
+      "challenge": "Paper counts from multiple locations had to be re-entered and summed by hand. Workers shared devices and could not handle complex auth flows. The admin needed an instant picture of what to produce next, but production reports took too long to assemble.",
+      "solution": "A React Native (Expo) app with custom profile-based auth for shared devices, weekly stock entries with database-level upsert guarantees, a Supabase backend with RLS scoping workers to their location, and a one-tap PDF report that auto-selects items needing production.",
+      "results": [
+        "Weekly paper counting became a few minutes on a phone",
+        "The production report tells the team exactly what to produce next",
+        "Stock totals are visible in real time instead of at month's end"
+      ],
+      "metrics": [
+        { "value": "2", "label": "App roles" },
+        { "value": "9", "label": "Screens" },
+        { "value": "PDF", "label": "Print-ready report" }
+      ]
+    },
+    "dentora": {
+      "title": "Dentora PMS",
+      "summary": "A full-stack dental practice management system — patient records, scheduling, billing, stock, staff payroll, and a patient portal — across four apps in a pnpm monorepo.",
+      "year": "2026",
       "role": "Web app, backend",
-      "duration": "14 weeks",
-      "overview": "Atlas ran nine stores on a shared folder of spreadsheets. Nobody knew real stock levels until the end of the month, and reorders were guesswork. We built one dashboard the whole chain works from.",
-      "challenge": "Every store kept its own file, in its own format, and merged them by hand each month. Numbers disagreed constantly, so managers stopped trusting the reports and ordered on instinct instead. The fix had to work for staff who had never used anything but Excel.",
-      "solution": "A single web app with live stock per store, transfers between branches, and a reorder view that flags items before they run out. We imported four years of history so the first screen a manager opened already had their own data in it. Training took one afternoon.",
+      "duration": "6+ months",
+      "overview": "Dental clinics in Algeria manage patients, appointments, billing, stock, and staff through paper records, spreadsheets, and phone calls. There is no integrated system that handles the full practice workflow while respecting Algerian data protection law.",
+      "challenge": "Paper-based records are slow to search and impossible to audit. Appointment scheduling relies on phone calls with frequent double-bookings. Billing is manual, stock tracking is ad-hoc, and there is no patient portal. Compliance with data protection law 18-07 requires field-level encryption for patient data.",
+      "solution": "A pnpm monorepo with four apps — public marketing site, staff admin SPA, patient portal, and Express API — sharing contracts, i18n, UI components, and config packages. Patient PII is encrypted with AES-256-GCM via custom Prisma middleware, and the admin and portal apps are PWAs with offline support for low-connectivity environments.",
       "results": [
-        "Stock counts went from monthly to live across all nine stores",
-        "Reorder decisions moved from instinct to flagged, dated alerts",
-        "Month-end reporting dropped from three days of merging to one click"
+        "Clinic operations consolidated into one system instead of scattered tools",
+        "Patient data encrypted at rest, compliant with Algerian law 18-07",
+        "Staff can work offline in low-connectivity environments via PWA"
       ],
       "metrics": [
-        { "value": "9", "label": "Stores on one system" },
-        { "value": "-64%", "label": "Time spent on reporting" },
-        { "value": "4 yrs", "label": "History migrated" }
+        { "value": "4", "label": "Apps in one monorepo" },
+        { "value": "36", "label": "Architecture decisions" },
+        { "value": "AES-256", "label": "Field-level encryption" }
       ]
     },
-    "nordwind-api": {
-      "title": "Nordwind API",
-      "summary": "A rebuilt ordering API that took a logistics platform from nightly batches to real-time.",
-      "year": "2024",
-      "role": "Backend, infrastructure",
-      "duration": "10 weeks",
-      "overview": "Nordwind's partners wanted to see order status as it happened. The existing system answered with data that was up to a day old, because everything moved in a nightly batch job.",
-      "challenge": "The batch job was the only integration point, and eight partners had built against it. We could not simply switch it off. The new API had to run alongside the old one long enough for every partner to migrate on their own schedule.",
-      "solution": "We built a versioned REST API with webhooks for status changes, and kept the nightly export running as a thin layer on top of the new data model. Partners migrated one at a time over four months without a single coordinated cutover.",
+    "groundwork": {
+      "title": "Groundwork",
+      "summary": "A complete coffee shop system in one monorepo — customer ordering site, staff admin with live SSE order queue, and a type-safe backend that re-prices every order server-side.",
+      "year": "2026",
+      "role": "Web app, backend",
+      "duration": "3 weeks",
+      "overview": "A single coffee shop juggles ordering, the kitchen queue, inventory, loyalty, and staff across paper tickets, a spreadsheet, and memory. Customers can't order ahead, baristas can't see the live queue, and stock runs out mid-service.",
+      "challenge": "Three apps can drift apart — a schema change in one place silently breaks another at runtime. A live order queue needs real-time updates. Client-submitted prices could be tampered with. Selling a product should deduct from multiple ingredients, not just one.",
+      "solution": "A shared Zod + tRPC v11 contract across all three apps so schema drift breaks the build. SSE with React Query invalidation for the live queue. Server-side repricing on every order. Recipe-based inventory deduction with low-stock alerts. Built in two days as a full-stack prototype.",
       "results": [
-        "Order status went from up-to-24-hours stale to under a second",
-        "All eight partners migrated with no downtime and no shared cutover date",
-        "The nightly batch was retired after the last partner moved"
+        "Full coffee shop stack — ordering, kitchen queue, inventory, loyalty — in one typed codebase",
+        "Order queue updates in real time via Server-Sent Events",
+        "Server-side repricing eliminates price tampering by design"
       ],
       "metrics": [
-        { "value": "<1s", "label": "Status latency" },
-        { "value": "8", "label": "Partners migrated" },
-        { "value": "0", "label": "Downtime windows" }
+        { "value": "3", "label": "Apps, one monorepo" },
+        { "value": "17", "label": "DB tables" },
+        { "value": "SSE", "label": "Real-time queue" }
       ]
     },
-    "lumen-studio": {
-      "title": "Lumen Studio",
-      "summary": "A booking flow redesign that cut abandoned bookings for a photography studio group.",
-      "year": "2023",
-      "role": "Product design, web app",
-      "duration": "8 weeks",
-      "overview": "Lumen books studio time by the hour across three locations. Most people who started a booking never finished it, and the team could not tell where they were dropping off.",
-      "challenge": "The old flow asked for payment details on the first screen, before showing whether the slot was even free. It also assumed a desktop screen, while most bookings were attempted on a phone during a lunch break.",
-      "solution": "We rebuilt the flow mobile-first: pick a location, see live availability, hold the slot for ten minutes, then pay. We added analytics on every step so the team can see exactly where people stop, instead of guessing.",
+    "apex-motors": {
+      "title": "Apex Motors",
+      "summary": "A full dealership platform — inventory SPA with financing, trade-in, and service booking, backed by an Express API and a JWT admin dashboard managing vehicles, leads, and orders.",
+      "year": "2026",
+      "role": "Web app, backend",
+      "duration": "3 weeks",
+      "overview": "A car dealership's web presence is usually a static brochure — visitors can't browse live inventory, filter by price, get a financing pre-qualification, or book a service. The sales team manages vehicles and leads in spreadsheets.",
+      "challenge": "Inventory lived in spreadsheets with no searchable online catalog. Leads came from scattered phone calls with no triage workflow. Vehicle photos were uploaded unoptimized, bloating the site. There was no purchase-intent flow for visitors ready to commit.",
+      "solution": "A React SPA with faceted inventory search, financing and trade-in forms, and purchase-intent checkout — backed by an Express 5 + MySQL API with JWT admin dashboard, server-side WebP image pipeline, and a unified leads system funneling four intent types into one triage workflow.",
       "results": [
-        "Completed bookings rose sharply after the payment step moved last",
-        "The team can now see drop-off per step instead of guessing",
-        "Phone bookings became the majority channel within two months"
+        "Inventory moved from spreadsheets to a live, filterable online catalog",
+        "Four lead types consolidated into one pipeline with admin triage",
+        "Vehicle photos auto-optimized to WebP on upload"
       ],
       "metrics": [
-        { "value": "2.4x", "label": "Completed bookings" },
-        { "value": "3", "label": "Locations live" },
-        { "value": "10 min", "label": "Slot hold window" }
+        { "value": "40", "label": "Seed vehicles" },
+        { "value": "4", "label": "Lead types" },
+        { "value": "WebP", "label": "Image pipeline" }
       ]
-    },
-    "terra-fleet": {
-      "title": "Terra Fleet",
-      "summary": "A driver app for logging vehicle checks and fuel without paper forms.",
-      "year": "2023",
-      "role": "Mobile"
-    },
-    "okapi-books": {
-      "title": "Okapi Books",
-      "summary": "An online catalogue and reservation site for an independent bookshop.",
-      "year": "2023",
-      "role": "Web app"
-    },
-    "vela-grid": {
-      "title": "Vela Grid",
-      "summary": "An internal platform that gives a solar installer one view of every site.",
-      "year": "2022",
-      "role": "Platform"
-    },
-    "siren-labs": {
-      "title": "Siren Labs",
-      "summary": "A marketing site and client portal for a small research lab.",
-      "year": "2022",
-      "role": "Web app"
-    },
-    "cobalt-pay": {
-      "title": "Cobalt Pay",
-      "summary": "A payment reconciliation service that matches transfers to invoices automatically.",
-      "year": "2022",
-      "role": "Backend"
     }
   },
   "teamTitle": "The team",

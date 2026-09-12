@@ -1,10 +1,7 @@
-import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, Link } from 'react-router';
 import {
   motion,
-  useScroll,
-  useTransform,
   useReducedMotion,
 } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -233,14 +230,17 @@ function ProjectBody({ slug, project }) {
               </p>
             </ScrollReveal>
             <div style={{ display: 'grid', gap: 'clamp(16px, 2vw, 24px)' }}>
-              {Array.from({ length: shots }, (_, i) => (
-                <Shot
-                  key={i}
-                  src={shotImage(slug, i + 1)}
-                  alt={`${d.title} — ${t('imgLabel')}`}
-                  reduce={reduce}
-                />
-              ))}
+              {Array.from({ length: shots }, (_, i) => {
+                const { src, kind } = shotImage(slug, i + 1);
+                return (
+                  <Shot
+                    key={i}
+                    src={src}
+                    kind={kind}
+                    alt={`${d.title} — ${t('imgLabel')}`}
+                  />
+                );
+              })}
             </div>
           </div>
         )}
@@ -487,30 +487,54 @@ function Metric({ value, label, reduce }) {
   );
 }
 
-function Shot({ src, alt, reduce }) {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['-7%', '7%']);
+function Shot({ src, alt, kind = 'desktop' }) {
+  if (kind === 'mobile') {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: 'min(56vh, 460px)',
+          padding: 'clamp(24px, 3vw, 40px)',
+          borderRadius: 3,
+          border: '1px solid var(--line, rgba(21,18,15,0.13))',
+          background: 'var(--surface, #fff)',
+        }}
+      >
+        <div style={{
+          width: 'min(280px, 40vw)',
+          borderRadius: 20,
+          overflow: 'hidden',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+          border: '3px solid #1a1a1a',
+          background: '#000',
+          flexShrink: 0,
+        }}>
+          <img
+            src={src}
+            alt={alt}
+            loading="lazy"
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
-      ref={ref}
       style={{
-        height: 'min(56vh, 460px)',
-        overflow: 'hidden',
         borderRadius: 3,
         border: '1px solid var(--line, rgba(21,18,15,0.13))',
         background: 'var(--surface, #fff)',
       }}
     >
-      <motion.img
+      <img
         src={src}
         alt={alt}
         loading="lazy"
-        style={{ width: '100%', height: '114%', objectFit: 'cover', y }}
+        style={{ width: '100%', height: 'auto', display: 'block' }}
       />
     </div>
   );
