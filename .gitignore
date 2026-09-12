@@ -21,6 +21,7 @@ package-lock.json
 !.env.example
 
 # AI agent local files — personal, never shared
+brag-output/
 CLAUDE.local.md
 .claude/settings.local.json
 .claude/*.local.json

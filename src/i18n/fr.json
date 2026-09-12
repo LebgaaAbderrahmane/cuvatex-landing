@@ -113,95 +113,105 @@
     "duration": "Durée"
   },
   "projects": {
-    "atlas-retail": {
-      "title": "Atlas Retail",
-      "summary": "Un tableau de bord des stocks et des ventes qui a remplacé onze fichiers Excel pour une chaîne de neuf magasins.",
-      "year": "2024",
+    "ecomassistant": {
+      "title": "EcomAssistant",
+      "summary": "Un agent WhatsApp IA qui confirme automatiquement les commandes COD, relance celles sans réponse, et répond aux clients en darija, français et arabe — y compris les vocaux et les photos de produits.",
+      "year": "2026",
+      "role": "Full-stack, IA",
+      "duration": "En développement",
+      "overview": "Le e-commerce algérien fonctionne presque exclusivement en paiement à la livraison, et les livraisons manquées représentent le premier poste de coût du secteur — la plupart causées par des commandes jamais confirmées ou oubliées le jour de l'expédition. EcomAssistant automatise toute la conversation de confirmation sur le propre numéro WhatsApp du commerçant.",
+      "challenge": "Les commerçants confirment les commandes manuellement via WhatsApp ou par téléphone, donc toute commande passée après les heures ouvrées reste sans réponse. Les clients qui envoient des vocaux en darija ou posent des questions produits avant de s'engager n'obtiennent souvent aucune réponse. Le mélange de langues rend les réponses automatiques difficiles.",
+      "solution": "Un SaaS qui se connecte à la boutique Shopify via OAuth, puis utilise Google Gemini pour interpréter les réponses en darija, français et arabe — texte, vocaux et photos produits — et agit via un registre d'outils fixe pour la recherche de produits, la création d'expéditions et la gestion des commandes. Les files BullMQ gèrent les relances et les tâches de fond.",
+      "results": [
+        "La confirmation de commande est passée de manuelle à entièrement automatique en trois langues",
+        "Les livraisons manquées ont diminué grâce aux relances automatiques avant expédition",
+        "Les commerçants gèrent tout depuis un seul tableau de bord au lieu d'outils séparés"
+      ],
+      "metrics": [
+        { "value": "3", "label": "Langues de l'agent" },
+        { "value": "24/7", "label": "Confirmation des commandes" },
+        { "value": "Shopify", "label": "Intégration boutique" }
+      ]
+    },
+    "nktex": {
+      "title": "NKTex",
+      "summary": "Une application React Native de comptage de stock pour une entreprise textile où les employés envoient leurs comptages hebdomadaires par emplacement et l'admin suit les totaux et génère un rapport PDF de production prêt à imprimer.",
+      "year": "2026",
+      "role": "Mobile, backend",
+      "duration": "1 mois",
+      "overview": "Les comptages hebdomadaires de stock de NKTex se faisaient sur papier et étaient regroupés manuellement. La somme des comptages de plusieurs emplacements prenait des heures, il n'y avait pas de vue rapide des totaux vs quantités maximales, et la planification de production était du bricolage.",
+      "challenge": "Les comptages papier de plusieurs emplacements devaient être res saisis et sommés à la main. Les employés partageaient des appareils et ne pouvaient pas gérer des flux d'authentification complexes. L'admin avait besoin d'une vue instantanée de quoi produire, mais les rapports prenaient trop de temps à assembler.",
+      "solution": "Une app React Native (Expo) avec authentification personnalisée pour appareils partagés, des entrées de stock hebdomadaires avec garantie d'upsert au niveau base de données, un backend Supabase avec RLS, et un rapport PDF en un tap qui sélectionne automatiquement les articles nécessitant de la production.",
+      "results": [
+        "Le comptage papier hebdomadaire est devenu quelques minutes sur un téléphone",
+        "Le rapport de production indique exactement quoi produire",
+        "Les totaux de stock sont visibles en temps réel au lieu de fin de mois"
+      ],
+      "metrics": [
+        { "value": "2", "label": "Rôles dans l'app" },
+        { "value": "9", "label": "Écrans" },
+        { "value": "PDF", "label": "Rapport prêt à imprimer" }
+      ]
+    },
+    "dentora": {
+      "title": "Dentora PMS",
+      "summary": "Un système complet de gestion de pratique dentaire — dossiers patients, planification, facturation, stock, paie du personnel et portail patient — en quatre applications dans un monorepo pnpm.",
+      "year": "2026",
       "role": "App web, backend",
-      "duration": "14 semaines",
-      "overview": "Atlas gérait neuf magasins avec un dossier partagé de fichiers Excel. Personne ne connaissait le stock réel avant la fin du mois, et les réapprovisionnements se faisaient au jugé. Nous avons construit un tableau de bord unique pour toute la chaîne.",
-      "challenge": "Chaque magasin gardait son propre fichier, dans son propre format, fusionné à la main chaque mois. Les chiffres se contredisaient sans cesse, les responsables ont cessé de faire confiance aux rapports et commandaient à l'instinct. La solution devait convenir à des équipes qui n'avaient jamais utilisé autre chose qu'Excel.",
-      "solution": "Une seule application web avec le stock en direct par magasin, les transferts entre succursales et une vue de réapprovisionnement qui signale les articles avant la rupture. Nous avons importé quatre ans d'historique : dès le premier écran, chaque responsable retrouvait ses propres données. La formation a pris un après-midi.",
+      "duration": "6+ mois",
+      "overview": "Les cabinets dentaires en Algérie gèrent les patients, rendez-vous, facturation, stock et personnel via des registres papier, des feuilles de calcul et des appels téléphoniques. Il n'existe pas de système intégré qui couvre tout le flux de travail tout en respectant la loi algérienne de protection des données.",
+      "challenge": "Les dossiers papier sont lents à chercher et impossibles à auditer. La planification des rendez-vous repose sur des appels avec des double-réservations fréquentes. La facturation est manuelle, le suivi de stock approximatif, et il n'y a pas de portail patient. La conformité à la loi 18-07 nécessite le chiffrement au niveau des champs pour les données patient.",
+      "solution": "Un monorepo pnpm avec quatre apps — site vitrine, SPA admin, portail patient et API Express — partageant contrats, i18n, composants UI et configuration. Les données PII patient sont chiffrées en AES-256-GCM via un middleware Prisma personnalisé, et les apps admin et portail sont des PWAs avec support hors-ligne.",
       "results": [
-        "Le suivi des stocks est passé du mensuel au temps réel dans les neuf magasins",
-        "Les réapprovisionnements sont passés de l'instinct à des alertes datées et signalées",
-        "La clôture mensuelle est passée de trois jours de fusion à un seul clic"
+        "Les opérations du cabinet consolidées dans un seul système",
+        "Données patient chiffrées au repos, conforme à la loi 18-07",
+        "Le personnel peut travailler hors-ligne grâce au PWA"
       ],
       "metrics": [
-        { "value": "9", "label": "Magasins sur un système" },
-        { "value": "-64%", "label": "Temps passé en reporting" },
-        { "value": "4 ans", "label": "Historique migré" }
+        { "value": "4", "label": "Apps dans un monorepo" },
+        { "value": "36", "label": "Décisions d'architecture" },
+        { "value": "AES-256", "label": "Chiffrement au niveau champ" }
       ]
     },
-    "nordwind-api": {
-      "title": "Nordwind API",
-      "summary": "Une API de commandes reconstruite qui a fait passer une plateforme logistique des lots nocturnes au temps réel.",
-      "year": "2024",
-      "role": "Backend, infrastructure",
-      "duration": "10 semaines",
-      "overview": "Les partenaires de Nordwind voulaient suivre l'état des commandes en direct. L'ancien système répondait avec des données parfois vieilles d'une journée, car tout transitait par un traitement par lots nocturne.",
-      "challenge": "Ce traitement par lots était le seul point d'intégration, et huit partenaires s'étaient construits autour. Impossible de l'arrêter du jour au lendemain. La nouvelle API devait cohabiter avec l'ancienne assez longtemps pour que chaque partenaire migre à son rythme.",
-      "solution": "Nous avons construit une API REST versionnée avec des webhooks sur les changements d'état, en conservant l'export nocturne comme une fine couche au-dessus du nouveau modèle de données. Les partenaires ont migré un par un sur quatre mois, sans bascule commune.",
+    "groundwork": {
+      "title": "Groundwork",
+      "summary": "Un système complet de coffee shop dans un monorepo — site de commande client, dashboard admin avec file de commandes SSE en temps réel, et un backend type-safe qui recalcule chaque commande côté serveur.",
+      "year": "2026",
+      "role": "App web, backend",
+      "duration": "3 semaines",
+      "overview": "Un coffee shop jongle avec les commandes, la file de la cuisine, l'inventaire, la fidélité et le personnel via des tickets papier, un tableur et la mémoire. Les clients ne peuvent pas commander à l'avance, les baristas ne voient pas la file en temps réel, et le stock tombe en panne en plein service.",
+      "challenge": "Trois apps peuvent diverger — un changement de schéma à un endroit casse silencieusement un autre au runtime. Une file de commandes en temps réel nécessite des mises à jour instantanées. Les prix soumis par le client pourraient être falsifiés. Vendre un produit devrait déduire de plusieurs ingrédients, pas d'un seul.",
+      "solution": "Un contrat Zod + tRPC v11 partagé entre les trois apps pour que la dérive de schéma casse la compilation. SSE avec invalidation React Query pour la file en temps réel. Recalcul des prix côté serveur sur chaque commande. Déduction d'inventaire basée sur les recettes avec alertes de stock bas. Prototype complet construit en deux jours.",
       "results": [
-        "L'état des commandes est passé de 24 heures de retard à moins d'une seconde",
-        "Les huit partenaires ont migré sans interruption ni date de bascule commune",
-        "Le traitement nocturne a été retiré après la migration du dernier partenaire"
+        "Stack complète de coffee shop — commande, file cuisine, inventaire, fidélité — dans un seul codebase typé",
+        "La file de commandes se met à jour en temps réel via Server-Sent Events",
+        "Le recalcul côté serveur élimine la falsification des prix par conception"
       ],
       "metrics": [
-        { "value": "<1s", "label": "Latence de statut" },
-        { "value": "8", "label": "Partenaires migrés" },
-        { "value": "0", "label": "Fenêtres d'interruption" }
+        { "value": "3", "label": "Apps, un monorepo" },
+        { "value": "17", "label": "Tables de BDD" },
+        { "value": "SSE", "label": "File en temps réel" }
       ]
     },
-    "lumen-studio": {
-      "title": "Lumen Studio",
-      "summary": "Une refonte du parcours de réservation qui a réduit les abandons pour un groupe de studios photo.",
-      "year": "2023",
-      "role": "Design produit, app web",
-      "duration": "8 semaines",
-      "overview": "Lumen loue des studios à l'heure sur trois sites. La plupart des personnes qui commençaient une réservation ne la terminaient jamais, et l'équipe ne savait pas où elles abandonnaient.",
-      "challenge": "L'ancien parcours demandait les informations de paiement dès le premier écran, avant même de montrer si le créneau était libre. Il supposait aussi un écran d'ordinateur, alors que la plupart des réservations étaient tentées sur téléphone pendant la pause déjeuner.",
-      "solution": "Nous avons reconstruit le parcours en mobile-first : choisir un site, voir les disponibilités en direct, bloquer le créneau dix minutes, puis payer. Nous avons ajouté un suivi à chaque étape pour que l'équipe voie exactement où les gens s'arrêtent, au lieu de deviner.",
+    "apex-motors": {
+      "title": "Apex Motors",
+      "summary": "Une plateforme complète de concession — SPA d'inventaire avec financement, reprise et réservation de services, soutenue par une API Express et un dashboard admin JWT gérant véhicules, prospects et commandes.",
+      "year": "2026",
+      "role": "App web, backend",
+      "duration": "3 semaines",
+      "overview": "La présence web d'un concessionnaire est généralement un brochure statique — les visiteurs ne peuvent pas parcourir l'inventaire en direct, filtrer par prix, obtenir une pré-qualification de financement ou réserver un service. L'équipe de vente gère véhicules et prospects dans des tableurs.",
+      "challenge": "L'inventaire vivait dans des tableurs sans catalogue en ligne consultable. Les prospects arrivaient par des appels dispersés sans workflow de tri. Les photos véhicules étaient téléchargées non optimisées, alourdissant le site. Il n'y avait pas de流程 d'achat pour les visiteurs prêts à s'engager.",
+      "solution": "Une SPA React avec recherche d'inventaire facettée, formulaires de financement et reprise, et tunnel d'achat — soutenue par une API Express 5 + MySQL avec dashboard admin JWT, pipeline d'images WebP côté serveur, et un système de prospects unifiant quatre types d'intention dans un seul workflow de tri.",
       "results": [
-        "Les réservations finalisées ont fortement augmenté après le déplacement du paiement en fin de parcours",
-        "L'équipe voit désormais l'abandon étape par étape au lieu de le deviner",
-        "Le téléphone est devenu le canal majoritaire en deux mois"
+        "L'inventaire est passé des tableurs à un catalogue en ligne filtrable",
+        "Quatre types de prospects consolidés dans un seul pipeline d'administration",
+        "Les photos véhicules sont automatiquement optimisées en WebP à l'upload"
       ],
       "metrics": [
-        { "value": "2,4x", "label": "Réservations finalisées" },
-        { "value": "3", "label": "Sites en service" },
-        { "value": "10 min", "label": "Créneau réservé" }
+        { "value": "40", "label": "Véhicules en seed" },
+        { "value": "4", "label": "Types de prospects" },
+        { "value": "WebP", "label": "Pipeline d'images" }
       ]
-    },
-    "terra-fleet": {
-      "title": "Terra Fleet",
-      "summary": "Une application conducteur pour enregistrer les contrôles véhicule et le carburant sans formulaires papier.",
-      "year": "2023",
-      "role": "Mobile"
-    },
-    "okapi-books": {
-      "title": "Okapi Books",
-      "summary": "Un catalogue en ligne et un site de réservation pour une librairie indépendante.",
-      "year": "2023",
-      "role": "App web"
-    },
-    "vela-grid": {
-      "title": "Vela Grid",
-      "summary": "Une plateforme interne qui donne à un installateur solaire une vue unique de chaque chantier.",
-      "year": "2022",
-      "role": "Plateforme"
-    },
-    "siren-labs": {
-      "title": "Siren Labs",
-      "summary": "Un site vitrine et un portail client pour un petit laboratoire de recherche.",
-      "year": "2022",
-      "role": "App web"
-    },
-    "cobalt-pay": {
-      "title": "Cobalt Pay",
-      "summary": "Un service de rapprochement des paiements qui associe automatiquement les virements aux factures.",
-      "year": "2022",
-      "role": "Backend"
     }
   },
   "teamTitle": "L'équipe",
